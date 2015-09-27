@@ -6,25 +6,39 @@ public class GameController : MonoBehaviour
 {
 	public GameObject[] asteroids;
 	public Vector3 spawnRange;
+    public GUIText scoreText;
+    public GUIText gameOverText;
+    public GUIText restartText;
 
-	public float waveWait;
+    public float waveWait;
 	public float spawnWait;
 	public float spawnWaitDecrement;
 	public float spawnWaitMin;
 	public float waveSize;
 	public float waveSizeIncrement;
-
-	public GUIText scoreText;
-	//public float scoreMultiplier;
+	
 	private int score;
+    private bool gameOver;
 
 	void Start()
 	{
 		score = 0;
-		//scoreMultiplier = 1.0f;
+        gameOverText.text = "";
+        restartText.text = "";
 		UpdateScore ();
 		StartCoroutine (SpawnRandomAsteroid());
 	}
+
+    void Update()
+    {
+        if(gameOver)
+        {
+            if(Input.GetKeyDown (KeyCode.R))
+            {
+                Application.LoadLevel(Application.loadedLevel);
+            }
+        }
+    }
 
 	IEnumerator SpawnRandomAsteroid()
 	{
@@ -45,14 +59,24 @@ public class GameController : MonoBehaviour
 
 			if(spawnWait > spawnWaitMin)
 				spawnWait -= spawnWaitDecrement;
+
+            if (gameOver)
+                break;
 		}
 	}
 
 	public void UpdateScore(int newIncrementScore)
 	{
-		score += (int)(newIncrementScore);// * scoreMultiplier);
+		score += (int)(newIncrementScore);
 		UpdateScore();
 	}
+
+    public void GameOver()
+    {
+        gameOverText.text = "Game Over!";
+        restartText.text = "Press 'R' to Restart";
+        gameOver = true;
+    }
 
 	void UpdateScore()
 	{

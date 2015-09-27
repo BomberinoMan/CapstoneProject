@@ -24,8 +24,11 @@ public class DestroyByContact : MonoBehaviour
 		if (other.tag != "Boundary") 
 		{
 			if(other.tag == "Player")
-				Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
-			if(other.tag == "Enemy")
+            {
+                Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
+                gameController.GameOver();
+            }
+            if (other.tag == "Enemy")
 				Instantiate(enemyExplosion, other.transform.position, other.transform.rotation);
 
 			gameController.UpdateScore(scoreValue);

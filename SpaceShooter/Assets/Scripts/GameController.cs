@@ -14,8 +14,15 @@ public class GameController : MonoBehaviour
 	public float waveSize;
 	public float waveSizeIncrement;
 
+	public GUIText scoreText;
+	//public float scoreMultiplier;
+	private int score;
+
 	void Start()
 	{
+		score = 0;
+		//scoreMultiplier = 1.0f;
+		UpdateScore ();
 		StartCoroutine (SpawnRandomAsteroid());
 	}
 
@@ -39,5 +46,16 @@ public class GameController : MonoBehaviour
 			if(spawnWait > spawnWaitMin)
 				spawnWait -= spawnWaitDecrement;
 		}
+	}
+
+	public void UpdateScore(int newIncrementScore)
+	{
+		score += (int)(newIncrementScore);// * scoreMultiplier);
+		UpdateScore();
+	}
+
+	void UpdateScore()
+	{
+		scoreText.text = "Score: " + score;
 	}
 }

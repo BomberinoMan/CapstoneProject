@@ -116,7 +116,7 @@ MonoBehaviour:
   background: {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
   indestructible: {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
   destructible: {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
-  player: {fileID: 104582, guid: 9796e58d47a8030428ac78352918a7a4, type: 2}
+  player: {fileID: 154668, guid: 94a713023dc5e48c6ae3ceb419756caa, type: 2}
   rows: 11
   columns: 15
 --- !u!114 &238175713

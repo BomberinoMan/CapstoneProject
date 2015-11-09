@@ -32,7 +32,7 @@ public class BoardManager : MonoBehaviour {
     }
     void InitializePlayers()
     {
-        GameObject instance = Instantiate(player, new Vector3(0, 1, 0.0f), Quaternion.identity) as GameObject;
+        GameObject instance = Instantiate(player, new Vector3(0, rows-1, 0.0f), Quaternion.identity) as GameObject;
         instance.transform.SetParent(boardHolder);
     }
 

@@ -8,8 +8,8 @@ public static class Direction
     public static int Left = 4;
 }
 
-public class PlayerMovement : MonoBehaviour {
-    public Animator animator;
+public class PlayerAnimation : MonoBehaviour {
+     private Animator animator;
 
 	void Start () {
         animator = gameObject.GetComponent<Animator>();

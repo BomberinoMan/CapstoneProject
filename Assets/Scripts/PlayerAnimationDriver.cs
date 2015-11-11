@@ -8,7 +8,7 @@ public static class Direction
     public static int Left = 4;
 }
 
-public class PlayerAnimation : MonoBehaviour {
+public class PlayerAnimationDriver : MonoBehaviour {
      private Animator animator;
 
 	void Start () {

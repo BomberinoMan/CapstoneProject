@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown("space"))
         {
             GameObject bomb = Instantiate(Bomb, new Vector3(AxisRounder.Round(0.49f, 0.51f, transform.position.x), AxisRounder.Round(0.49f, 0.51f, transform.position.y), 0.0f), Quaternion.identity) as GameObject;
+			bomb.GetComponent<BombController>().Radius = 2;
+			bomb.transform.SetParent(gameObject.transform.parent);
         }
     }
 

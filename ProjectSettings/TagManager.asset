@@ -17,7 +17,7 @@ TagManager:
   - Player
   - BlockingLayer
   - Background
-  - 
+  - Laser
   - 
   - 
   - 
@@ -50,6 +50,9 @@ TagManager:
     locked: 0
   - name: Bomb
     uniqueID: 2709368161
+    locked: 0
+  - name: Laser
+    uniqueID: 443877733
     locked: 0
   - name: Player
     uniqueID: 563877875

@@ -48,6 +48,7 @@ GameObject:
   - 61: {fileID: 6187240}
   - 61: {fileID: 6143710}
   - 61: {fileID: 6122110}
+  - 114: {fileID: 11431306}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Bomb
@@ -190,8 +191,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99ebb78355f7824aaa14f6624b5ebbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DelayTime: 3
-  ExplosionTime: .5
+--- !u!114 &11431306
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de4b6a5e2eb0b4934b638e5437da8243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Radius: 1
 --- !u!114 &11499690
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,8 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99ebb78355f7824aaa14f6624b5ebbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DelayTime: 3
-  ExplosionTime: .5
 --- !u!212 &21201942
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -292,6 +301,34 @@ Prefab:
       propertyPath: m_Size.y
       value: .75
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: LaserHor
+      value: 
+      objectReference: {fileID: 174818, guid: f3a1e46f2ec5c452683f0cb96a96079e, type: 2}
+    - target: {fileID: 0}
+      propertyPath: LaserVert
+      value: 
+      objectReference: {fileID: 151588, guid: 9048c23f97aca45b2a5825459a94a4e2, type: 2}
+    - target: {fileID: 0}
+      propertyPath: LaserCross
+      value: 
+      objectReference: {fileID: 135874, guid: 679b24bbfd1c6410dae8624dbf143980, type: 2}
+    - target: {fileID: 0}
+      propertyPath: LaserUp
+      value: 
+      objectReference: {fileID: 139784, guid: 1ca60e39272104a469bbbeae4649d045, type: 2}
+    - target: {fileID: 0}
+      propertyPath: LaserDown
+      value: 
+      objectReference: {fileID: 183380, guid: 08625e3e412c0484f9c10f7acbe32f9b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: LaserLeft
+      value: 
+      objectReference: {fileID: 153060, guid: 7d3cf27765ace4640b7411b3a9a24eeb, type: 2}
+    - target: {fileID: 0}
+      propertyPath: LaserRight
+      value: 
+      objectReference: {fileID: 189476, guid: aafd3eb3b3df24b0bb9b30655e1470fa, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165528}

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4b2b4daa68260a84e92bc8ef75ec1794
-timeCreated: 1447285724
+timeCreated: 1448312705
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -37,7 +37,7 @@ TextureImporter:
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 0
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 400
+  spritePixelsToUnits: 395
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
@@ -61,30 +61,30 @@ TextureImporter:
     - name: LaserVert
       rect:
         serializedVersion: 2
-        x: 0
-        y: 401
-        width: 400
-        height: 400
+        x: 2
+        y: 403
+        width: 396
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: LaserHor
       rect:
         serializedVersion: 2
-        x: 401
-        y: 401
-        width: 400
-        height: 400
+        x: 403
+        y: 403
+        width: 396
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: LaserCross
       rect:
         serializedVersion: 2
-        x: 802
-        y: 401
-        width: 400
-        height: 400
+        x: 804
+        y: 403
+        width: 396
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -101,40 +101,40 @@ TextureImporter:
     - name: LaserUp
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 400
-        height: 400
+        x: 2
+        y: 2
+        width: 396
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: LaserLeft
       rect:
         serializedVersion: 2
-        x: 404
-        y: 0
-        width: 400
-        height: 400
+        x: 403
+        y: 2
+        width: 395
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: LaserDown
       rect:
         serializedVersion: 2
-        x: 802
-        y: 5
-        width: 400
-        height: 400
+        x: 804
+        y: 2
+        width: 396
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: LaserRight
       rect:
         serializedVersion: 2
-        x: 1203
-        y: 0
-        width: 401
-        height: 400
+        x: 1205
+        y: 2
+        width: 397
+        height: 396
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

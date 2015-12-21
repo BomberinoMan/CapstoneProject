@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BombController : MonoBehaviour 
 {	
-	public int Radius = 2;
+	public int Radius;
 
 	void Start()
 	{

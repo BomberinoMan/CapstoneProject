@@ -115,10 +115,8 @@ public class BoardManager : MonoBehaviour {
 	private bool OnIndestructible(int x, int y)
 	{
 		foreach (Coords square in indestructibleCoords)
-			if (square.x == x && square.y == y) {
-				Debug.Log("Indestructible found: " + x + "," + y);
+			if (square.x == x && square.y == y)
 				return true;
-			}
 		return false;
 	}
 

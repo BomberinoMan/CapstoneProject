@@ -15,7 +15,7 @@ public class LaserAnimationDriver : MonoBehaviour
 	}
 	
 	void Update () {
-		animator.SetBool("IsDone", (CreationTime + ExplosionTime) <= Time.time);
+		//animator.SetBool("IsDone", (CreationTime + ExplosionTime) <= Time.time);
 	}
 	
 	public void KillMe()

@@ -16,11 +16,6 @@ public class PlayerAnimationDriver : MonoBehaviour {
 	}
 	
 	void Update () {
-        UpdateMovementAnimations();
-    }
-
-    void UpdateMovementAnimations()
-    {
         float vert = Input.GetAxisRaw("Vertical");
         float hor = Input.GetAxisRaw("Horizontal");
 
@@ -44,5 +39,17 @@ public class PlayerAnimationDriver : MonoBehaviour {
         }
         else
             animator.SetFloat("Speed", 0.0f);
+    }
+
+    public string GetDirection()
+    {
+        switch (animator.GetInteger("Direction"))
+        {
+            case 1: return "Up";
+            case 2: return "Right";
+            case 3: return "Down";
+            case 4: return "Left";
+            default: return "Up";
+        }
     }
 }

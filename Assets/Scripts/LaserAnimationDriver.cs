@@ -3,19 +3,18 @@ using System.Collections;
 
 public class LaserAnimationDriver : MonoBehaviour 
 {
-	
+    public BombParams paramaters;
 	private Animator animator;
 	private float CreationTime;
-	private float ExplosionTime;
+	
 	
 	void Start () {
 		animator = gameObject.GetComponent<Animator>();
 		CreationTime = Time.time;
-		ExplosionTime = BombParams.ExplodingDuration;
 	}
 	
 	void Update () {
-		//animator.SetBool("IsDone", (CreationTime + ExplosionTime) <= Time.time);
+		animator.SetBool("IsDone", (CreationTime + paramaters.explodingDuration) <= Time.time);
 	}
 	
 	public void KillMe()

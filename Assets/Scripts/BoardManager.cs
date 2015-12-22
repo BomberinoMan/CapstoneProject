@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 struct BombCoords{
 	public GameObject bomb;
 	public int x;
 	public int y;
-	public int r;
+	public BombParams p;
 
-	public BombCoords(GameObject bomb, int x, int y, int r)
+	public BombCoords(GameObject bomb, int x, int y, BombParams p)
 	{
 		this.bomb = bomb;
 		this.x = x;
 		this.y = y;
-		this.r = r;
+		this.p = p;
 	}
 }
 
@@ -75,6 +76,12 @@ public class BoardManager : MonoBehaviour {
                 instance.transform.SetParent(boardHolder);
             }
     }
+
+    public void LineBomb(int x, int y, string v, int numBombs)
+    {
+        //TODO Implement this
+    }
+
     void InitializePlayers()
     {
         GameObject instance = Instantiate(player, new Vector3(0, rows-1, 0.0f), Quaternion.identity) as GameObject;
@@ -88,23 +95,23 @@ public class BoardManager : MonoBehaviour {
         InitializePlayers();
     }
 
-	public void AddBomb(GameObject bomb, int x, int y, int r)
+	public void AddBomb(GameObject bomb, int x, int y, BombParams p)
 	{
-		bombs.Add (new BombCoords (bomb, x, y, r));
+		bombs.Add (new BombCoords (bomb, x, y, p));
 	}
 
-	private int RemoveBomb(int x, int y)
+	private BombParams RemoveBomb(int x, int y)
 	{
 		foreach (BombCoords bomb in bombs)
 			if (bomb.x == x && bomb.y == y) {
 				Destroy (bomb.bomb); 	// Destroy bomb game oject
 				bombs.Remove (bomb);
-				return bomb.r;
+				return bomb.p;
 			}
-		return -1;
+        return new BombParams();
 	}
 
-	private bool OnBomb(int x, int y)
+	public bool OnBomb(int x, int y)
 	{
 		foreach (BombCoords bomb in bombs)
 			if (bomb.x == x && bomb.y == y)
@@ -122,20 +129,20 @@ public class BoardManager : MonoBehaviour {
 
 	public void ExplodeBomb(int x, int y)
 	{
-		int r = RemoveBomb ((int)x, (int)y);	// Remove from list of bombs, destroy GameObject
+		BombParams p = RemoveBomb (x, y);	// Remove from list of bombs, destroy GameObject
 		GameObject instance = Instantiate (laserCross, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		instance.transform.SetParent (boardHolder);	// Instantiate the cross of the laser
-
-		LaserUp (x, y, r);
-		LaserDown (x, y, r);
-		LaserLeft (x, y, r);
-		LaserRight (x, y, r);
+        instance.GetComponent<LaserAnimationDriver>().paramaters = p;
+		LaserUp (x, y, p);
+		LaserDown (x, y, p);
+		LaserLeft (x, y, p);
+		LaserRight (x, y, p);
 	}
 
-	private void LaserUp(int x, int y, int radius)
+	private void LaserUp(int x, int y, BombParams p)
 	{
 		GameObject laser;
-		for (int i = 0; i <= radius; i++) {
+		for (int i = 0; i <= p.radius; i++) {
 			y++;
 			if(OnBomb(x, y))
 			{
@@ -146,19 +153,20 @@ public class BoardManager : MonoBehaviour {
 			{
 				break;
 			}
-			if(i != radius)
+			if(i != p.radius)
 				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserUp, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
 
-			laser.transform.SetParent(boardHolder);
+            laser.transform.SetParent(boardHolder);
 		}
 	}
 
-	private void LaserDown(int x, int y, int radius)
+	private void LaserDown(int x, int y, BombParams p)
 	{
 		GameObject laser;
-		for (int i = 0; i <= radius; i++) {
+		for (int i = 0; i <= p.radius; i++) {
 			y--;
 			if(OnBomb(x, y))
 			{
@@ -169,19 +177,20 @@ public class BoardManager : MonoBehaviour {
 			{
 				break;
 			}
-			if(i != radius)
+			if(i != p.radius)
 				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserDown, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			
-			laser.transform.SetParent(boardHolder);
+            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+
+            laser.transform.SetParent(boardHolder);
 		}
 	}
 
-	private void LaserLeft(int x, int y, int radius)
+	private void LaserLeft(int x, int y, BombParams p)
 	{
 		GameObject laser;
-		for (int i = 0; i <= radius; i++) {
+		for (int i = 0; i <= p.radius; i++) {
 			x--;
 			if(OnBomb(x, y))
 			{
@@ -192,19 +201,20 @@ public class BoardManager : MonoBehaviour {
 			{
 				break;
 			}
-			if(i != radius)
+			if(i != p.radius)
 				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserLeft, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			
-			laser.transform.SetParent(boardHolder);
+            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+
+            laser.transform.SetParent(boardHolder);
 		}
 	}
 
-	private void LaserRight(int x, int y, int radius)
+	private void LaserRight(int x, int y, BombParams p)
 	{
 		GameObject laser;
-		for (int i = 0; i <= radius; i++) {
+		for (int i = 0; i <= p.radius; i++) {
 			x++;
 			if(OnBomb(x, y))
 			{
@@ -215,12 +225,13 @@ public class BoardManager : MonoBehaviour {
 			{
 				break;
 			}
-			if(i != radius)
+			if(i != p.radius)
 				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserRight, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			
-			laser.transform.SetParent(boardHolder);
+            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+
+            laser.transform.SetParent(boardHolder);
 		}
 	}
 }

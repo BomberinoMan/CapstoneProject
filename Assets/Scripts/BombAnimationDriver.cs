@@ -2,22 +2,18 @@
 using System.Collections;
 
 public class BombAnimationDriver : MonoBehaviour {
-    private float DelayTime;
-    private float ExplosionTime;
     private Animator animator;
+    public BombParams paramaters;
     private float CreationTime;
 
     void Start () {
         animator = gameObject.GetComponent<Animator>();
         CreationTime = Time.time;
-
-		DelayTime = BombParams.DelayTime;
-		ExplosionTime = BombParams.WarningTime;
     }
 
     void Update () {
-        animator.SetBool("IsExploding", (CreationTime + DelayTime) <= Time.time);
-        animator.SetBool("IsDisapearing", (CreationTime + DelayTime + ExplosionTime) <= Time.time);
+        animator.SetBool("IsExploding", (CreationTime + paramaters.delayTime) <= Time.time);
+        animator.SetBool("IsDisapearing", (CreationTime + paramaters.delayTime + paramaters.explodingDuration) <= Time.time);
     }
 
     void KillMe()

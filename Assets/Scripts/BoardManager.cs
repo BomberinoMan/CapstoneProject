@@ -82,6 +82,16 @@ public class BoardManager : MonoBehaviour {
         //TODO Implement this
     }
 
+    private void returnBombToPlayer(GameObject bomb)
+    {
+        try
+        {
+            bomb.GetComponent<BombController>().parentPlayer.GetComponent<PlayerController>().numBombs++;
+        }
+        catch (MissingReferenceException e) // If the player dies before the bomb explodes, then we do not need to give them another one
+        { }
+    }
+
     void InitializePlayers()
     {
         GameObject instance = Instantiate(player, new Vector3(0, rows-1, 0.0f), Quaternion.identity) as GameObject;
@@ -104,7 +114,8 @@ public class BoardManager : MonoBehaviour {
 	{
 		foreach (BombCoords bomb in bombs)
 			if (bomb.x == x && bomb.y == y) {
-				Destroy (bomb.bomb); 	// Destroy bomb game oject
+                returnBombToPlayer(bomb.bomb);
+                Destroy (bomb.bomb); 	// Destroy bomb game oject
 				bombs.Remove (bomb);
 				return bomb.p;
 			}
@@ -129,10 +140,10 @@ public class BoardManager : MonoBehaviour {
 
 	public void ExplodeBomb(int x, int y)
 	{
-		BombParams p = RemoveBomb (x, y);	// Remove from list of bombs, destroy GameObject
+		BombParams p = RemoveBomb (x, y);	// Remove from list of bombs, destroy GameObject, give player another bomb
 		GameObject instance = Instantiate (laserCross, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		instance.transform.SetParent (boardHolder);	// Instantiate the cross of the laser
-        instance.GetComponent<LaserAnimationDriver>().paramaters = p;
+        instance.GetComponent<LaserController>().paramaters = p;
 		LaserUp (x, y, p);
 		LaserDown (x, y, p);
 		LaserLeft (x, y, p);
@@ -157,7 +168,7 @@ public class BoardManager : MonoBehaviour {
 				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserUp, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+            laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
 		}
@@ -181,7 +192,7 @@ public class BoardManager : MonoBehaviour {
 				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserDown, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+            laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
 		}
@@ -205,7 +216,7 @@ public class BoardManager : MonoBehaviour {
 				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserLeft, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+            laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
 		}
@@ -229,7 +240,7 @@ public class BoardManager : MonoBehaviour {
 				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 			else 
 				laser = Instantiate(laserRight, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-            laser.GetComponent<LaserAnimationDriver>().paramaters = p;
+            laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
 		}

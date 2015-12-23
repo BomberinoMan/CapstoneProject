@@ -9,6 +9,7 @@ public class BombAnimationDriver : MonoBehaviour {
     void Start () {
         animator = gameObject.GetComponent<Animator>();
         CreationTime = Time.time;
+        paramaters = gameObject.GetComponentInParent<BombController>().paramaters;
     }
 
     void Update () {

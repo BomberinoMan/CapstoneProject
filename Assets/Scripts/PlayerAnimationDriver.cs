@@ -16,6 +16,7 @@ public class PlayerAnimationDriver : MonoBehaviour {
 	}
 	
 	void Update () {
+        //TODO need to implement reverse movement here aswell
         float vert = Input.GetAxisRaw("Vertical");
         float hor = Input.GetAxisRaw("Horizontal");
 

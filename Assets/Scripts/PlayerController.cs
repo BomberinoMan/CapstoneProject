@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public BombParams bombParams = new BombParams();
     public bool canLayBombs = true;
     public bool alwaysLayBombs = false;
+    public bool reverseMovement = false;
 
     public GameObject bombObject;
     private Rigidbody2D rb;
@@ -17,11 +18,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        //TODO: Remove these once they are confirmed to be working
-        Debug.LogWarning("Delay time: " + bombParams.delayTime);
-        Debug.LogWarning("Exploding Duration: " + bombParams.explodingDuration);
-        Debug.LogWarning("Radius: " + bombParams.radius);
-        Debug.LogWarning("Warning Time: " + bombParams.warningTime);
         rb = GetComponent<Rigidbody2D>();
         transform = GetComponent<Transform>();
     }
@@ -31,20 +27,38 @@ public class PlayerController : MonoBehaviour
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
-        if (ver == 0.0f && hor != 0.0f)
-            rb.position = new Vector3(
-                rb.position.x + Input.GetAxisRaw("Horizontal") * speed,
-                AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
-                0.0f);
-        else if(hor == 0.0f && ver != 0.0f)
-            rb.position = new Vector3(
-                AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
-                rb.position.y + Input.GetAxisRaw("Vertical") * speed,
-                0.0f);
-
-        if((Input.GetKeyDown("space") && canLayBombs) || alwaysLayBombs)
+        if(!reverseMovement)
         {
-            if (GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)transform.position.x, (int)transform.position.y))
+            if (ver == 0.0f && hor != 0.0f)
+                rb.position = new Vector3(
+                    rb.position.x + hor * speed,
+                    AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
+                    0.0f);
+            else if (hor == 0.0f && ver != 0.0f)
+                rb.position = new Vector3(
+                    AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
+                    rb.position.y + ver * speed,
+                    0.0f);
+        }
+        else
+        {
+            if (ver == 0.0f && hor != 0.0f)
+                rb.position = new Vector3(
+                    rb.position.x - hor * speed,
+                    AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
+                    0.0f);
+            else if (hor == 0.0f && ver != 0.0f)
+                rb.position = new Vector3(
+                    AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
+                    rb.position.y - ver * speed,
+                    0.0f);
+        }
+            
+
+
+        if ((Input.GetKeyDown("space") && canLayBombs) || alwaysLayBombs)
+        {
+            if (bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)transform.position.x, (int)transform.position.y))
                 GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().LineBomb((int)transform.position.x, (int)transform.position.y, gameObject.GetComponent<PlayerAnimationDriver>().GetDirection(), numBombs);
             else
             {

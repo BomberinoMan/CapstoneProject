@@ -7,10 +7,6 @@ PlayerSettings:
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
-<<<<<<< HEAD
-=======
-  targetResolution: 0
->>>>>>> BomberinoMan_Animation
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
@@ -100,7 +96,7 @@ PlayerSettings:
   metroEnableLowLatencyPresentationAPI: 0
   xboxOneDisableKinectGpuReservation: 0
   virtualRealitySupported: 0
-  productGUID: dc7d320946734354db28a4ee0bdbadfb
+  productGUID: 66115b3c8b57902408d0a3b86077a198
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 9
   AndroidPreferredInstallLocation: 1
@@ -346,9 +342,10 @@ PlayerSettings:
   metroWideTileShowName: 0
   metroDefaultTileSize: 1
   metroTileForegroundText: 1
-  metroTileBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
-  metroSplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
-  metroSplashScreenUseBackgroundColor: 0
+  metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
+  metroSplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628,
+    a: 1}
+  metroSplashScreenUseBackgroundColor: 1
   platformCapabilities: {}
   metroFTAName: 
   metroFTAFileTypes: []
@@ -414,45 +411,15 @@ PlayerSettings:
   XboxOnePersistentLocalStorageSize: 0
   intPropertyNames:
   - Android::ScriptingBackend
-  - Metro::ScriptingBackend
   - Standalone::ScriptingBackend
-  - WP8::ScriptingBackend
-  - WebGL::ScriptingBackend
-  - WebGL::audioCompressionFormat
-  - WebGL::exceptionSupport
-  - WebGL::memorySize
   - WebPlayer::ScriptingBackend
-  - iOS::Architecture
-  - iOS::EnableIncrementalBuildSupportForIl2cpp
-  - iOS::ScriptingBackend
   Android::ScriptingBackend: 0
-  Metro::ScriptingBackend: 2
   Standalone::ScriptingBackend: 0
-  WP8::ScriptingBackend: 2
-  WebGL::ScriptingBackend: 1
-  WebGL::audioCompressionFormat: 4
-  WebGL::exceptionSupport: 1
-  WebGL::memorySize: 256
   WebPlayer::ScriptingBackend: 0
-  iOS::Architecture: 2
-  iOS::EnableIncrementalBuildSupportForIl2cpp: 0
-  iOS::ScriptingBackend: 1
   boolPropertyNames:
-  - WebGL::analyzeBuildSize
-  - WebGL::dataCaching
-  - WebGL::useEmbeddedResources
   - XboxOne::enus
-  WebGL::analyzeBuildSize: 0
-  WebGL::dataCaching: 0
-  WebGL::useEmbeddedResources: 0
   XboxOne::enus: 1
-  stringPropertyNames:
-  - WebGL::emscriptenArgs
-  - WebGL::template
-  - additionalIl2CppArgs::additionalIl2CppArgs
-  WebGL::emscriptenArgs: 
-  WebGL::template: APPLICATION:Default
-  additionalIl2CppArgs::additionalIl2CppArgs: 
+  stringPropertyNames: []
   cloudProjectId: 
   projectName: 
   organizationId: 

@@ -7,11 +7,6 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         boardManager = GetComponent<BoardManager>();
-        InitGame();
-    }
-
-    void InitGame()
-    {
         boardManager.CreateBoard();
     }
 }

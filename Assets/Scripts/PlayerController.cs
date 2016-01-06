@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
             HandlePowerUpCollision(other);
         else if (other.gameObject.tag == "Laser")
         {
+            //TODO add destruction animation support
             Destroy(gameObject);
         }
     }

@@ -8,8 +8,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 434160}
-  - 114: {fileID: 11457722}
   - 114: {fileID: 11438584}
+  - 114: {fileID: 11439066}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardManager: {fileID: 0}
---- !u!114 &11457722
+--- !u!114 &11439066
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -55,7 +55,10 @@ MonoBehaviour:
   background: {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
   indestructible: {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
   destructible: {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
-  player: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
+  player1: {fileID: 111466, guid: 6a29d5fff6a3ce94c8de37d17726647a, type: 2}
+  player2: {fileID: 191922, guid: 6e0f72671a84f6f44b93c90683b0c3f7, type: 2}
+  player3: {fileID: 162892, guid: fd431ab7f481ba34ab0f571c859582fd, type: 2}
+  player4: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
   laserCross: {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
   laserHor: {fileID: 109734, guid: 9adbb3f820837b740b8d1225c2535b9e, type: 2}
   laserVert: {fileID: 151648, guid: 52720c29d63eff64b9bf7d9a3d35fdce, type: 2}
@@ -65,6 +68,7 @@ MonoBehaviour:
   laserRight: {fileID: 180182, guid: d7b28480e3c91a04b9b4222f3e842b44, type: 2}
   rows: 11
   columns: 13
+  fillPercentage: 0.9
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -76,6 +80,26 @@ Prefab:
       propertyPath: player
       value: 
       objectReference: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
+    - target: {fileID: 0}
+      propertyPath: player1
+      value: 
+      objectReference: {fileID: 111466, guid: 6a29d5fff6a3ce94c8de37d17726647a, type: 2}
+    - target: {fileID: 0}
+      propertyPath: player2
+      value: 
+      objectReference: {fileID: 191922, guid: 6e0f72671a84f6f44b93c90683b0c3f7, type: 2}
+    - target: {fileID: 0}
+      propertyPath: player3
+      value: 
+      objectReference: {fileID: 162892, guid: fd431ab7f481ba34ab0f571c859582fd, type: 2}
+    - target: {fileID: 0}
+      propertyPath: player4
+      value: 
+      objectReference: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
+    - target: {fileID: 0}
+      propertyPath: fillPercentage
+      value: 0.9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 146564}

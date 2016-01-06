@@ -31,26 +31,26 @@ public class PlayerController : MonoBehaviour
         {
             if (ver == 0.0f && hor != 0.0f)
                 rb.position = new Vector3(
-                    rb.position.x + hor * speed,
+                    rb.position.x + hor * speed * speedScalar,
                     AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
                     0.0f);
             else if (hor == 0.0f && ver != 0.0f)
                 rb.position = new Vector3(
                     AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
-                    rb.position.y + ver * speed,
+                    rb.position.y + ver * speed * speedScalar,
                     0.0f);
         }
         else
         {
             if (ver == 0.0f && hor != 0.0f)
                 rb.position = new Vector3(
-                    rb.position.x - hor * speed,
+                    rb.position.x - hor * speed * speedScalar,
                     AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
                     0.0f);
             else if (hor == 0.0f && ver != 0.0f)
                 rb.position = new Vector3(
                     AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
-                    rb.position.y - ver * speed,
+                    rb.position.y - ver * speed * speedScalar,
                     0.0f);
         }
             

@@ -55,7 +55,7 @@ MonoBehaviour:
   background: {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
   indestructible: {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
   destructible: {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
-  player: {fileID: 154668, guid: 94a713023dc5e48c6ae3ceb419756caa, type: 2}
+  player: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
   laserCross: {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
   laserHor: {fileID: 109734, guid: 9adbb3f820837b740b8d1225c2535b9e, type: 2}
   laserVert: {fileID: 151648, guid: 52720c29d63eff64b9bf7d9a3d35fdce, type: 2}
@@ -71,7 +71,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 146564}

@@ -17,11 +17,16 @@ struct BombCoords{
 	}
 }
 
-public class BoardManager : MonoBehaviour {
-
+public class BoardManager : MonoBehaviour
+{
     public GameObject background;
     public GameObject indestructible;
     public GameObject destructible;
+    public GameObject upgradeBomb;
+    public GameObject upgradeBombLine;
+    public GameObject upgradeKick;
+    public GameObject upgradeLaser;
+    public GameObject upgradeRadioactive;
     public GameObject player1;
     public GameObject player2;
     public GameObject player3;
@@ -38,10 +43,20 @@ public class BoardManager : MonoBehaviour {
     public int rows;                // 11
     public int columns;             // 13
     public float fillPercentage;    // 90
-    public Coor player1Spawn = new Coor(0, 10, null);     // 0,10
-    public Coor player2Spawn = new Coor(12, 0, null);     // 12,0
-    public Coor player3Spawn = new Coor(0, 0, null);     // 0,0
-    public Coor player4Spawn = new Coor(12, 10, null);     // 12,10
+    public Coor player1Spawn = new Coor(0, 10, null);   // 0,10
+    public Coor player2Spawn = new Coor(12, 0, null);   // 12,0
+    public Coor player3Spawn = new Coor(0, 0, null);    // 0,0
+    public Coor player4Spawn = new Coor(12, 10, null);  // 12,10
+
+    //TODO get actual values for these
+    public int minNumBombUpgrades;
+    public int maxNumBombUpgrades;
+    public int minNumLaserUpgrades;
+    public int maxNumLaserUpgrades;
+    public int minNumKickUpgrades;
+    public int maxNumKickUpgrades;
+    public int minNumLineUpgrades;
+    public int maxNumLineUpgrades;
 
     private Transform boardHolder;
 	private List<BombCoords> bombs = new List<BombCoords>();
@@ -79,8 +94,11 @@ public class BoardManager : MonoBehaviour {
         boardHolder = new GameObject("Board").transform;
         InitializeBoardDefault();
         InitializeDestructible();
-        //InitializeUpgrades();
-        InitializePlayers(2);
+        InitializePlayers(1);
+        InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
+        InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
+        InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
+        InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
     }
 
     void InitializePlayers(int numPlayers)
@@ -117,7 +135,7 @@ public class BoardManager : MonoBehaviour {
     }
     private void InitializeSpawn(Coor playerSpawn)
     {
-        destructibleCoords.Remove(playerSpawn);
+        Destroy(destructibleCoords.Remove(playerSpawn));
 
         if (!InitializeSpawnUp(playerSpawn))
             if (!InitializeSpawnRight(playerSpawn))
@@ -132,8 +150,8 @@ public class BoardManager : MonoBehaviour {
         if (indestructibleCoords.inList(PlayerSpawn.x, PlayerSpawn.y + 1))
             return false;
 
-        destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y + 1);
-        destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y + 2);
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y + 1));
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y + 2));
 
         return true;
     }
@@ -142,8 +160,8 @@ public class BoardManager : MonoBehaviour {
         if (indestructibleCoords.inList(PlayerSpawn.x, PlayerSpawn.y - 1))
             return false;
 
-        destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y - 1);
-        destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y - 2);
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y - 1));
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x, PlayerSpawn.y - 2));
 
         return true;
     }
@@ -152,8 +170,8 @@ public class BoardManager : MonoBehaviour {
         if (indestructibleCoords.inList(PlayerSpawn.x - 1, PlayerSpawn.y))
             return false;
 
-        destructibleCoords.Remove(PlayerSpawn.x - 1, PlayerSpawn.y);
-        destructibleCoords.Remove(PlayerSpawn.x - 2, PlayerSpawn.y);
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x - 1, PlayerSpawn.y));
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x - 2, PlayerSpawn.y));
 
         return true;
     }
@@ -162,15 +180,34 @@ public class BoardManager : MonoBehaviour {
         if (indestructibleCoords.inList(PlayerSpawn.x + 1, PlayerSpawn.y))
             return false;
 
-        destructibleCoords.Remove(PlayerSpawn.x + 1, PlayerSpawn.y);
-        destructibleCoords.Remove(PlayerSpawn.x + 2, PlayerSpawn.y);
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x + 1, PlayerSpawn.y));
+        Destroy(destructibleCoords.Remove(PlayerSpawn.x + 2, PlayerSpawn.y));
 
         return true;
     }
 
-    private void InitializeUpgrades()
+    private void InitializeUpgrades(int min, int max, GameObject upgrade)
     {
-        // TODO
+        for (int i = 0; i < max; i++)
+        {
+            int x = (int)UnityEngine.Random.Range(0.0f, columns);
+            int y = (int)UnityEngine.Random.Range(0.0f, rows);
+
+            if (destructibleCoords.inList(x, y) && !upgradeCoords.inList(x, y))
+            {
+                var upgradeClone = Instantiate(upgrade, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+                upgradeCoords.Add(x, y, upgradeClone);
+            }
+            else
+            {
+                i--;
+                continue;
+            }
+
+            //Stop randomly between the min and the max
+            if (i >= min && UnityEngine.Random.value <= (max - min) / 100)
+                break;
+        }
     }
 
     private void InitializeDestructible()
@@ -224,7 +261,7 @@ public class BoardManager : MonoBehaviour {
     {
         try
         {
-            bomb.GetComponent<BombController>().parentPlayer.GetComponent<PlayerController>().numBombs++;
+            bomb.GetComponent<BombController>().parentPlayer.GetComponent<PlayerController>().currNumBombs++;
         }
         catch (MissingReferenceException e) // If the player dies before the bomb explodes, then we do not need to give them another one
         { }
@@ -250,8 +287,12 @@ public class BoardManager : MonoBehaviour {
 			}
             else if(destructibleCoords.inList(x, y))
             {
-                destructibleCoords.Remove(x, y);
+                Destroy(destructibleCoords.Remove(x, y));
                 break;
+            }
+            else if(upgradeCoords.inList(x, y))
+            {
+                Destroy(upgradeCoords.Remove(x, y));
             }
 			if(i != p.radius)
 				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
@@ -278,8 +319,12 @@ public class BoardManager : MonoBehaviour {
 			}
             else if (destructibleCoords.inList(x, y))
             {
-                destructibleCoords.Remove(x, y);
+                Destroy(destructibleCoords.Remove(x, y));
                 break;
+            }
+            else if (upgradeCoords.inList(x, y))
+            {
+                Destroy(upgradeCoords.Remove(x, y));
             }
             if (i != p.radius)
 				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
@@ -306,8 +351,12 @@ public class BoardManager : MonoBehaviour {
 			}
             else if (destructibleCoords.inList(x, y))
             {
-                destructibleCoords.Remove(x, y);
+                Destroy(destructibleCoords.Remove(x, y));
                 break;
+            }
+            else if (upgradeCoords.inList(x, y))
+            {
+                Destroy(upgradeCoords.Remove(x, y));
             }
             if (i != p.radius)
 				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
@@ -334,8 +383,12 @@ public class BoardManager : MonoBehaviour {
 			}
             else if (destructibleCoords.inList(x, y))
             {
-                destructibleCoords.Remove(x, y);
+                Destroy(destructibleCoords.Remove(x, y));
                 break;
+            }
+            else if (upgradeCoords.inList(x, y))
+            {
+                Destroy(upgradeCoords.Remove(x, y));
             }
             if (i != p.radius)
 				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;

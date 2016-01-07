@@ -6,7 +6,19 @@ public class PlayerController : MonoBehaviour
     public float speedScalar;
     public int bombKick;
     public int bombLine;
-    public int numBombs;
+    public int currNumBombs;
+
+    private int _maxNumBombs;
+    public int maxNumBombs
+    {
+        get { return _maxNumBombs; }
+        set
+        {
+            Debug.Log(value);
+            _maxNumBombs = value;
+            currNumBombs++;
+        }
+    }
     public BombParams bombParams = new BombParams();
     public bool canLayBombs = true;
     public bool alwaysLayBombs = false;
@@ -20,6 +32,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         transform = GetComponent<Transform>();
+        _maxNumBombs = currNumBombs;
     }
 
 	void Update ()
@@ -59,12 +72,12 @@ public class PlayerController : MonoBehaviour
         if ((Input.GetKeyDown("space") && canLayBombs) || alwaysLayBombs)
         {
             if (bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)transform.position.x, (int)transform.position.y))
-                GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().LineBomb((int)transform.position.x, (int)transform.position.y, gameObject.GetComponent<PlayerAnimationDriver>().GetDirection(), numBombs);
+                GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().LineBomb((int)transform.position.x, (int)transform.position.y, gameObject.GetComponent<PlayerAnimationDriver>().GetDirection(), currNumBombs);
             else
             {
-                if (numBombs <= 0)
+                if (currNumBombs <= 0)
                     return;
-                numBombs--;
+                currNumBombs--;
 
                 GameObject bomb = Instantiate(
                 bombObject,
@@ -83,8 +96,11 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "PowerUp")
-            HandlePowerUpCollision(other);
+        if (other.gameObject.tag == "Upgrade")
+        {
+            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeType>().type).ApplyEffect(gameObject);
+            Destroy(other.gameObject);
+        }
         else if (other.gameObject.tag == "Laser")
         {
             //TODO add destruction animation support
@@ -96,10 +112,5 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.tag == "Bomb")
             other.isTrigger = false;
-    }
-
-    private void HandlePowerUpCollision(Collider2D other)
-    {
-        // Do nothing
     }
 }

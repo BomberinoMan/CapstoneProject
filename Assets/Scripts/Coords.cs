@@ -23,7 +23,7 @@ public class Coords {
         coords.Add(new Coor(x, y, gameObject));
     }
 
-    public void Remove(int x, int y)
+    public GameObject Remove(int x, int y)
     {
         Coor itemToRemove = new Coor();
         bool remove = false;
@@ -35,11 +35,11 @@ public class Coords {
                 remove = true;
             }
 
-        if (remove)
-            RemoveItem(itemToRemove);
+        coords.Remove(itemToRemove);
+        return itemToRemove.gameObject;
     }
 
-    public void Remove(Coor givenCoords)
+    public GameObject Remove(Coor givenCoords)
     {
         Coor itemToRemove = new Coor();
         bool remove = false;
@@ -51,8 +51,8 @@ public class Coords {
                 remove = true;
             }
 
-        if (remove)
-            RemoveItem(itemToRemove);
+        coords.Remove(itemToRemove);
+        return itemToRemove.gameObject;
     }
 
     public bool inList(int x, int y)
@@ -69,12 +69,6 @@ public class Coords {
             if (coor.x == givenCoords.x && coor.y == givenCoords.y)
                 return true;
         return false;
-    }
-
-    private void RemoveItem(Coor coor)
-    {
-        coords.Remove(coor);
-        Object.Destroy(coor.gameObject.gameObject);
     }
 }
    

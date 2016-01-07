@@ -124,7 +124,7 @@ MonoBehaviour:
   speedScalar: 1
   bombKick: 0
   bombLine: 0
-  numBombs: 3
+  currNumBombs: 1
   canLayBombs: 1
   alwaysLayBombs: 0
   reverseMovement: 0
@@ -191,6 +191,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: currNumBombs
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

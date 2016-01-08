@@ -47,6 +47,7 @@ GameObject:
   - 61: {fileID: 6130554}
   - 114: {fileID: 11419134}
   - 61: {fileID: 6168038}
+  - 50: {fileID: 5078674}
   m_Layer: 12
   m_Name: Bomb
   m_TagString: Bomb
@@ -123,6 +124,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 416978}
   m_RootOrder: 0
+--- !u!50 &5078674
+Rigidbody2D:
+  serializedVersion: 2
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163012}
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 3
 --- !u!61 &6130554
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -135,7 +152,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: .949999988, y: .949999988}
 --- !u!61 &6168038
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -148,7 +165,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: .949999988, y: .949999988}
 --- !u!61 &6187544
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -161,7 +178,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .5, y: .5}
+  m_Size: {x: .0599999987, y: .0599999987}
 --- !u!61 &6189900
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -174,7 +191,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .5, y: .5}
+  m_Size: {x: .0599999987, y: .0599999987}
 --- !u!95 &9540324
 Animator:
   serializedVersion: 3
@@ -231,6 +248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4b6a5e2eb0b4934b638e5437da8243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: .119999997
+  speedScalar: 1
   parentPlayer: {fileID: 0}
 --- !u!114 &11452880
 MonoBehaviour:
@@ -320,11 +339,11 @@ Prefab:
       objectReference: {fileID: 6200000, guid: c57f5dde5adba7f4b94d460b62ce8581, type: 2}
     - target: {fileID: 0}
       propertyPath: m_Size.x
-      value: 1
+      value: .949999988
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Size.y
-      value: 1
+      value: .949999988
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_IsTrigger
@@ -341,6 +360,30 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_TagString
       value: Finish
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: speedScalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: speed
+      value: .119999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Constraints
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

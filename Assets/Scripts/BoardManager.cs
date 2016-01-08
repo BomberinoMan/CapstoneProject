@@ -2,21 +2,6 @@
 using System.Collections.Generic;
 using System;
 
-struct BombCoords{
-	public GameObject bomb;
-	public int x;
-	public int y;
-	public BombParams p;
-
-	public BombCoords(GameObject bomb, int x, int y, BombParams p)
-	{
-		this.bomb = bomb;
-		this.x = x;
-		this.y = y;
-		this.p = p;
-	}
-}
-
 public class BoardManager : MonoBehaviour
 {
     public GameObject background;
@@ -64,7 +49,7 @@ public class BoardManager : MonoBehaviour
 	private GameObject player4Instance;
 
     private Transform boardHolder;
-	private List<BombCoords> bombs = new List<BombCoords>();
+	private List<GameObject> bombs = new List<GameObject>();
     private Coords indestructibleCoords = new Coords();
     private Coords destructibleCoords = new Coords();
     private Coords upgradeCoords = new Coords();
@@ -229,25 +214,25 @@ public class BoardManager : MonoBehaviour
             }
     }
 
-    public void AddBomb(GameObject bomb, int x, int y, BombParams p)
+    public void AddBomb(GameObject bomb)
 	{
-		bombs.Add (new BombCoords (bomb, x, y, p));
+		bombs.Add (bomb);
 	}
 	private BombParams RemoveBomb(int x, int y)
 	{
-		foreach (BombCoords bomb in bombs)
-			if (bomb.x == x && bomb.y == y) {
-				bomb.bomb.GetComponent<BombController>().Explode(false); // Give the player another bomb
-                Destroy (bomb.bomb); 	// Destroy bomb game oject
+		foreach (GameObject bomb in bombs)
+			if (AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y) {
+				bomb.GetComponent<BombController>().Explode(false); // Give the player another bomb
+                Destroy (bomb); 	// Destroy bomb game oject
 				bombs.Remove (bomb);	// Remove from list
-				return bomb.p;
+				return bomb.GetComponent<BombController>().paramaters;
 			}
         return new BombParams();
 	}
 	public bool OnBomb(int x, int y)
 	{
-		foreach (BombCoords bomb in bombs)
-			if (bomb.x == x && bomb.y == y)
+		foreach (GameObject bomb in bombs)
+			if (AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
 				return true;
 		return false;
 	}
@@ -265,13 +250,13 @@ public class BoardManager : MonoBehaviour
 
 	public bool OnPlayer (int x, int y)
 	{
-		if (player1Instance != null && (int)AxisRounder.Round(0.49f, 0.51f, player1Instance.transform.position.x) == x && (int)AxisRounder.Round(0.49f, 0.51f, player1Instance.transform.position.y) == y)
+		if (player1Instance != null && (int)AxisRounder.Round(player1Instance.transform.position.x) == x && (int)AxisRounder.Round(player1Instance.transform.position.y) == y)
 			return true;
-		if (player2Instance != null && (int)AxisRounder.Round(0.49f, 0.51f, player2Instance.transform.position.x) == x && (int)AxisRounder.Round(0.49f, 0.51f, player2Instance.transform.position.y) == y)
+		if (player2Instance != null && (int)AxisRounder.Round(player2Instance.transform.position.x) == x && (int)AxisRounder.Round(player2Instance.transform.position.y) == y)
 			return true;
-		if (player3Instance != null && (int)AxisRounder.Round(0.49f, 0.51f, player3Instance.transform.position.x) == x && (int)AxisRounder.Round(0.49f, 0.51f, player3Instance.transform.position.y) == y)
+		if (player3Instance != null && (int)AxisRounder.Round(player3Instance.transform.position.x) == x && (int)AxisRounder.Round(player3Instance.transform.position.y) == y)
 			return true;
-		if (player4Instance != null && (int)AxisRounder.Round(0.49f, 0.51f, player4Instance.transform.position.x) == x && (int)AxisRounder.Round(0.49f, 0.51f, player4Instance.transform.position.y) == y)
+		if (player4Instance != null && (int)AxisRounder.Round(player4Instance.transform.position.x) == x && (int)AxisRounder.Round(player4Instance.transform.position.y) == y)
 			return true;
 		return false;
 	}
@@ -303,6 +288,7 @@ public class BoardManager : MonoBehaviour
 
 		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
+		bombs.Add (bomb);
 
 		LineBombUp (x, y + 1, numBombs - 1, player);
 	}
@@ -313,6 +299,7 @@ public class BoardManager : MonoBehaviour
 		Debug.Log (numBombs);
 		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
+		bombs.Add (bomb);
 		
 		LineBombDown (x, y - 1, numBombs - 1, player);
 	}
@@ -323,6 +310,7 @@ public class BoardManager : MonoBehaviour
 		
 		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
+		bombs.Add (bomb);
 		
 		LineBombLeft (x - 1, y, numBombs - 1, player);
 	}
@@ -333,6 +321,7 @@ public class BoardManager : MonoBehaviour
 		
 		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
+		bombs.Add (bomb);
 		
 		LineBombRight (x + 1, y, numBombs - 1, player);
 	}

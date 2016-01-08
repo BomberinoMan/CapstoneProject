@@ -12,7 +12,7 @@ public class BombController : MonoBehaviour
 	private bool isMoving = false;
 	private string direction = "";
 	private Rigidbody2D rb;
-
+	private int count = 0;
 	void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
@@ -26,15 +26,16 @@ public class BombController : MonoBehaviour
 		}
 
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
-			.AddBomb (gameObject, (int)gameObject.transform.position.x, (int)gameObject.transform.position.y, paramaters);
+			.AddBomb (gameObject);
 
 		parentPlayer.GetComponent<PlayerController>().currNumBombs--;
-		GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+		//GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
 	}
 
 	void Update()
 	{
 		if (isMoving) {
+			return;
 			rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
 			switch(direction)
 			{
@@ -88,7 +89,7 @@ public class BombController : MonoBehaviour
 		catch (MissingReferenceException e) // If the player dies before the bomb explodes, then we do not need to give them another one
 		{ }
 	}
-
+	/*
 	void OnTriggerExit2D(Collider2D collisionInfo)
 	{
 		if (collisionInfo.gameObject.Equals (parentPlayer))
@@ -121,9 +122,13 @@ public class BombController : MonoBehaviour
 
 	private void StopMovement()
 	{
+		count++;
+		if (count < 100)
+			Debug.Log (rb.position);
 		isMoving = false;
 		direction = "";
 
-		rb.position = new Vector3 (AxisRounder.Round (0.49f, 0.51f, rb.position.x), AxisRounder.Round (0.49f, 0.51f, rb.position.y), 0.0f);
+		//rb.position = new Vector3 (AxisRounder.Round (0.49f, 0.51f, rb.position.x), AxisRounder.Round (0.49f, 0.51f, rb.position.y), 0.0f);
 	}
+*/
 }

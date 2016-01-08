@@ -66,30 +66,25 @@ public class PlayerController : MonoBehaviour
                     rb.position.y - ver * speed * speedScalar,
                     0.0f);
         }
-            
-
 
         if ((Input.GetKeyDown("space") && canLayBombs) || alwaysLayBombs)
         {
-            if (bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)transform.position.x, (int)transform.position.y))
-                GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().LineBomb((int)transform.position.x, (int)transform.position.y, gameObject.GetComponent<PlayerAnimationDriver>().GetDirection(), currNumBombs);
+			if (bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(0.49f, 0.51f, transform.position.x), (int)AxisRounder.Round(0.49f, 0.51f, transform.position.y)))
+				GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().LineBomb((int)AxisRounder.Round(0.49f, 0.51f, transform.position.x), (int)AxisRounder.Round(0.49f, 0.51f, transform.position.y), gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), currNumBombs, gameObject);
             else
             {
                 if (currNumBombs <= 0)
                     return;
-                currNumBombs--;
 
                 GameObject bomb = Instantiate(
-                bombObject,
-                new Vector3(
-                    AxisRounder.Round(0.49f, 0.51f, transform.position.x),
-                    AxisRounder.Round(0.49f, 0.51f, transform.position.y),
-                    0.0f),
-                Quaternion.identity)
-                as GameObject;
-                bomb.GetComponent<BombController>().paramaters = bombParams;
-                bomb.GetComponent<BombController>().parentPlayer = gameObject;
-                bomb.transform.SetParent(gameObject.transform.parent);
+	                bombObject,
+	                new Vector3(
+	                    AxisRounder.Round(0.49f, 0.51f, transform.position.x),
+	                    AxisRounder.Round(0.49f, 0.51f, transform.position.y),
+	                    0.0f),
+	                Quaternion.identity)
+	                as GameObject;
+				BombManager.SetupBomb(gameObject, bomb);
             }
         }
     }
@@ -106,11 +101,5 @@ public class PlayerController : MonoBehaviour
             //TODO add destruction animation support
             Destroy(gameObject);
         }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Bomb")
-            other.isTrigger = false;
     }
 }

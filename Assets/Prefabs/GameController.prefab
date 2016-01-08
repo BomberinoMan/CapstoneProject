@@ -73,7 +73,7 @@ MonoBehaviour:
   laserRight: {fileID: 180182, guid: d7b28480e3c91a04b9b4222f3e842b44, type: 2}
   rows: 11
   columns: 13
-  fillPercentage: 0.9
+  fillPercentage: .899999976
   minNumBombUpgrades: 10
   maxNumBombUpgrades: 15
   minNumLaserUpgrades: 15

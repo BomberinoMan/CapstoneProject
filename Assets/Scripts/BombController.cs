@@ -29,13 +29,12 @@ public class BombController : MonoBehaviour
 			.AddBomb (gameObject);
 
 		parentPlayer.GetComponent<PlayerController>().currNumBombs--;
-		//GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+		GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
 	}
 
 	void Update()
 	{
 		if (isMoving) {
-			return;
 			rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
 			switch(direction)
 			{
@@ -86,10 +85,13 @@ public class BombController : MonoBehaviour
 				parentPlayer.GetComponent<PlayerController>().currNumBombs++;
 			hasExploded = true;
 		}
-		catch (MissingReferenceException e) // If the player dies before the bomb explodes, then we do not need to give them another one
-		{ }
+
+#pragma warning disable CS0168 // Variable is declared but never used
+        catch (MissingReferenceException e) // If the player dies before the bomb explodes, then we do not need to give them another one
+#pragma warning restore CS0168 // Variable is declared but never used
+        { }
 	}
-	/*
+	
 	void OnTriggerExit2D(Collider2D collisionInfo)
 	{
 		if (collisionInfo.gameObject.Equals (parentPlayer))
@@ -107,6 +109,10 @@ public class BombController : MonoBehaviour
 		else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb") {
 			StopMovement();
 		}
+        else if(collisionInfo.gameObject.tag == "Upgrade")
+        {
+            Destroy(collisionInfo.gameObject);
+        }
 
 		//TODO need to destroy upgrades that we go over
 	}
@@ -128,7 +134,6 @@ public class BombController : MonoBehaviour
 		isMoving = false;
 		direction = "";
 
-		//rb.position = new Vector3 (AxisRounder.Round (0.49f, 0.51f, rb.position.x), AxisRounder.Round (0.49f, 0.51f, rb.position.y), 0.0f);
+		rb.position = new Vector3 (AxisRounder.Round (0.49f, 0.51f, rb.position.x), AxisRounder.Round (0.49f, 0.51f, rb.position.y), 0.0f);
 	}
-*/
 }

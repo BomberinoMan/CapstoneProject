@@ -26,14 +26,10 @@ public class Coords {
     public GameObject Remove(int x, int y)
     {
         Coor itemToRemove = new Coor();
-        bool remove = false;
 
         foreach (Coor coor in coords)
             if (coor.x == x && coor.y == y)
-            {
                 itemToRemove = coor;
-                remove = true;
-            }
 
         coords.Remove(itemToRemove);
         return itemToRemove.gameObject;
@@ -42,13 +38,11 @@ public class Coords {
     public GameObject Remove(Coor givenCoords)
     {
         Coor itemToRemove = new Coor();
-        bool remove = false;
 
         foreach (Coor coor in coords)
             if (coor.x == givenCoords.x && coor.y == givenCoords.y)
             {
                 itemToRemove = coor;
-                remove = true;
             }
 
         coords.Remove(itemToRemove);

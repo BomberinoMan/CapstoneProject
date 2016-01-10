@@ -26,7 +26,9 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bombObject;
     private Rigidbody2D rb;
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
     private Transform transform;
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 
     void Start()
     {

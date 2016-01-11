@@ -12,14 +12,15 @@ public class BombController : MonoBehaviour
 	private bool isMoving = false;
 	private string direction = "";
 	private Rigidbody2D rb;
-	private int count = 0;
+
 	void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
 
+			// Ignor collisions with player that planted the bomb
 		if (GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnPlayer ((int)gameObject.transform.position.x, (int)gameObject.transform.position.y)) {
 			Physics2D.IgnoreCollision (gameObject.GetComponent<Collider2D> (), parentPlayer.gameObject.GetComponent<Collider2D> ());
-			foreach(Collider2D collider in gameObject.GetComponentsInChildren<Collider2D> ())
+			foreach(Collider2D collider in gameObject.GetComponentsInChildren<Collider2D> ())	// Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
 				if(collider.gameObject.GetInstanceID() != GetInstanceID() && !collider.isTrigger)
 					Physics2D.IgnoreCollision (collider, parentPlayer.gameObject.GetComponent<Collider2D> ());
 			gameObject.GetComponentInChildren<BombCollisionController> ().parentPlayer = parentPlayer;
@@ -41,14 +42,14 @@ public class BombController : MonoBehaviour
 				case ("Up"):
 					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX;
 					rb.position = new Vector3(
-						AxisRounder.Round(0.49f, 0.51f, rb.position.x),
+						AxisRounder.Round(rb.position.x),
 						rb.position.y + 1 * speed * speedScalar,
 						0.0f);
 					break;
 				case ("Down"):
 					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX;
 					rb.position = new Vector3(
-						AxisRounder.Round(0.49f, 0.51f, rb.position.x),
+						AxisRounder.Round(rb.position.x),
 						rb.position.y - 1 * speed * speedScalar,
 						0.0f);
 					break;
@@ -56,14 +57,14 @@ public class BombController : MonoBehaviour
 					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionY;
 					rb.position = new Vector3(
 						rb.position.x - 1 * speed * speedScalar,
-						AxisRounder.Round(0.49f, 0.51f, rb.position.y),
+						AxisRounder.Round(rb.position.y),
 						0.0f);
 					break;
 				case ("Right"):
 					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionY;
 					rb.position = new Vector3(
 						rb.position.x + 1 * speed * speedScalar,
-						AxisRounder.Round(0.49f, 0.51f, rb.position.y),
+						AxisRounder.Round(rb.position.y),
 						0.0f);
 					break;
 				default:
@@ -113,8 +114,6 @@ public class BombController : MonoBehaviour
         {
             Destroy(collisionInfo.gameObject);
         }
-
-		//TODO need to destroy upgrades that we go over
 	}
 
 	void OnTriggerStay2D(Collider2D collisionInfo)
@@ -122,18 +121,13 @@ public class BombController : MonoBehaviour
 		if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb") {
 			StopMovement();
 		}
-		
-		//TODO need to destroy upgrades that we go over
 	}
 
 	private void StopMovement()
 	{
-		count++;
-		if (count < 100)
-			Debug.Log (rb.position);
 		isMoving = false;
 		direction = "";
 
-		rb.position = new Vector3 (AxisRounder.Round (0.49f, 0.51f, rb.position.x), AxisRounder.Round (0.49f, 0.51f, rb.position.y), 0.0f);
+		rb.position = new Vector3 (AxisRounder.Round (rb.position.x), AxisRounder.Round (rb.position.y), 0.0f);
 	}
 }

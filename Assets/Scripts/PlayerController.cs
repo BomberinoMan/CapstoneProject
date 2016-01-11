@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPlayerController
 {
-    public float speed;
-    public float speedScalar;
-    public int bombKick;
-    public int bombLine;
-    public int currNumBombs;
+	public float speed { get; set; }
+	public float speedScalar { get; set; }
+	public int bombKick { get; set; }
+	public int bombLine { get; set; }
+	public int currNumBombs { get; set; }
 
     private int _maxNumBombs;
     public int maxNumBombs
@@ -14,15 +14,15 @@ public class PlayerController : MonoBehaviour
         get { return _maxNumBombs; }
         set
         {
-            Debug.Log(value);
             _maxNumBombs = value;
             currNumBombs++;
         }
     }
-    public BombParams bombParams = new BombParams();
-    public bool canLayBombs = true;
-    public bool alwaysLayBombs = false;
-    public bool reverseMovement = false;
+	public BombParams bombParams { get; set; }
+	public bool canLayBombs { get; set; }
+	public bool alwaysLayBombs { get; set; }
+	public bool reverseMovement { get; set; }
+	public bool isRadioactive { get; set; }
 
     public GameObject bombObject;
     private Rigidbody2D rb;
@@ -32,9 +32,20 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+		speed = 0.06f;
+		speedScalar = 1.0f;
+		bombKick = 0;
+		bombLine = 0;
+		currNumBombs = 1;
+		_maxNumBombs = currNumBombs;
+		bombParams = new BombParams();
+		canLayBombs = true;
+		alwaysLayBombs = false;
+		reverseMovement = false;
+		isRadioactive = false;
+
         rb = GetComponent<Rigidbody2D>();
         transform = GetComponent<Transform>();
-        _maxNumBombs = currNumBombs;
     }
 
 	void Update ()
@@ -71,8 +82,15 @@ public class PlayerController : MonoBehaviour
 
         if ((Input.GetKeyDown("space") && canLayBombs) || alwaysLayBombs)
         {
-			if (bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(0.49f, 0.51f, transform.position.x), (int)AxisRounder.Round(0.49f, 0.51f, transform.position.y)))
-				GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().LineBomb((int)AxisRounder.Round(0.49f, 0.51f, transform.position.x), (int)AxisRounder.Round(0.49f, 0.51f, transform.position.y), gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), currNumBombs, gameObject);
+			if (bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(transform.position.x), (int)AxisRounder.Round(transform.position.y)))
+				GameObject.FindGameObjectWithTag("GameController")
+					.GetComponent<BoardManager>()
+						.LineBomb(
+							(int)AxisRounder.Round(transform.position.x), 
+							(int)AxisRounder.Round(transform.position.y), 
+							gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), 
+							currNumBombs, 
+							gameObject);
             else
             {
                 if (currNumBombs <= 0)
@@ -81,8 +99,8 @@ public class PlayerController : MonoBehaviour
                 GameObject bomb = Instantiate(
 	                bombObject,
 	                new Vector3(
-	                    AxisRounder.Round(0.49f, 0.51f, transform.position.x),
-	                    AxisRounder.Round(0.49f, 0.51f, transform.position.y),
+	                    AxisRounder.Round(transform.position.x),
+	                    AxisRounder.Round(transform.position.y),
 	                    0.0f),
 	                Quaternion.identity)
 	                as GameObject;
@@ -100,8 +118,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.gameObject.tag == "Laser")
         {
+			GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().Reassign ();
             //TODO add destruction animation support
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }

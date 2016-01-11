@@ -12,10 +12,8 @@ public class BoardManager : MonoBehaviour
     public GameObject upgradeKick;
     public GameObject upgradeLaser;
     public GameObject upgradeRadioactive;
-    public GameObject player1;
-    public GameObject player2;
-    public GameObject player3;
-    public GameObject player4;
+
+	public GameObject[] playerPrefab;
 
     public GameObject laserCross;
 	public GameObject laserHor;
@@ -28,10 +26,12 @@ public class BoardManager : MonoBehaviour
     public int rows;                // 11
     public int columns;             // 13
     public float fillPercentage;    // 90
-    public Coor player1Spawn = new Coor(0, 10, null);   // 0,10
-    public Coor player2Spawn = new Coor(12, 0, null);   // 12,0
-    public Coor player3Spawn = new Coor(0, 0, null);    // 0,0
-    public Coor player4Spawn = new Coor(12, 10, null);  // 12,10
+	public Coor[] playerSpawn = new Coor[4]
+		{	new Coor(0, 10, null), 
+			new Coor(12, 0, null), 
+			new Coor(12, 0, null), 
+			new Coor(12, 10, null)
+		};
 
     //TODO get actual values for these
     public int minNumBombUpgrades;
@@ -43,16 +43,21 @@ public class BoardManager : MonoBehaviour
     public int minNumLineUpgrades;
     public int maxNumLineUpgrades;
 
-	private GameObject player1Instance;
-	private GameObject player2Instance;
-	private GameObject player3Instance;
-	private GameObject player4Instance;
+	private GameObject[] playerInstance = new GameObject[4];
 
     private Transform boardHolder;
 	private List<GameObject> bombs = new List<GameObject>();
     private Coords indestructibleCoords = new Coords();
     private Coords destructibleCoords = new Coords();
     private Coords upgradeCoords = new Coords();
+
+	public void Reassign()//IPlayerController playerController)
+	{
+		IPlayerController temp = playerInstance[0].GetComponent<IPlayerController> ();
+		temp =  new FastMovementDecorator (temp);
+		Destroy (playerInstance [0].gameObject.GetComponent<PlayerController> ());
+		playerInstance [0].AddComponent<FastMovementDecorator> ();
+	}
 
     void InitializeBoardDefault()
     {
@@ -93,35 +98,11 @@ public class BoardManager : MonoBehaviour
 
     void InitializePlayers(int numPlayers)
     {
-        switch(numPlayers)
-        {
-            case 4:
-                player4Instance = Instantiate(player4, new Vector3(player4Spawn.x, player4Spawn.y, 0.0f), Quaternion.identity) as GameObject;
-                InitializeSpawn(player4Spawn);
-
-                player4Instance.transform.SetParent(boardHolder);
-                goto case 3;
-            case 3:
-                player3Instance = Instantiate(player3, new Vector3(player3Spawn.x, player3Spawn.y, 0.0f), Quaternion.identity) as GameObject;
-                InitializeSpawn(player3Spawn);
-
-                player3Instance.transform.SetParent(boardHolder);
-                goto case 2;
-            case 2:
-                player2Instance = Instantiate(player2, new Vector3(player2Spawn.x, player2Spawn.y, 0.0f), Quaternion.identity) as GameObject;
-                InitializeSpawn(player2Spawn);
-
-                player2Instance.transform.SetParent(boardHolder);
-                goto case 1;
-            case 1:
-                player1Instance = Instantiate(player1, new Vector3(player1Spawn.x, player1Spawn.y, 0.0f), Quaternion.identity) as GameObject;
-                InitializeSpawn(player1Spawn);
-
-                player1Instance.transform.SetParent(boardHolder);
-                break;
-            default:
-                break;
-        }
+		for (int i = 0; i < numPlayers; i++) {
+			playerInstance [i] = Instantiate (playerPrefab [i], new Vector3 (playerSpawn [i].x, playerSpawn [i].y, 0.0f), Quaternion.identity) as GameObject;
+			InitializeSpawn (playerSpawn [i]);
+			playerInstance [i].transform.SetParent (boardHolder);
+		}
     }
     private void InitializeSpawn(Coor playerSpawn)
     {
@@ -250,14 +231,10 @@ public class BoardManager : MonoBehaviour
 
 	public bool OnPlayer (int x, int y)
 	{
-		if (player1Instance != null && (int)AxisRounder.Round(player1Instance.transform.position.x) == x && (int)AxisRounder.Round(player1Instance.transform.position.y) == y)
-			return true;
-		if (player2Instance != null && (int)AxisRounder.Round(player2Instance.transform.position.x) == x && (int)AxisRounder.Round(player2Instance.transform.position.y) == y)
-			return true;
-		if (player3Instance != null && (int)AxisRounder.Round(player3Instance.transform.position.x) == x && (int)AxisRounder.Round(player3Instance.transform.position.y) == y)
-			return true;
-		if (player4Instance != null && (int)AxisRounder.Round(player4Instance.transform.position.x) == x && (int)AxisRounder.Round(player4Instance.transform.position.y) == y)
-			return true;
+		foreach (GameObject player in playerInstance) {
+			if (player != null && AxisRounder.Round (player.transform.position.x) == x && AxisRounder.Round (player.transform.position.y) == y)
+				return true;
+		}
 		return false;
 	}
 

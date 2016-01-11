@@ -60,10 +60,11 @@ MonoBehaviour:
   upgradeKick: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}
   upgradeLaser: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
   upgradeRadioactive: {fileID: 111694, guid: 9920a51739a4ac848af1b142346cdda2, type: 2}
-  player1: {fileID: 111466, guid: 6a29d5fff6a3ce94c8de37d17726647a, type: 2}
-  player2: {fileID: 191922, guid: 6e0f72671a84f6f44b93c90683b0c3f7, type: 2}
-  player3: {fileID: 162892, guid: fd431ab7f481ba34ab0f571c859582fd, type: 2}
-  player4: {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
+  playerPrefab:
+  - {fileID: 111466, guid: 6a29d5fff6a3ce94c8de37d17726647a, type: 2}
+  - {fileID: 191922, guid: 6e0f72671a84f6f44b93c90683b0c3f7, type: 2}
+  - {fileID: 162892, guid: fd431ab7f481ba34ab0f571c859582fd, type: 2}
+  - {fileID: 182036, guid: 1b26708a9527b8a4aaf7a4a87c346d12, type: 2}
   laserCross: {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
   laserHor: {fileID: 109734, guid: 9adbb3f820837b740b8d1225c2535b9e, type: 2}
   laserVert: {fileID: 151648, guid: 52720c29d63eff64b9bf7d9a3d35fdce, type: 2}
@@ -73,7 +74,7 @@ MonoBehaviour:
   laserRight: {fileID: 180182, guid: d7b28480e3c91a04b9b4222f3e842b44, type: 2}
   rows: 11
   columns: 13
-  fillPercentage: .899999976
+  fillPercentage: 0.9
   minNumBombUpgrades: 10
   maxNumBombUpgrades: 15
   minNumLaserUpgrades: 15
@@ -89,6 +90,14 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: player.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: playerPrefab.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: player
       value: 

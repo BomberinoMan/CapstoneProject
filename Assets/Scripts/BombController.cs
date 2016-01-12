@@ -98,7 +98,7 @@ public class BombController : MonoBehaviour
 		if (collisionInfo.gameObject.Equals (parentPlayer))
 			Physics2D.IgnoreCollision (gameObject.GetComponent<Collider2D> (), collisionInfo.gameObject.GetComponent<Collider2D> (), false);
 	}
-
+    //TODO Add collision detection for lasers
 	void OnTriggerEnter2D(Collider2D collisionInfo)
 	{
 		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerController> ().bombKick > 0) {

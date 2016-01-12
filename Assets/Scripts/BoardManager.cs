@@ -51,14 +51,6 @@ public class BoardManager : MonoBehaviour
     private Coords destructibleCoords = new Coords();
     private Coords upgradeCoords = new Coords();
 
-	public void Reassign()//IPlayerController playerController)
-	{
-		IPlayerController temp = playerInstance[0].GetComponent<IPlayerController> ();
-		temp =  new FastMovementDecorator (temp);
-		Destroy (playerInstance [0].gameObject.GetComponent<PlayerController> ());
-		playerInstance [0].AddComponent<FastMovementDecorator> ();
-	}
-
     void InitializeBoardDefault()
     {
         for (int x = -1; x <= columns; x++)

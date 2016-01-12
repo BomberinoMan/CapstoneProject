@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         }
         else if (other.gameObject.tag == "Laser")
         {
-			GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().Reassign ();
+			//GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().Reassign ();
             //TODO add destruction animation support
             //Destroy(gameObject);
         }

@@ -10,7 +10,7 @@ public class BombController : MonoBehaviour
 	private bool hasExploded = false;
 
 	private bool isMoving = false;
-	private string direction = "";
+	private Vector3 direction = new Vector3();
 	private Rigidbody2D rb;
 
 	void Start()
@@ -19,11 +19,13 @@ public class BombController : MonoBehaviour
 
 			// Ignor collisions with player that planted the bomb
 		if (GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnPlayer ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y))) {
-			Physics2D.IgnoreCollision (gameObject.GetComponent<Collider2D> (), parentPlayer.gameObject.GetComponent<Collider2D> ());
-			foreach(Collider2D collider in gameObject.GetComponentsInChildren<Collider2D> ())	// Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
-				if(collider.gameObject.GetInstanceID() != GetInstanceID() && !collider.isTrigger)
+			foreach (Collider2D collider in gameObject.GetComponentsInChildren<Collider2D> ())	// Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
+				if (!collider.isTrigger)
 					Physics2D.IgnoreCollision (collider, parentPlayer.gameObject.GetComponent<Collider2D> ());
-			gameObject.GetComponentInChildren<BombCollisionController> ().parentPlayer = parentPlayer;
+				
+				// set parentPlayer in all child sub colliders
+			foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController> ())
+				collisionController.parentPlayer = parentPlayer;
 		}
 
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
@@ -37,41 +39,20 @@ public class BombController : MonoBehaviour
 	{
 		if (isMoving) {
 			rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-			switch(direction)
-			{
-				case ("Up"):
-					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX;
-					rb.position = new Vector3(
-						AxisRounder.Round(rb.position.x),
-						rb.position.y + 1 * speed * speedScalar,
-						0.0f);
-					break;
-				case ("Down"):
-					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX;
-					rb.position = new Vector3(
-						AxisRounder.Round(rb.position.x),
-						rb.position.y - 1 * speed * speedScalar,
-						0.0f);
-					break;
-				case ("Left"):
-					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionY;
-					rb.position = new Vector3(
-						rb.position.x - 1 * speed * speedScalar,
-						AxisRounder.Round(rb.position.y),
-						0.0f);
-					break;
-				case ("Right"):
-					rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionY;
-					rb.position = new Vector3(
-						rb.position.x + 1 * speed * speedScalar,
-						AxisRounder.Round(rb.position.y),
-						0.0f);
-					break;
-				default:
-					break;
+			if ((int)direction.x != 0) {
+				rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionY;
+				rb.position = new Vector3 (
+					rb.position.x + direction.x * speed * speedScalar,
+					AxisRounder.Round (rb.position.y),
+					0.0f);
+			} else if ((int)direction.y != 0) {
+				rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX;
+				rb.position = new Vector3 (
+					AxisRounder.Round (rb.position.x),
+					rb.position.y + direction.y * speed * speedScalar,
+					0.0f);
 			}
 		}
-
 	}
 
 	public void Explode(bool notifyBoard = true)
@@ -81,8 +62,7 @@ public class BombController : MonoBehaviour
 			GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
 				.ExplodeBomb ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y));
 
-		try
-		{
+		try {
 			if(!hasExploded)
 				parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
 			hasExploded = true;
@@ -92,28 +72,25 @@ public class BombController : MonoBehaviour
 		catch (MissingReferenceException e) { } // If the player dies before the bomb explodes, then we do not need to give them another one
 		#pragma warning restore CS0168 // Variable is declared but never used
 	}
-	
-	void OnTriggerExit2D(Collider2D collisionInfo)
-	{
-		if (collisionInfo.gameObject.Equals (parentPlayer))
-			Physics2D.IgnoreCollision (gameObject.GetComponent<Collider2D> (), collisionInfo.gameObject.GetComponent<Collider2D> (), false);
-	}
+
     //TODO Add collision detection for lasers
 	void OnTriggerEnter2D(Collider2D collisionInfo)
 	{
 		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent> ().bombKick > 0) {
 			if (collisionInfo.gameObject.Equals (parentPlayer) && Physics2D.GetIgnoreCollision (gameObject.GetComponent<Collider2D> (), collisionInfo.gameObject.GetComponent<Collider2D> ()))
 				return;
+			
 			isMoving = true;
-			direction = collisionInfo.gameObject.GetComponentInChildren<PlayerAnimationDriver> ().GetDirection ();
-		} 
-		else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb") {
-			StopMovement();
+			direction = -(collisionInfo.transform.position - transform.position).normalized;
+			direction.x = AxisRounder.Round (direction.x);
+			direction.y = AxisRounder.Round (direction.y);
+		} else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb") {
+			StopMovement ();
+		} else if (collisionInfo.gameObject.tag == "Upgrade") {
+			Destroy (collisionInfo.gameObject);
+		} else if (collisionInfo.gameObject.tag == "Laser") {
+			Explode ();
 		}
-        else if(collisionInfo.gameObject.tag == "Upgrade")
-        {
-            Destroy(collisionInfo.gameObject);
-        }
 	}
 
 	void OnTriggerStay2D(Collider2D collisionInfo)
@@ -126,7 +103,7 @@ public class BombController : MonoBehaviour
 	private void StopMovement()
 	{
 		isMoving = false;
-		direction = "";
+		direction = Vector3.zero;
 
 		rb.position = new Vector3 (AxisRounder.Round (rb.position.x), AxisRounder.Round (rb.position.y), 0.0f);
 	}

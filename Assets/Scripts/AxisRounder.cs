@@ -5,38 +5,33 @@ public static class AxisRounder
 
     public static float Round(float roundDownDecimal, float roundUpDecimal, float num)
     {
+		float sign = num < 0.0f ? -1.0f : 1.0f;
+		num = Mathf.Abs (num);
         float remainder = num % 1;
 
         if (remainder <= roundDownDecimal)
-            return num - remainder;
+			return sign * (num - remainder);
         else if (remainder >= roundUpDecimal)
-            return num + ((1.0f - remainder));
+			return sign * (num + ((1.0f - remainder)));
 
         return (int)num;
     }
 
 	public static float Round(float num)
 	{
-		float roundDownDecimal = 0.49999f;
-		float roundUpDecimal = 0.50001f;
-		float remainder = num % 1;
-		
-		if (remainder <= roundDownDecimal)
-			return num - remainder;
-		else if (remainder >= roundUpDecimal)
-			return num + ((1.0f - remainder));
-		
-		return (int)num;
+		return Round (0.49999f, 0.50001f, num);
 	}
 
     public static float SmoothRound(float roundDownDecimal, float roundUpDecimal, float num)
     {
+		float sign = num < 0.0f ? -1.0f : 1.0f;
+		num = Mathf.Abs (num);
         float remainder = num % 1;
 
         if (remainder <= roundDownDecimal)
-            return num - remainder / 8.0f;
+			return sign * (num - remainder / 8.0f);
         else if (remainder >= roundUpDecimal)
-            return num + ((1.0f - remainder) / 8.0f);
+			return sign * (num + ((1.0f - remainder) / 8.0f));
 		
         return num;
     }

@@ -12,7 +12,7 @@ public class FastMovementPlayerControllerModifier : DefaultPlayerControllerModif
 
 	public override float speedScalar { 
 		get { 
-			if(!isRadioactive)
+			if(isRadioactive)
 				return 4.0f; 
 			return _playerController.speedScalar;
 		} 

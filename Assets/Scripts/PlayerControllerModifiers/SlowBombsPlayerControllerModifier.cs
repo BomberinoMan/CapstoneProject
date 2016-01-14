@@ -16,7 +16,7 @@ public class SlowBombsPlayerControllerModifier : DefaultPlayerControllerModifier
 		temp.radius = _playerController.bombParams.radius;
 		temp.warningTime = _playerController.bombParams.warningTime;
 
-		temp.delayTime = temp.delayTime * 4.0f;
+		temp.warningTime = temp.warningTime * 8.0f;
 	}
 
 	public override BombParams bombParams { 

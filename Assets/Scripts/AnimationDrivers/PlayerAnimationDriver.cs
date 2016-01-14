@@ -15,13 +15,12 @@ public class PlayerAnimationDriver : MonoBehaviour {
         animator = gameObject.GetComponent<Animator>();
 	}
 	
-	void Update () {
+	void FixedUpdate () {
         //TODO need to implement reverse movement here aswell
         float vert = Input.GetAxisRaw("Vertical");
         float hor = Input.GetAxisRaw("Horizontal");
 
-        if (vert != 0.0)
-        {
+        if (vert != 0.0) {
             animator.SetFloat("Speed", Mathf.Abs(vert));
 
             if (vert > 0.0)
@@ -29,8 +28,7 @@ public class PlayerAnimationDriver : MonoBehaviour {
             else if (vert < 0.0)
                 animator.SetInteger("Direction", Direction.Down);
         }
-        else if (hor != 0.0)
-        {
+        else if (hor != 0.0) {
             animator.SetFloat("Speed", Mathf.Abs(hor));
 
             if (hor > 0.0)

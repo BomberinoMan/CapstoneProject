@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerControllerComponent : MonoBehaviour {
 	private float speed;
+	private float flipFlopTime;
+	private float flipFlopDuration = 0.25f;
 	private IPlayerControllerModifier _playerController;
 
 	public GameObject bombObject;
@@ -18,56 +20,26 @@ public class PlayerControllerComponent : MonoBehaviour {
 	void Start()
 	{
 		speed = 0.06f;
-
+		flipFlopTime = Time.time;
 		_playerController = new DefaultPlayerControllerModifier ();
-
+		Debug.Log (_playerController.currNumBombs);
+		Debug.Log (_playerController.maxNumBombs);
 		rb = GetComponent<Rigidbody2D>();
 		transform = GetComponent<Transform>();
 	}
 
 	void Update ()
 	{
-		if ((Input.GetKeyDown("space") && _playerController.canLayBombs) && !_playerController.alwaysLayBombs)
-		{
-			if (_playerController.bombLine > 0 && GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(transform.position.x), (int)AxisRounder.Round(transform.position.y)))
-				GameObject.FindGameObjectWithTag("GameController")
-					.GetComponent<BoardManager>()
-					.LineBomb(
-						(int)AxisRounder.Round(transform.position.x), 
-						(int)AxisRounder.Round(transform.position.y), 
-						gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), 
-						_playerController.currNumBombs, 
-						gameObject);
-			else
-			{
-				if (_playerController.currNumBombs <= 0)
-					return;
-
-				GameObject bomb = Instantiate(
-					bombObject,
-					new Vector3(
-						AxisRounder.Round(transform.position.x),
-						AxisRounder.Round(transform.position.y),
-						0.0f),
-					Quaternion.identity)
-					as GameObject;
-				BombManager.SetupBomb(gameObject, bomb);
+		if (Input.GetKeyDown ("space") && _playerController.canLayBombs) {
+			if (!OnBomb ()) {
+				LayBomb ();
+			} else if (_playerController.bombLine > 0) {
+				LayLineBomb ();
 			}
 		}
 
-		if (_playerController.alwaysLayBombs && !GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnBomb ((int)AxisRounder.Round (transform.position.x), (int)AxisRounder.Round (transform.position.y))) {
-			if (_playerController.currNumBombs <= 0)
-				return;
-			
-			GameObject bomb = Instantiate (
-                  bombObject,
-                  new Vector3 (
-	                  AxisRounder.Round (transform.position.x),
-	                  AxisRounder.Round (transform.position.y),
-	                  0.0f),
-                  Quaternion.identity)
-				as GameObject;
-			BombManager.SetupBomb (gameObject, bomb);
+		if (_playerController.alwaysLayBombs && !OnBomb()) {
+			LayBomb ();
 		}
 	}
 
@@ -99,6 +71,38 @@ public class PlayerControllerComponent : MonoBehaviour {
 					rb.position.y - ver * speed * _playerController.speedScalar,
 					0.0f);
 		}
+
+		flipFlopColor ();
+	}
+
+	private void LayBomb(){
+		if (_playerController.currNumBombs <= 0)
+			return;
+
+		GameObject bomb = Instantiate (
+			bombObject,
+			new Vector3 (
+				AxisRounder.Round (transform.position.x),
+				AxisRounder.Round (transform.position.y),
+				0.0f),
+			Quaternion.identity)
+			as GameObject;
+		BombManager.SetupBomb (gameObject, bomb);
+	}
+
+	private void LayLineBomb(){
+		GameObject.FindGameObjectWithTag("GameController")
+			.GetComponent<BoardManager>()
+			.LineBomb(
+				(int)AxisRounder.Round(transform.position.x), 
+				(int)AxisRounder.Round(transform.position.y), 
+				gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), 
+				_playerController.currNumBombs, 
+				gameObject);
+	}
+
+	private bool OnBomb(){
+		return GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnBomb ((int)AxisRounder.Round (transform.position.x), (int)AxisRounder.Round (transform.position.y));
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -108,17 +112,32 @@ public class PlayerControllerComponent : MonoBehaviour {
 			Destroy (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {
 			//TODO add destruction animation support
-			Destroy(gameObject);
+			//Destroy(gameObject);
 		}
 	}
 
-	public IPlayerControllerModifier getPlayerControllerModifier()
-	{
+	public IPlayerControllerModifier getPlayerControllerModifier() {
 		return _playerController;
 	}
 
-	public void changePlayerControllerModifier(IPlayerControllerModifier newModifier)
-	{
+	public void changePlayerControllerModifier(IPlayerControllerModifier newModifier) {
 		_playerController = newModifier;
+	}
+
+	private void flipFlopColor() {
+		if (!_playerController.isRadioactive) {
+			gameObject.GetComponentInChildren<SpriteRenderer> ().color = Color.white;
+			return;
+		}
+
+		if (flipFlopTime + flipFlopDuration > Time.time)
+			return;
+
+		if (gameObject.GetComponentInChildren<SpriteRenderer> ().color == Color.white)
+			gameObject.GetComponentInChildren<SpriteRenderer> ().color = new Color (0.678f, 0.698f, 0.741f);
+		else
+			gameObject.GetComponentInChildren<SpriteRenderer> ().color = Color.white;
+
+		flipFlopTime = Time.time;
 	}
 }

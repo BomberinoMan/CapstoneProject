@@ -4,6 +4,7 @@ using System;
 
 public class BoardManager : MonoBehaviour
 {
+	private int debug = 0;
     public GameObject background;
     public GameObject indestructible;
     public GameObject destructible;
@@ -80,12 +81,12 @@ public class BoardManager : MonoBehaviour
     {
         boardHolder = new GameObject("Board").transform;
         InitializeBoardDefault();
-        InitializeDestructible();
+        //InitializeDestructible();
         InitializePlayers(1);
-        InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
-        InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
-        InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
-        InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
+        //InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
+        //InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
+        //InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
+        //InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
     }
 
     void InitializePlayers(int numPlayers)
@@ -193,19 +194,20 @@ public class BoardManager : MonoBehaviour
 	}
 	private BombParams RemoveBomb(int x, int y)
 	{
-		foreach (GameObject bomb in bombs)
-			if (AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y) {
-				bomb.GetComponent<BombController>().Explode(false); // Give the player another bomb
-                Destroy (bomb); 	// Destroy bomb game oject
+		foreach (GameObject bomb in bombs) {
+			if (AxisRounder.Round (bomb.transform.position.x) == x && AxisRounder.Round (bomb.transform.position.y) == y) {
+				bomb.GetComponent<BombController> ().Explode (false); // Give the player another bomb
+				Destroy (bomb); 	// Destroy bomb game oject
 				bombs.Remove (bomb);	// Remove from list
-				return bomb.GetComponent<BombController>().paramaters;
+				return bomb.GetComponent<BombController> ().paramaters;
 			}
-        return new BombParams();
+		}
+		throw new InvalidProgramException ();
 	}
 	public bool OnBomb(int x, int y)
 	{
 		foreach (GameObject bomb in bombs)
-			if (AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
+			if (bomb != null && AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
 				return true;
 		return false;
 	}
@@ -255,7 +257,7 @@ public class BoardManager : MonoBehaviour
 		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
 			return;
 
-		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
+		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
 		bombs.Add (bomb);
 
@@ -266,7 +268,7 @@ public class BoardManager : MonoBehaviour
 		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
 			return;
 		Debug.Log (numBombs);
-		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
+		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
 		bombs.Add (bomb);
 		
@@ -277,7 +279,7 @@ public class BoardManager : MonoBehaviour
 		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
 			return;
 		
-		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
+		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
 		bombs.Add (bomb);
 		
@@ -288,7 +290,7 @@ public class BoardManager : MonoBehaviour
 		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
 			return;
 		
-		GameObject bomb = Instantiate (player.GetComponent<PlayerController>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
+		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 		BombManager.SetupBomb (player, bomb);
 		bombs.Add (bomb);
 		

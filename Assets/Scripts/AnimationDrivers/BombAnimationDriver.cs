@@ -12,7 +12,7 @@ public class BombAnimationDriver : MonoBehaviour {
         paramaters = gameObject.GetComponentInParent<BombController>().paramaters;
     }
 
-    void Update () {
+    void FixedUpdate () {
         animator.SetBool("IsExploding", (CreationTime + paramaters.delayTime) <= Time.time);
         animator.SetBool("IsDisapearing", (CreationTime + paramaters.delayTime + paramaters.explodingDuration) <= Time.time);
     }

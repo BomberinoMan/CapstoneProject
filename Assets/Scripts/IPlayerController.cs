@@ -1,4 +1,4 @@
-﻿public interface IPlayerController{
+﻿public interface IPlayerController {
 	float speedScalar { get; set; }
 	int bombKick { get; set; }
 	int bombLine { get; set; }

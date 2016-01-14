@@ -8,9 +8,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 422912}
-  - 114: {fileID: 11499812}
   - 61: {fileID: 6199026}
   - 50: {fileID: 5052250}
+  - 114: {fileID: 11430512}
   m_Layer: 8
   m_Name: Player1
   m_TagString: Player
@@ -109,6 +109,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11430512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 111466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b4e64cccd51c4983ba5099b74ed7c76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
 --- !u!114 &11479894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -120,18 +132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e1121cc1770aad44b1901b3fc21d07c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11499812
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 111466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49c9539870742314484b4f1f2ac177b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
 --- !u!212 &21275810
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -201,6 +201,10 @@ Prefab:
       propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: bombObject
+      value: 
+      objectReference: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 111466}

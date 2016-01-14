@@ -18,7 +18,7 @@ public class BombController : MonoBehaviour
 		rb = GetComponent<Rigidbody2D>();
 
 			// Ignor collisions with player that planted the bomb
-		if (GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnPlayer ((int)gameObject.transform.position.x, (int)gameObject.transform.position.y)) {
+		if (GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnPlayer ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y))) {
 			Physics2D.IgnoreCollision (gameObject.GetComponent<Collider2D> (), parentPlayer.gameObject.GetComponent<Collider2D> ());
 			foreach(Collider2D collider in gameObject.GetComponentsInChildren<Collider2D> ())	// Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
 				if(collider.gameObject.GetInstanceID() != GetInstanceID() && !collider.isTrigger)
@@ -29,11 +29,11 @@ public class BombController : MonoBehaviour
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
 			.AddBomb (gameObject);
 
-		parentPlayer.GetComponent<PlayerController>().currNumBombs--;
+		parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
 		GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		if (isMoving) {
 			rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
@@ -76,21 +76,21 @@ public class BombController : MonoBehaviour
 
 	public void Explode(bool notifyBoard = true)
 	{
+		StopMovement ();
 		if(notifyBoard)
 			GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
-				.ExplodeBomb ((int)gameObject.transform.position.x, (int)gameObject.transform.position.y);
+				.ExplodeBomb ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y));
 
 		try
 		{
 			if(!hasExploded)
-				parentPlayer.GetComponent<PlayerController>().currNumBombs++;
+				parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
 			hasExploded = true;
 		}
 
-#pragma warning disable CS0168 // Variable is declared but never used
-        catch (MissingReferenceException e) // If the player dies before the bomb explodes, then we do not need to give them another one
-#pragma warning restore CS0168 // Variable is declared but never used
-        { }
+		#pragma warning disable CS0168 // Variable is declared but never used
+		catch (MissingReferenceException e) { } // If the player dies before the bomb explodes, then we do not need to give them another one
+		#pragma warning restore CS0168 // Variable is declared but never used
 	}
 	
 	void OnTriggerExit2D(Collider2D collisionInfo)
@@ -101,7 +101,7 @@ public class BombController : MonoBehaviour
     //TODO Add collision detection for lasers
 	void OnTriggerEnter2D(Collider2D collisionInfo)
 	{
-		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerController> ().bombKick > 0) {
+		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent> ().bombKick > 0) {
 			if (collisionInfo.gameObject.Equals (parentPlayer) && Physics2D.GetIgnoreCollision (gameObject.GetComponent<Collider2D> (), collisionInfo.gameObject.GetComponent<Collider2D> ()))
 				return;
 			isMoving = true;

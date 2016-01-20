@@ -83,16 +83,16 @@ public class BoardManager : MonoBehaviour
     {
         boardHolder = new GameObject("Board").transform;
         InitializeBoardDefault();
-        InitializeDestructible();
-        InitializePlayers(1);
-
-        InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
-        InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
-        InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
-        InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
-		InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
-		InitializeUpgrades (minNumRadioactiveUpgrades, maxNumRadioactiveUpgrades, upgradeRadioactive);
-
+//        InitializeDestructible();
+//        InitializePlayers();
+//
+//        InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
+//        InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
+//        InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
+//        InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
+//		InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
+//		InitializeUpgrades (minNumRadioactiveUpgrades, maxNumRadioactiveUpgrades, upgradeRadioactive);
+//
     }
 
     void InitializePlayers(int numPlayers)

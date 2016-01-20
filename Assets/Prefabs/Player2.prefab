@@ -29,6 +29,7 @@ GameObject:
   - 61: {fileID: 6122804}
   - 50: {fileID: 5010770}
   - 114: {fileID: 11445266}
+  - 114: {fileID: 11483348}
   m_Layer: 8
   m_Name: Player2
   m_TagString: Player
@@ -121,6 +122,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
+--- !u!114 &11483348
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 191922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 110
+    i1: 15
+    i2: 114
+    i3: 103
+    i4: 26
+    i5: 132
+    i6: 246
+    i7: 244
+    i8: 75
+    i9: 147
+    i10: 201
+    i11: 6
+    i12: 131
+    i13: 176
+    i14: 195
+    i15: 247
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &11485678
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -29,6 +29,7 @@ GameObject:
   - 61: {fileID: 6124448}
   - 50: {fileID: 5052938}
   - 114: {fileID: 11472626}
+  - 114: {fileID: 11491832}
   m_Layer: 8
   m_Name: Player3
   m_TagString: Player
@@ -132,6 +133,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
+--- !u!114 &11491832
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 162892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 253
+    i1: 67
+    i2: 26
+    i3: 183
+    i4: 244
+    i5: 129
+    i6: 186
+    i7: 52
+    i8: 171
+    i9: 15
+    i10: 87
+    i11: 28
+    i12: 133
+    i13: 149
+    i14: 130
+    i15: 253
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!212 &21249126
 SpriteRenderer:
   m_ObjectHideFlags: 1

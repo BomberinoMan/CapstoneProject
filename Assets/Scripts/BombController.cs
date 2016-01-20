@@ -77,8 +77,9 @@ public class BombController : MonoBehaviour
 	void OnTriggerEnter2D(Collider2D collisionInfo)
 	{
 		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent> ().bombKick > 0) {
-			if (collisionInfo.gameObject.Equals (parentPlayer) && Physics2D.GetIgnoreCollision (gameObject.GetComponent<Collider2D> (), collisionInfo.gameObject.GetComponent<Collider2D> ()))
-				return;
+			foreach (Collider2D bombCollider in gameObject.GetComponentsInChildren<Collider2D>())
+				if (Physics2D.GetIgnoreCollision (bombCollider, collisionInfo.gameObject.GetComponent<Collider2D> ()))
+					return; // Ignore collisions on colliders that are on the parent player before they leave the bomb
 			
 			isMoving = true;
 			direction = -(collisionInfo.transform.position - transform.position).normalized;

@@ -26,9 +26,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 459490}
-  - 114: {fileID: 11406436}
   - 61: {fileID: 6122804}
   - 50: {fileID: 5010770}
+  - 114: {fileID: 11445266}
   m_Layer: 8
   m_Name: Player2
   m_TagString: Player
@@ -109,7 +109,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11406436
+--- !u!114 &11445266
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -117,17 +117,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 191922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49c9539870742314484b4f1f2ac177b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b4e64cccd51c4983ba5099b74ed7c76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.06
-  speedScalar: 1
-  bombKick: 0
-  bombLine: 0
-  currNumBombs: 1
-  canLayBombs: 1
-  alwaysLayBombs: 0
-  reverseMovement: 0
   bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
 --- !u!114 &11485678
 MonoBehaviour:
@@ -197,6 +189,10 @@ Prefab:
       propertyPath: currNumBombs
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: bombObject
+      value: 
+      objectReference: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 191922}

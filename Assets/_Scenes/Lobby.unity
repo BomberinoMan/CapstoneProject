@@ -96,7 +96,7 @@ GameObject:
   - 222: {fileID: 206387710}
   - 114: {fileID: 206387709}
   m_Layer: 5
-  m_Name: Player1Text (1)
+  m_Name: Player3Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,10 +113,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1904773898}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 458, y: 240}
+  m_AnchoredPosition: {x: 339, y: 240}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &206387709
@@ -151,40 +151,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Player1Name
+  m_Text: Player3Name
 --- !u!222 &206387710
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 206387707}
---- !u!1 &456512399
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 456512400}
-  m_Layer: 0
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &456512400
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 456512399}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
 --- !u!1 &555728186
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,7 +169,7 @@ GameObject:
   - 222: {fileID: 555728189}
   - 114: {fileID: 555728188}
   m_Layer: 5
-  m_Name: Player1Text (3)
+  m_Name: Player2Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -213,10 +186,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1904773898}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 458, y: -15}
+  m_AnchoredPosition: {x: 339, y: -15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &555728188
@@ -251,7 +224,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Player1Name
+  m_Text: Player2Name
 --- !u!222 &555728189
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -318,7 +291,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!1 &958940111
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +323,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -450, y: 240}
+  m_AnchoredPosition: {x: -325, y: 240}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &958940113
@@ -392,6 +365,66 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 958940111}
+--- !u!1001 &1632614315
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 412274, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_MaxPlayersPerConnection
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LobbyPlayerPrefab
+      value: 
+      objectReference: {fileID: 11441438, guid: 8614c5b25e4a14a69b8426eb1d1b6a09,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_GamePlayerPrefab
+      value: 
+      objectReference: {fileID: 142472, guid: 58d5cb0cd7e374eb38d4398c5b63fade, type: 2}
+    - target: {fileID: 11410578, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 11454362, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+  m_ParentPrefab: {fileID: 100100000, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1904773894
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,11 +509,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 958940112}
+  - {fileID: 555728187}
   - {fileID: 206387708}
   - {fileID: 2011348109}
-  - {fileID: 555728187}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -583,7 +616,7 @@ GameObject:
   - 222: {fileID: 2011348111}
   - 114: {fileID: 2011348110}
   m_Layer: 5
-  m_Name: Player1Text (2)
+  m_Name: 'Player4Text '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -600,10 +633,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1904773898}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -450, y: -15}
+  m_AnchoredPosition: {x: -325, y: -15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2011348110
@@ -638,7 +671,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Player1Name
+  m_Text: Player4Name
 --- !u!222 &2011348111
 CanvasRenderer:
   m_ObjectHideFlags: 0

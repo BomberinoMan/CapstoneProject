@@ -17,8 +17,7 @@ public class PlayerControllerComponent : MonoBehaviour {
 	public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
 	public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
 
-	void Start()
-	{
+	void Start() {
 		speed = 0.06f;
 		flipFlopTime = Time.time;
 		_playerController = new DefaultPlayerControllerModifier ();
@@ -28,8 +27,7 @@ public class PlayerControllerComponent : MonoBehaviour {
 		transform = GetComponent<Transform>();
 	}
 
-	void Update ()
-	{
+	void Update () {
 		if (Input.GetKeyDown ("space") && _playerController.canLayBombs) {
 			if (!OnBomb ()) {
 				LayBomb ();

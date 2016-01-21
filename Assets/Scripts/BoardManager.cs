@@ -4,6 +4,9 @@ using System;
 
 public class BoardManager : MonoBehaviour
 {
+	public GameObject playerPrefabTest;
+	public GameObject playerAnimationtest;
+
 	private int debug = 0;
     public GameObject background;
     public GameObject indestructible;
@@ -83,6 +86,16 @@ public class BoardManager : MonoBehaviour
     {
         boardHolder = new GameObject("Board").transform;
         InitializeBoardDefault();
+		GameObject newPlayer;
+		GameObject newPlayerAnimation;
+
+		newPlayer = Instantiate (playerPrefabTest, new Vector3 (0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+		newPlayerAnimation = Instantiate (playerAnimationtest, new Vector3 (0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+		newPlayerAnimation.transform.SetParent (newPlayer.transform);
+		newPlayer.transform.SetParent (boardHolder);
+		Debug.Log (newPlayer.activeInHierarchy);
+		Debug.Log (newPlayer.activeSelf);
+		//TODO remove the ability to spawn players
 //        InitializeDestructible();
 //        InitializePlayers();
 //

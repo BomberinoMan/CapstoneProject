@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class SettingsMenu : MonoBehaviour
 {
     public void SaveButton_OnClick()
     {
-        Application.LoadLevel("StartupMenu");
+        SceneManager.LoadScene("StartupMenu");
     }
 
     public void CancelButton_OnClick()
     {
-        Application.LoadLevel("StartupMenu");
+        SceneManager.LoadScene("StartupMenu");
     }
 }

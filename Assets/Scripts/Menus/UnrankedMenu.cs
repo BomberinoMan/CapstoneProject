@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class UnrankedMenu : MonoBehaviour
 {
@@ -10,16 +11,16 @@ public class UnrankedMenu : MonoBehaviour
 
     public void JoinButton_OnClick()
     {
-        Application.LoadLevel("Game");
+        SceneManager.LoadScene("Game");
     }
 
     public void CreateButton_OnClick()
     {
-        Application.LoadLevel("Game");
+        SceneManager.LoadScene("Game");
     }
 
     public void BackButton_OnClick()
     {
-        Application.LoadLevel("StartupMenu");
+        SceneManager.LoadScene("StartupMenu");
     }
 }

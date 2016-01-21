@@ -7,7 +7,6 @@ public class BoardManager : MonoBehaviour
 	public GameObject playerPrefabTest;
 	public GameObject playerAnimationtest;
 
-	private int debug = 0;
     public GameObject background;
     public GameObject indestructible;
     public GameObject destructible;

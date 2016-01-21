@@ -59,18 +59,20 @@ public class BombController : MonoBehaviour
 	{
 		StopMovement ();
 		if(notifyBoard)
+        {
 			GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
 				.ExplodeBomb ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y));
+        }
 
-		try {
+		try
+        {
 			if(!hasExploded)
 				parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
 			hasExploded = true;
 		}
-
-		#pragma warning disable CS0168 // Variable is declared but never used
-		catch (MissingReferenceException e) { } // If the player dies before the bomb explodes, then we do not need to give them another one
-		#pragma warning restore CS0168 // Variable is declared but never used
+		catch (MissingReferenceException)
+        {
+        }
 	}
 
     //TODO Add collision detection for lasers

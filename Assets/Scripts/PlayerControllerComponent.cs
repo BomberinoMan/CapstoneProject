@@ -9,7 +9,7 @@ public class PlayerControllerComponent : MonoBehaviour {
 
 	public GameObject bombObject;
 	private Rigidbody2D rb;
-	private Transform transform;
+	private Transform tempTransform;
 
 	public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
 	public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
@@ -24,7 +24,7 @@ public class PlayerControllerComponent : MonoBehaviour {
 		Debug.Log (_playerController.currNumBombs);
 		Debug.Log (_playerController.maxNumBombs);
 		rb = GetComponent<Rigidbody2D>();
-		transform = GetComponent<Transform>();
+		tempTransform = GetComponent<Transform>();
 	}
 
 	void Update () {
@@ -80,8 +80,8 @@ public class PlayerControllerComponent : MonoBehaviour {
 		GameObject bomb = Instantiate (
 			bombObject,
 			new Vector3 (
-				AxisRounder.Round (transform.position.x),
-				AxisRounder.Round (transform.position.y),
+				AxisRounder.Round (tempTransform.position.x),
+				AxisRounder.Round (tempTransform.position.y),
 				0.0f),
 			Quaternion.identity)
 			as GameObject;
@@ -92,15 +92,15 @@ public class PlayerControllerComponent : MonoBehaviour {
 		GameObject.FindGameObjectWithTag("GameController")
 			.GetComponent<BoardManager>()
 			.LineBomb(
-				(int)AxisRounder.Round(transform.position.x), 
-				(int)AxisRounder.Round(transform.position.y), 
+				(int)AxisRounder.Round(tempTransform.position.x), 
+				(int)AxisRounder.Round(tempTransform.position.y), 
 				gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), 
 				_playerController.currNumBombs, 
 				gameObject);
 	}
 
 	private bool OnBomb(){
-		return GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnBomb ((int)AxisRounder.Round (transform.position.x), (int)AxisRounder.Round (transform.position.y));
+		return GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnBomb ((int)AxisRounder.Round (tempTransform.position.x), (int)AxisRounder.Round (tempTransform.position.y));
 	}
 
 	void OnTriggerEnter2D(Collider2D other)

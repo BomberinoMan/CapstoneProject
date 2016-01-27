@@ -1,141 +1,176 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerControllerComponent : MonoBehaviour {
-	private float speed;
-	private float flipFlopTime;
-	private float flipFlopDuration = 0.25f;
-	private IPlayerControllerModifier _playerController;
+public class PlayerControllerComponent : MonoBehaviour
+{
+    private float _speed;
+    private float _flipFlopTime;
+    private float _flipFlopDuration = 0.25f;
+    private IPlayerControllerModifier _playerController;
 
-	public GameObject bombObject;
-	private Rigidbody2D rb;
-	private Transform tempTransform;
+    public GameObject bombObject;
+    private Rigidbody2D _rb;
+    private Transform _tempTransform;
 
-	public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
-	public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
-	public int bombKick { get { return _playerController.bombKick; } set { _playerController.bombKick = value; } }
-	public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
-	public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
+    public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
+    public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
+    public int bombKick { get { return _playerController.bombKick; } set { _playerController.bombKick = value; } }
+    public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
+    public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
 
-	void Start() {
-		speed = 0.06f;
-		flipFlopTime = Time.time;
-		_playerController = new DefaultPlayerControllerModifier ();
-		Debug.Log (_playerController.currNumBombs);
-		Debug.Log (_playerController.maxNumBombs);
-		rb = GetComponent<Rigidbody2D>();
-		tempTransform = GetComponent<Transform>();
-	}
+    void Start()
+    {
+        _speed = 0.06f;
+        _flipFlopTime = Time.time;
+        _playerController = new DefaultPlayerControllerModifier();
+        _rb = GetComponent<Rigidbody2D>();
+        _tempTransform = GetComponent<Transform>();
+    }
 
-	void Update () {
-		if (Input.GetKeyDown ("space") && _playerController.canLayBombs) {
-			if (!OnBomb ()) {
-				LayBomb ();
-			} else if (_playerController.bombLine > 0) {
-				LayLineBomb ();
-			}
-		}
+    void Update()
+    {
+        if (Input.GetKeyDown("space") && _playerController.canLayBombs)
+        {
+            if (!OnBomb())
+            {
+                LayBomb();
+            }
+            else if (_playerController.bombLine > 0)
+            {
+                LayLineBomb();
+            }
+        }
 
-		if (_playerController.alwaysLayBombs && !OnBomb()) {
-			LayBomb ();
-		}
-	}
+        if (_playerController.alwaysLayBombs && !OnBomb())
+        {
+            LayBomb();
+        }
+    }
 
-	void FixedUpdate() //TODO Add reverse movement support to animation driver
-	{
-		float hor = Input.GetAxisRaw("Horizontal");
-		float ver = Input.GetAxisRaw("Vertical");
+    void FixedUpdate() //TODO Add reverse movement support to animation driver
+    {
+        float hor = Input.GetAxisRaw("Horizontal");
+        float ver = Input.GetAxisRaw("Vertical");
 
-		if(!_playerController.reverseMovement) {
-			if (ver == 0.0f && hor != 0.0f)
-				rb.position = new Vector3(
-					rb.position.x + hor * speed * _playerController.speedScalar,
-					AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
-					0.0f);
-			else if (hor == 0.0f && ver != 0.0f)
-				rb.position = new Vector3(
-					AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
-					rb.position.y + ver * speed * _playerController.speedScalar,
-					0.0f);
-		} else {
-			if (ver == 0.0f && hor != 0.0f)
-				rb.position = new Vector3(
-					rb.position.x - hor * speed * _playerController.speedScalar,
-					AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.y),
-					0.0f);
-			else if (hor == 0.0f && ver != 0.0f)
-				rb.position = new Vector3(
-					AxisRounder.SmoothRound(0.3f, 0.7f, rb.position.x),
-					rb.position.y - ver * speed * _playerController.speedScalar,
-					0.0f);
-		}
+        if (!_playerController.reverseMovement)
+        {
+            if (ver == 0.0f && hor != 0.0f)
+            {
+                _rb.position = new Vector3(
+                    _rb.position.x + hor * _speed * _playerController.speedScalar,
+                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
+                    0.0f);
+            }
+            else if (hor == 0.0f && ver != 0.0f)
+            {
+                _rb.position = new Vector3(
+                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
+                    _rb.position.y + ver * _speed * _playerController.speedScalar,
+                    0.0f);
+            }
+        }
+        else
+        {
+            if (ver == 0.0f && hor != 0.0f)
+            {
+                _rb.position = new Vector3(
+                    _rb.position.x - hor * _speed * _playerController.speedScalar,
+                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
+                    0.0f);
+            }
+            else if (hor == 0.0f && ver != 0.0f)
+            {
+                _rb.position = new Vector3(
+                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
+                    _rb.position.y - ver * _speed * _playerController.speedScalar,
+                    0.0f);
+            }
+        }
 
-		flipFlopColor ();
-	}
+        flipFlopColor();
+    }
 
-	private void LayBomb(){
-		if (_playerController.currNumBombs <= 0)
-			return;
+    private void LayBomb()
+    {
+        if (_playerController.currNumBombs <= 0)
+        {
+            return;
+        }
 
-		GameObject bomb = Instantiate (
-			bombObject,
-			new Vector3 (
-				AxisRounder.Round (tempTransform.position.x),
-				AxisRounder.Round (tempTransform.position.y),
-				0.0f),
-			Quaternion.identity)
-			as GameObject;
-		BombManager.SetupBomb (gameObject, bomb);
-	}
+        GameObject bomb = Instantiate(
+            bombObject,
+            new Vector3(
+                AxisRounder.Round(_tempTransform.position.x),
+                AxisRounder.Round(_tempTransform.position.y),
+                0.0f),
+            Quaternion.identity)
+            as GameObject;
+        BombManager.SetupBomb(gameObject, bomb);
+    }
 
-	private void LayLineBomb(){
-		GameObject.FindGameObjectWithTag("GameController")
-			.GetComponent<BoardManager>()
-			.LineBomb(
-				(int)AxisRounder.Round(tempTransform.position.x), 
-				(int)AxisRounder.Round(tempTransform.position.y), 
-				gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(), 
-				_playerController.currNumBombs, 
-				gameObject);
-	}
+    private void LayLineBomb()
+    {
+        GameObject.FindGameObjectWithTag("GameController")
+            .GetComponent<BoardManager>()
+            .LineBomb(
+                (int)AxisRounder.Round(_tempTransform.position.x),
+                (int)AxisRounder.Round(_tempTransform.position.y),
+                gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(),
+                _playerController.currNumBombs,
+                gameObject);
+    }
 
-	private bool OnBomb(){
-		return GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnBomb ((int)AxisRounder.Round (tempTransform.position.x), (int)AxisRounder.Round (tempTransform.position.y));
-	}
+    private bool OnBomb()
+    {
+        return GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(_tempTransform.position.x), (int)AxisRounder.Round(_tempTransform.position.y));
+    }
 
-	void OnTriggerEnter2D(Collider2D other)
-	{
-		if (other.gameObject.tag == "Upgrade") {
-			UpgradeFactory.getUpgrade (other.gameObject.GetComponent<UpgradeType> ().type).ApplyEffect (gameObject);
-			Destroy (other.gameObject);
-		} else if (other.gameObject.tag == "Laser") {
-			//TODO add destruction animation support
-			//Destroy(gameObject);
-		}
-	}
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Upgrade")
+        {
+            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeType>().type).ApplyEffect(gameObject);
+            Destroy(other.gameObject);
+        }
+        else if (other.gameObject.tag == "Laser")
+        {
+            //TODO add destruction animation support
+            //Destroy(gameObject);
+        }
+    }
 
-	public IPlayerControllerModifier getPlayerControllerModifier() {
-		return _playerController;
-	}
+    public IPlayerControllerModifier getPlayerControllerModifier()
+    {
+        return _playerController;
+    }
 
-	public void changePlayerControllerModifier(IPlayerControllerModifier newModifier) {
-		_playerController = newModifier;
-	}
+    public void changePlayerControllerModifier(IPlayerControllerModifier newModifier)
+    {
+        _playerController = newModifier;
+    }
 
-	private void flipFlopColor() {
-		if (!_playerController.isRadioactive) {
-			gameObject.GetComponentInChildren<SpriteRenderer> ().color = Color.white;
-			return;
-		}
+    private void flipFlopColor()
+    {
+        if (!_playerController.isRadioactive)
+        {
+            gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+            return;
+        }
 
-		if (flipFlopTime + flipFlopDuration > Time.time)
-			return;
+        if (_flipFlopTime + _flipFlopDuration > Time.time)
+        {
+            return;
+        }
 
-		if (gameObject.GetComponentInChildren<SpriteRenderer> ().color == Color.white)
-			gameObject.GetComponentInChildren<SpriteRenderer> ().color = new Color (0.678f, 0.698f, 0.741f);
-		else
-			gameObject.GetComponentInChildren<SpriteRenderer> ().color = Color.white;
+        if (gameObject.GetComponentInChildren<SpriteRenderer>().color == Color.white)
+        {
+            gameObject.GetComponentInChildren<SpriteRenderer>().color = new Color(0.678f, 0.698f, 0.741f);
+        }
+        else
+        {
+            gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+        }
 
-		flipFlopTime = Time.time;
-	}
+        _flipFlopTime = Time.time;
+    }
 }

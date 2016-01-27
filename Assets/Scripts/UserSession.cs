@@ -6,7 +6,7 @@ public class UserSession : MonoBehaviour {
 	public MatchScore matchScore;
 
 	void Awake(){
-		DontDestroyOnLoad (this);
+		//DontDestroyOnLoad (this);
 	}
 
 	public UserSession () {

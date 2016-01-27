@@ -4,8 +4,8 @@ using System;
 
 public class BoardManager : MonoBehaviour
 {
-	public GameObject playerPrefabTest;
-	public GameObject playerAnimationtest;
+    public GameObject playerPrefabTest;
+    public GameObject playerAnimationtest;
 
     public GameObject background;
     public GameObject indestructible;
@@ -16,25 +16,25 @@ public class BoardManager : MonoBehaviour
     public GameObject upgradeLaser;
     public GameObject upgradeRadioactive;
 
-	public GameObject[] playerPrefab;
+    public GameObject[] playerPrefab;
 
     public GameObject laserCross;
-	public GameObject laserHor;
-	public GameObject laserVert;
-	public GameObject laserUp;
-	public GameObject laserDown;
-	public GameObject laserLeft;
-	public GameObject laserRight;
+    public GameObject laserHor;
+    public GameObject laserVert;
+    public GameObject laserUp;
+    public GameObject laserDown;
+    public GameObject laserLeft;
+    public GameObject laserRight;
 
     public int rows;                // 11
     public int columns;             // 13
     public float fillPercentage;    // 90
-	public Coor[] playerSpawn = new Coor[4]
-		{	new Coor(0, 10, null), 
-			new Coor(12, 0, null), 
-			new Coor(12, 0, null), 
-			new Coor(12, 10, null)
-		};
+    public Coor[] playerSpawn = new Coor[4]
+        {   new Coor(0, 10, null),
+            new Coor(12, 0, null),
+            new Coor(12, 0, null),
+            new Coor(12, 10, null)
+        };
 
     //TODO get actual values for these
     public int minNumBombUpgrades;
@@ -45,13 +45,13 @@ public class BoardManager : MonoBehaviour
     public int maxNumKickUpgrades;
     public int minNumLineUpgrades;
     public int maxNumLineUpgrades;
-	public int minNumRadioactiveUpgrades;
-	public int maxNumRadioactiveUpgrades;
+    public int minNumRadioactiveUpgrades;
+    public int maxNumRadioactiveUpgrades;
 
-	private GameObject[] playerInstance = new GameObject[4];
+    private GameObject[] playerInstance = new GameObject[4];
 
     private Transform boardHolder;
-	private List<GameObject> bombs = new List<GameObject>();
+    private List<GameObject> bombs = new List<GameObject>();
     private Coords indestructibleCoords = new Coords();
     private Coords destructibleCoords = new Coords();
     private Coords upgradeCoords = new Coords();
@@ -64,16 +64,16 @@ public class BoardManager : MonoBehaviour
                 // Background
                 GameObject instance;
 
-                if(x == -1 || y == -1 || x == columns || y == rows) //Border
-				{
+                if (x == -1 || y == -1 || x == columns || y == rows) //Border
+                {
                     instance = Instantiate(indestructible, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-					indestructibleCoords.Add(x, y, instance);
-				}
-                else if(x % 2 == 1 && y % 2 == 1) // Rows and columns
-				{
+                    indestructibleCoords.Add(x, y, instance);
+                }
+                else if (x % 2 == 1 && y % 2 == 1) // Rows and columns
+                {
                     instance = Instantiate(indestructible, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-					indestructibleCoords.Add(x, y, instance);
-				}
+                    indestructibleCoords.Add(x, y, instance);
+                }
                 else
                     instance = Instantiate(background, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 
@@ -85,35 +85,34 @@ public class BoardManager : MonoBehaviour
     {
         boardHolder = new GameObject("Board").transform;
         InitializeBoardDefault();
-		GameObject newPlayer;
-		GameObject newPlayerAnimation;
+        GameObject newPlayer;
+        GameObject newPlayerAnimation;
 
-		newPlayer = Instantiate (playerPrefabTest, new Vector3 (0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
-		newPlayerAnimation = Instantiate (playerAnimationtest, new Vector3 (0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
-		newPlayerAnimation.transform.SetParent (newPlayer.transform);
-		newPlayer.transform.SetParent (boardHolder);
-		Debug.Log (newPlayer.activeInHierarchy);
-		Debug.Log (newPlayer.activeSelf);
-		//TODO remove the ability to spawn players
-//        InitializeDestructible();
-//        InitializePlayers();
-//
-//        InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
-//        InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
-//        InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
-//        InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
-//		InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
-//		InitializeUpgrades (minNumRadioactiveUpgrades, maxNumRadioactiveUpgrades, upgradeRadioactive);
-//
+        newPlayer = Instantiate(playerPrefabTest, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+        newPlayerAnimation = Instantiate(playerAnimationtest, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
+        newPlayerAnimation.transform.SetParent(newPlayer.transform);
+        newPlayer.transform.SetParent(boardHolder);
+        //TODO remove the ability to spawn players
+        //        InitializeDestructible();
+        //        InitializePlayers();
+        //
+        //        InitializeUpgrades(minNumBombUpgrades, maxNumBombUpgrades, upgradeBomb);
+        //        InitializeUpgrades(minNumKickUpgrades, maxNumKickUpgrades, upgradeKick);
+        //        InitializeUpgrades(minNumLaserUpgrades, maxNumLaserUpgrades, upgradeLaser);
+        //        InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
+        //		InitializeUpgrades(minNumLineUpgrades, maxNumLineUpgrades, upgradeBombLine);
+        //		InitializeUpgrades (minNumRadioactiveUpgrades, maxNumRadioactiveUpgrades, upgradeRadioactive);
+        //
     }
 
     void InitializePlayers(int numPlayers)
     {
-		for (int i = 0; i < numPlayers; i++) {
-			playerInstance [i] = Instantiate (playerPrefab [i], new Vector3 (playerSpawn [i].x, playerSpawn [i].y, 0.0f), Quaternion.identity) as GameObject;
-			InitializeSpawn (playerSpawn [i]);
-			playerInstance [i].transform.SetParent (boardHolder);
-		}
+        for (int i = 0; i < numPlayers; i++)
+        {
+            playerInstance[i] = Instantiate(playerPrefab[i], new Vector3(playerSpawn[i].x, playerSpawn[i].y, 0.0f), Quaternion.identity) as GameObject;
+            InitializeSpawn(playerSpawn[i]);
+            playerInstance[i].transform.SetParent(boardHolder);
+        }
     }
     private void InitializeSpawn(Coor playerSpawn)
     {
@@ -197,7 +196,7 @@ public class BoardManager : MonoBehaviour
         for (int x = 0; x <= columns; x++)
             for (int y = 0; y <= rows; y++)
             {
-                if(UnityEngine.Random.value <= fillPercentage && !indestructibleCoords.inList(x, y))
+                if (UnityEngine.Random.value <= fillPercentage && !indestructibleCoords.inList(x, y))
                 {
                     GameObject instance = Instantiate(destructible, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
                     destructibleCoords.Add(x, y, instance);
@@ -207,159 +206,131 @@ public class BoardManager : MonoBehaviour
     }
 
     public void AddBomb(GameObject bomb)
-	{
-		bombs.Add (bomb);
-	}
-	private BombParams RemoveBomb(int x, int y)
-	{
-		foreach (GameObject bomb in bombs) {
-			if (AxisRounder.Round (bomb.transform.position.x) == x && AxisRounder.Round (bomb.transform.position.y) == y) {
-				bomb.GetComponent<BombController> ().Explode (false); // Give the player another bomb
-				Destroy (bomb); 	// Destroy bomb game oject
-				bombs.Remove (bomb);	// Remove from list
-				return bomb.GetComponent<BombController> ().paramaters;
-			}
-		}
-		throw new InvalidProgramException ();
-	}
-	public bool OnBomb(int x, int y)
-	{
-		foreach (GameObject bomb in bombs)
-			if (bomb != null && AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
-				return true;
-		return false;
-	}
-	public void ExplodeBomb(int x, int y)
-	{
-		BombParams p = RemoveBomb (x, y);	// Remove from list of bombs, destroy GameObject, give player another bomb
-		GameObject instance = Instantiate (laserCross, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
-		instance.transform.SetParent (boardHolder);	// Instantiate the cross of the laser
+    {
+        bombs.Add(bomb);
+    }
+    private BombParams RemoveBomb(int x, int y)
+    {
+        foreach (GameObject bomb in bombs)
+        {
+            if (AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
+            {
+                bomb.GetComponent<BombController>().Explode(false); // Give the player another bomb
+                Destroy(bomb);  // Destroy bomb game oject
+                bombs.Remove(bomb); // Remove from list
+                return bomb.GetComponent<BombController>().paramaters;
+            }
+        }
+        throw new InvalidProgramException();
+    }
+    public bool OnBomb(int x, int y)
+    {
+        foreach (GameObject bomb in bombs)
+            if (bomb != null && AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
+                return true;
+        return false;
+    }
+    public void ExplodeBomb(int x, int y)
+    {
+        BombParams p = RemoveBomb(x, y);    // Remove from list of bombs, destroy GameObject, give player another bomb
+        GameObject instance = Instantiate(laserCross, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+        instance.transform.SetParent(boardHolder);	// Instantiate the cross of the laser
         instance.GetComponent<LaserController>().paramaters = p;
-		LaserUp (x, y, p);
-		LaserDown (x, y, p);
-		LaserLeft (x, y, p);
-		LaserRight (x, y, p);
-	}
+        LaserUp(x, y, p);
+        LaserDown(x, y, p);
+        LaserLeft(x, y, p);
+        LaserRight(x, y, p);
+    }
 
-	public bool OnPlayer (int x, int y)
-	{
-		foreach (GameObject player in playerInstance) {
-			if (player != null && AxisRounder.Round (player.transform.position.x) == x && AxisRounder.Round (player.transform.position.y) == y)
-				return true;
-		}
-		return false;
-	}
+    public bool OnPlayer(int x, int y)
+    {
+        foreach (GameObject player in playerInstance)
+        {
+            if (player != null && AxisRounder.Round(player.transform.position.x) == x && AxisRounder.Round(player.transform.position.y) == y)
+                return true;
+        }
+        return false;
+    }
 
     public void LineBomb(int x, int y, string v, int numBombs, GameObject player)
     {
-		switch (v) 
-		{
-			case "Up":
-				LineBombUp(x, y + 1, numBombs, player);
-				return;
-			case "Down":
-				LineBombDown(x, y - 1, numBombs, player);
-				return;
-			case "Left":
-				LineBombLeft(x - 1, y, numBombs, player);
-				return;
-			case "Right":
-				LineBombRight(x + 1, y, numBombs, player);
-				return;
-			default:
-				return;
-		}
+        switch (v)
+        {
+            case "Up":
+                LineBombUp(x, y + 1, numBombs, player);
+                return;
+            case "Down":
+                LineBombDown(x, y - 1, numBombs, player);
+                return;
+            case "Left":
+                LineBombLeft(x - 1, y, numBombs, player);
+                return;
+            case "Right":
+                LineBombRight(x + 1, y, numBombs, player);
+                return;
+            default:
+                return;
+        }
     }
-	private void LineBombUp(int x, int y, int numBombs, GameObject player)
-	{
-		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
-			return;
+    private void LineBombUp(int x, int y, int numBombs, GameObject player)
+    {
+        if (numBombs <= 0 || indestructibleCoords.inList(x, y) || destructibleCoords.inList(x, y) || OnBomb(x, y) || upgradeCoords.inList(x, y) || OnPlayer(x, y))
+            return;
 
-		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
-		BombManager.SetupBomb (player, bomb);
-		bombs.Add (bomb);
+        GameObject bomb = Instantiate(player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+        BombManager.SetupBomb(player, bomb);
+        bombs.Add(bomb);
 
-		LineBombUp (x, y + 1, numBombs - 1, player);
-	}
-	private void LineBombDown(int x, int y, int numBombs, GameObject player)
-	{
-		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
-			return;
-		Debug.Log (numBombs);
-		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
-		BombManager.SetupBomb (player, bomb);
-		bombs.Add (bomb);
-		
-		LineBombDown (x, y - 1, numBombs - 1, player);
-	}
-	private void LineBombLeft(int x, int y, int numBombs, GameObject player)
-	{
-		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
-			return;
-		
-		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
-		BombManager.SetupBomb (player, bomb);
-		bombs.Add (bomb);
-		
-		LineBombLeft (x - 1, y, numBombs - 1, player);
-	}
-	private void LineBombRight(int x, int y, int numBombs, GameObject player)
-	{
-		if (numBombs <= 0 || indestructibleCoords.inList (x, y) || destructibleCoords.inList (x, y) || OnBomb (x, y) || upgradeCoords.inList (x, y) || OnPlayer (x, y))
-			return;
-		
-		GameObject bomb = Instantiate (player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
-		BombManager.SetupBomb (player, bomb);
-		bombs.Add (bomb);
-		
-		LineBombRight (x + 1, y, numBombs - 1, player);
-	}
+        LineBombUp(x, y + 1, numBombs - 1, player);
+    }
+    private void LineBombDown(int x, int y, int numBombs, GameObject player)
+    {
+        if (numBombs <= 0 || indestructibleCoords.inList(x, y) || destructibleCoords.inList(x, y) || OnBomb(x, y) || upgradeCoords.inList(x, y) || OnPlayer(x, y))
+            return;
+        Debug.Log(numBombs);
+        GameObject bomb = Instantiate(player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+        BombManager.SetupBomb(player, bomb);
+        bombs.Add(bomb);
+
+        LineBombDown(x, y - 1, numBombs - 1, player);
+    }
+    private void LineBombLeft(int x, int y, int numBombs, GameObject player)
+    {
+        if (numBombs <= 0 || indestructibleCoords.inList(x, y) || destructibleCoords.inList(x, y) || OnBomb(x, y) || upgradeCoords.inList(x, y) || OnPlayer(x, y))
+            return;
+
+        GameObject bomb = Instantiate(player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+        BombManager.SetupBomb(player, bomb);
+        bombs.Add(bomb);
+
+        LineBombLeft(x - 1, y, numBombs - 1, player);
+    }
+    private void LineBombRight(int x, int y, int numBombs, GameObject player)
+    {
+        if (numBombs <= 0 || indestructibleCoords.inList(x, y) || destructibleCoords.inList(x, y) || OnBomb(x, y) || upgradeCoords.inList(x, y) || OnPlayer(x, y))
+            return;
+
+        GameObject bomb = Instantiate(player.GetComponent<PlayerControllerComponent>().bombObject, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+        BombManager.SetupBomb(player, bomb);
+        bombs.Add(bomb);
+
+        LineBombRight(x + 1, y, numBombs - 1, player);
+    }
     private void LaserUp(int x, int y, BombParams p)
-	{
-		GameObject laser;
-		for (int i = 0; i <= p.radius; i++) {
-			y++;
-			if(OnBomb(x, y))
-			{
-			   	ExplodeBomb(x, y);
-				continue;
-			}
-			else if(indestructibleCoords.inList(x, y))
-			{
-				break;
-			}
-            else if(destructibleCoords.inList(x, y))
+    {
+        GameObject laser;
+        for (int i = 0; i <= p.radius; i++)
+        {
+            y++;
+            if (OnBomb(x, y))
             {
-                Destroy(destructibleCoords.Remove(x, y));
+                ExplodeBomb(x, y);
+                continue;
+            }
+            else if (indestructibleCoords.inList(x, y))
+            {
                 break;
             }
-            else if(upgradeCoords.inList(x, y))
-            {
-                Destroy(upgradeCoords.Remove(x, y));
-            }
-			if(i != p.radius)
-				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			else 
-				laser = Instantiate(laserUp, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-            laser.GetComponent<LaserController>().paramaters = p;
-
-            laser.transform.SetParent(boardHolder);
-		}
-	}
-	private void LaserDown(int x, int y, BombParams p)
-	{
-		GameObject laser;
-		for (int i = 0; i <= p.radius; i++) {
-			y--;
-			if(OnBomb(x, y))
-			{
-				ExplodeBomb(x, y);
-				continue;
-			}
-			else if(indestructibleCoords.inList(x, y))
-			{
-				break;
-			}
             else if (destructibleCoords.inList(x, y))
             {
                 Destroy(destructibleCoords.Remove(x, y));
@@ -370,28 +341,29 @@ public class BoardManager : MonoBehaviour
                 Destroy(upgradeCoords.Remove(x, y));
             }
             if (i != p.radius)
-				laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			else 
-				laser = Instantiate(laserDown, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+                laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+            else
+                laser = Instantiate(laserUp, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
             laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
-		}
-	}
-	private void LaserLeft(int x, int y, BombParams p)
-	{
-		GameObject laser;
-		for (int i = 0; i <= p.radius; i++) {
-			x--;
-			if(OnBomb(x, y))
-			{
-				ExplodeBomb(x, y);
-				continue;
-			}
-			else if(indestructibleCoords.inList(x, y))
-			{
-				break;
-			}
+        }
+    }
+    private void LaserDown(int x, int y, BombParams p)
+    {
+        GameObject laser;
+        for (int i = 0; i <= p.radius; i++)
+        {
+            y--;
+            if (OnBomb(x, y))
+            {
+                ExplodeBomb(x, y);
+                continue;
+            }
+            else if (indestructibleCoords.inList(x, y))
+            {
+                break;
+            }
             else if (destructibleCoords.inList(x, y))
             {
                 Destroy(destructibleCoords.Remove(x, y));
@@ -402,28 +374,29 @@ public class BoardManager : MonoBehaviour
                 Destroy(upgradeCoords.Remove(x, y));
             }
             if (i != p.radius)
-				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			else 
-				laser = Instantiate(laserLeft, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+                laser = Instantiate(laserVert, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+            else
+                laser = Instantiate(laserDown, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
             laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
-		}
-	}
-	private void LaserRight(int x, int y, BombParams p)
-	{
-		GameObject laser;
-		for (int i = 0; i <= p.radius; i++) {
-			x++;
-			if(OnBomb(x, y))
-			{
-				ExplodeBomb(x, y);
-				continue;
-			}
-			else if(indestructibleCoords.inList(x, y))
-			{
-				break;
-			}
+        }
+    }
+    private void LaserLeft(int x, int y, BombParams p)
+    {
+        GameObject laser;
+        for (int i = 0; i <= p.radius; i++)
+        {
+            x--;
+            if (OnBomb(x, y))
+            {
+                ExplodeBomb(x, y);
+                continue;
+            }
+            else if (indestructibleCoords.inList(x, y))
+            {
+                break;
+            }
             else if (destructibleCoords.inList(x, y))
             {
                 Destroy(destructibleCoords.Remove(x, y));
@@ -434,12 +407,45 @@ public class BoardManager : MonoBehaviour
                 Destroy(upgradeCoords.Remove(x, y));
             }
             if (i != p.radius)
-				laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-			else 
-				laser = Instantiate(laserRight, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+                laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+            else
+                laser = Instantiate(laserLeft, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
             laser.GetComponent<LaserController>().paramaters = p;
 
             laser.transform.SetParent(boardHolder);
-		}
-	}
+        }
+    }
+    private void LaserRight(int x, int y, BombParams p)
+    {
+        GameObject laser;
+        for (int i = 0; i <= p.radius; i++)
+        {
+            x++;
+            if (OnBomb(x, y))
+            {
+                ExplodeBomb(x, y);
+                continue;
+            }
+            else if (indestructibleCoords.inList(x, y))
+            {
+                break;
+            }
+            else if (destructibleCoords.inList(x, y))
+            {
+                Destroy(destructibleCoords.Remove(x, y));
+                break;
+            }
+            else if (upgradeCoords.inList(x, y))
+            {
+                Destroy(upgradeCoords.Remove(x, y));
+            }
+            if (i != p.radius)
+                laser = Instantiate(laserHor, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+            else
+                laser = Instantiate(laserRight, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
+            laser.GetComponent<LaserController>().paramaters = p;
+
+            laser.transform.SetParent(boardHolder);
+        }
+    }
 }

@@ -15,7 +15,8 @@ public struct Coor
     }
 }
 
-public class Coords {
+public class Coords
+{
     private List<Coor> coords = new List<Coor>();
 
     public void Add(int x, int y, GameObject gameObject)
@@ -65,4 +66,3 @@ public class Coords {
         return false;
     }
 }
-   

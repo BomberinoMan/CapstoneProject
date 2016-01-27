@@ -11,6 +11,8 @@ GameObject:
   - 61: {fileID: 6191484}
   - 212: {fileID: 21231714}
   - 114: {fileID: 11481206}
+  - 114: {fileID: 11438188}
+  - 114: {fileID: 11443236}
   m_Layer: 13
   m_Name: UpgradeRadioactive
   m_TagString: Upgrade
@@ -91,6 +93,58 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11438188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 111694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 153
+    i1: 32
+    i2: 165
+    i3: 23
+    i4: 57
+    i5: 164
+    i6: 172
+    i7: 132
+    i8: 138
+    i9: 241
+    i10: 177
+    i11: 66
+    i12: 52
+    i13: 108
+    i14: 221
+    i15: 162
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &11443236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 111694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 0
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &11481206
 MonoBehaviour:
   m_ObjectHideFlags: 1

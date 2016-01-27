@@ -28,6 +28,8 @@ GameObject:
   - 61: {fileID: 6119412}
   - 212: {fileID: 21228998}
   - 114: {fileID: 11448178}
+  - 114: {fileID: 11435496}
+  - 114: {fileID: 11490370}
   m_Layer: 13
   m_Name: UpgradeBomb
   m_TagString: Upgrade
@@ -67,12 +69,13 @@ BoxCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 176696}
   m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .5, y: .5}
+  m_Size: {x: 0.5, y: 0.5}
 --- !u!95 &9562758
 Animator:
   serializedVersion: 3
@@ -90,6 +93,38 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11435496
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 25
+    i1: 173
+    i2: 217
+    i3: 98
+    i4: 122
+    i5: 235
+    i6: 166
+    i7: 84
+    i8: 90
+    i9: 223
+    i10: 146
+    i11: 118
+    i12: 230
+    i13: 64
+    i14: 47
+    i15: 29
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &11448178
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -102,6 +137,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+--- !u!114 &11490370
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 0
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!212 &21219840
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -120,14 +175,18 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 315545113
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 113cbc4491c381c41b62b9771c78c4a7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
 --- !u!212 &21228998
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -146,14 +205,18 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 315545113
   m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 1e68640012699c04a837c406afc047b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

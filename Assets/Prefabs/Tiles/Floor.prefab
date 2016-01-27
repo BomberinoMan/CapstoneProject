@@ -9,6 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 491512}
   - 212: {fileID: 21214946}
+  - 114: {fileID: 11442276}
+  - 114: {fileID: 11419048}
   m_Layer: 10
   m_Name: Floor
   m_TagString: Untagged
@@ -28,6 +30,58 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11419048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 142690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 0
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &11442276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 142690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 228
+    i1: 133
+    i2: 108
+    i3: 138
+    i4: 10
+    i5: 101
+    i6: 199
+    i7: 116
+    i8: 216
+    i9: 50
+    i10: 159
+    i11: 51
+    i12: 218
+    i13: 178
+    i14: 124
+    i15: 148
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!212 &21214946
 SpriteRenderer:
   m_ObjectHideFlags: 1

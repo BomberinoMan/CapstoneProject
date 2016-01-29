@@ -73,7 +73,23 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 0
   m_OfflineScene: Lobby
   m_OnlineScene: 
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
+  - {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
+  - {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
+  - {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
+  - {fileID: 114058, guid: cff52736efd2f8342ae4c2e889500934, type: 2}
+  - {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}
+  - {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
+  - {fileID: 111694, guid: 9920a51739a4ac848af1b142346cdda2, type: 2}
+  - {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
+  - {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
+  - {fileID: 189166, guid: ac417a3cedcdadb46abb0e2de9d114fe, type: 2}
+  - {fileID: 109734, guid: 9adbb3f820837b740b8d1225c2535b9e, type: 2}
+  - {fileID: 117164, guid: cd4eb78551b9beb4ebd2c4136f4713e7, type: 2}
+  - {fileID: 180182, guid: d7b28480e3c91a04b9b4222f3e842b44, type: 2}
+  - {fileID: 164174, guid: 80b60945654382f4fb1f496975d6523b, type: 2}
+  - {fileID: 151648, guid: 52720c29d63eff64b9bf7d9a3d35fdce, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -102,7 +118,7 @@ MonoBehaviour:
     m_ReactorMaximumReceivedMessages: 1024
     m_ReactorMaximumSentMessages: 1024
     m_MaxPacketSize: 2000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
@@ -123,6 +139,14 @@ MonoBehaviour:
   m_LobbyScene: Lobby
   m_PlayScene: Game
   lobbySlots: []
+  bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
+  laserUpgrade: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
+  kickUpgrade: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}
+  lineUpgrade: {fileID: 114058, guid: cff52736efd2f8342ae4c2e889500934, type: 2}
+  radioactiveUpgrade: {fileID: 111694, guid: 9920a51739a4ac848af1b142346cdda2, type: 2}
+  floor: {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
+  destructible: {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
+  indestructible: {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
   playerAnimations:
   - {fileID: 198336, guid: e0bdd4ddfaf624880aafbfec13ca8e9c, type: 2}
   - {fileID: 130842, guid: db208dfe21da242fa81373f0e78cd98a, type: 2}

@@ -59,34 +59,14 @@ public class BoardManager : MonoBehaviour
 
     void InitializeBoardDefault()
     {
-        for (int x = -1; x <= columns; x++)
-            for (int y = -1; y <= rows; y++)
-            {
-                // Background
-                GameObject instance;
-
-                if (x == -1 || y == -1 || x == columns || y == rows) //Border
-                {
-                    instance = Instantiate(indestructible, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-                    indestructibleCoords.Add(x, y, instance);
-                }
-                else if (x % 2 == 1 && y % 2 == 1) // Rows and columns
-                {
-                    instance = Instantiate(indestructible, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-                    indestructibleCoords.Add(x, y, instance);
-                }
-                else
-                    instance = Instantiate(background, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
-
-                instance.transform.SetParent(boardHolder);
-            }
+        
     }
 
     public void CreateBoard()
     {
-        boardHolder = new GameObject("Board").transform;
+        //boardHolder = new GameObject("Board").transform;
 
-        InitializeBoardDefault();
+        //InitializeBoardDefault();
 		/*
         GameObject newPlayer;
         GameObject newPlayerAnimation;

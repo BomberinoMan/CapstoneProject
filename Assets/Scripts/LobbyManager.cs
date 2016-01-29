@@ -2,156 +2,127 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class LobbyManager : NetworkLobbyManager
 {
+	private BoardCreator boardCreator;
 	private IList<int> playerOrder = new List<int>(); //TODO LIMIT ON THE NUMBER OF PLAYERS
 	private Vector3[] playerSpawnVectors = new Vector3[4]
-	{   new Vector3(0.0f, 10.0f, 0.0f),
-		new Vector3(12.0f, 0.0f, 0.0f),
-		new Vector3(12.0f, 0.0f, 0.0f),
-		new Vector3(12.0f, 10.0f, 0.0f)
+	{   new Vector3(1.0f, 11.0f, 0.0f),
+		new Vector3(13.0f, 1.0f, 0.0f),
+		new Vector3(13.0f, 11.0f, 0.0f),
+		new Vector3(1.0f, 1.0f, 0.0f)
 	};
 
+	public GameObject bombUpgrade;
+	public GameObject laserUpgrade;
+	public GameObject kickUpgrade;
+	public GameObject lineUpgrade;
+	public GameObject radioactiveUpgrade;
+
+	public GameObject floor;
+	public GameObject destructible;
+	public GameObject indestructible;
 	public GameObject[] playerAnimations;
 
-	// **************SERVER**************
-    public override void OnLobbyStartHost()
-    {
-        Debug.Log("OnLobbyStartHost()");
-        base.OnLobbyStartHost();
-    }
-
-    public override void OnLobbyStopHost()
-    {
-        Debug.Log("OnLobbyStopHost()");
-        base.OnLobbyStopHost();
-    }
-
-    public override void OnLobbyStartServer()
-    {
-        Debug.Log("OnLobbyStartServer()");
-
+	public override void OnLobbyStartServer ()
+	{
 		playerOrder.Clear ();
+	}
 
-        base.OnLobbyStartServer();
-    }
+	public override void OnLobbyServerConnect (NetworkConnection conn)
+	{
+		if(conn.address != "localServer")
+			playerOrder.Add (conn.connectionId);
+	}
 
-    public override void OnLobbyServerConnect(NetworkConnection networkConnection)
-    {
-        Debug.Log("OnLobbyServerConnect(NetworkConnection networkConnection)");
-		if(networkConnection.address != "localServer")
-			playerOrder.Add (networkConnection.connectionId);
-		base.OnLobbyServerConnect (networkConnection);
-    }
+	public override void OnLobbyServerDisconnect(NetworkConnection networkConnection){
+		playerOrder.Remove (networkConnection.connectionId);		
+	}
 
-    public override void OnLobbyServerDisconnect(NetworkConnection networkConnection)
-    {
-        Debug.Log("OnLobbyServerDisconnect(NetworkConnection networkConnection)");
-
-		playerOrder.Remove (networkConnection.connectionId);
-
-        base.OnLobbyServerDisconnect(networkConnection);
-    }
-
-    public override void OnLobbyServerSceneChanged(string name)
-    {
-        Debug.Log("OnLobbyServerSceneChanged(string name)");
-        base.OnLobbyServerSceneChanged(name);
-    }
-
-    public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)
-    {
-        Debug.Log("OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)");
-        return base.OnLobbyServerCreateLobbyPlayer(networkConnection, other);
-    }
-
-    public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short other)
+	public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
     {
         Debug.Log("OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short other)");
+		Debug.Log (playerControllerId);
+		int i = getSlotIndex (networkConnection.connectionId);
 
-		int i = 0;
-		GameObject newPlayer = null;
-		GameObject playerAnimation;
-
-		foreach(var id in playerOrder){
-			if (id == networkConnection.connectionId)
-				break;
-			i++;
-		}
-
-		newPlayer = Instantiate (playerPrefab.gameObject);
-
-		playerAnimation = Instantiate (playerAnimations [i]);
-		playerAnimation.transform.SetParent (newPlayer.transform);
+		GameObject newPlayer = Instantiate (playerPrefab.gameObject);
 		newPlayer.transform.position = playerSpawnVectors [i];
+		newPlayer.GetComponent<PlayerControllerComponent> ().playerIndex = i;
 
-		newPlayer.GetComponent<PlayerControllerComponent> ().playerNum = i;
-
-		NetworkServer.Spawn (newPlayer);
-
+		NetworkServer.Spawn(newPlayer);
 		return newPlayer;
     }
 
-    public override void OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)
-    {
-        Debug.Log("OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)");
-        base.OnLobbyServerPlayerRemoved(networkConnection, other);
-    }
+    public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2) {
+		SpawnBoard ();
 
-    public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
-    {
-        Debug.Log("OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)");
-        return base.OnLobbyServerSceneLoadedForPlayer(gameObject1, gameObject2);
+		return true;
     }
 
     public override void OnLobbyServerPlayersReady()
     {
-        Debug.Log("OnLobbyServerPlayersReady()");
-        base.OnLobbyServerPlayersReady();
+		ServerChangeScene(playScene);
     }
 
+	private void SpawnBoard(){
+		boardCreator = new BoardCreator ();
 
-	// **************CLIENT**************
+		boardCreator.InitializeDestructible ();
 
-	public override void OnLobbyClientEnter (){
-		Debug.Log("OnLobbyClientEnter ()");
+		foreach(var player in playerOrder)
+			if(player != null)
+					boardCreator.InitializeSpawn (playerSpawnVectors[getSlotIndex (player)]);
 
-		base.OnLobbyClientEnter();
+		boardCreator.InitializeUpgrades();
+
+		var board = boardCreator.getBoard();
+
+		foreach (var tile in board.tiles) {
+			if (tile.isIndestructible) {
+				NetworkServer.Spawn (Instantiate (indestructible, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+				continue;
+			}
+			else {
+				NetworkServer.Spawn (Instantiate(floor, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+			}
+			// TODO the upgrades are overlapping
+//			if (tile.isDestructible)
+//				NetworkServer.Spawn (Instantiate (destructible, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+
+			if (tile.isUpgrade)
+				switch (tile.upgradeType) {
+					case(UpgradeType.Bomb):
+						NetworkServer.Spawn (Instantiate (bombUpgrade, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+						break;
+					case(UpgradeType.Kick):
+						NetworkServer.Spawn (Instantiate (kickUpgrade, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+						break;
+					case(UpgradeType.Laser):
+						NetworkServer.Spawn (Instantiate (laserUpgrade, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+						break;
+					case(UpgradeType.Line):
+						NetworkServer.Spawn (Instantiate (lineUpgrade, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+						break;
+					case (UpgradeType.Radioactive):
+						NetworkServer.Spawn (Instantiate (radioactiveUpgrade, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+						break;
+					default: // Do nothing
+						break;
+				}
+		}
 	}
 
-	public override void OnLobbyClientExit (){
-		Debug.Log("OnLobbyClientExit ()");
-		base.OnLobbyClientExit();
-	}
+	private int getSlotIndex(int connectionId){
+		int i = 0;
+		foreach(var playerId in playerOrder){
+			if (playerId == connectionId)
+				return i;
+			i++;
+		}
 
-	public override void OnLobbyClientConnect (NetworkConnection conn){
-		Debug.Log("OnLobbyClientConnect ()");
-		base.OnLobbyClientConnect(conn);
-	}
-
-	public override void OnLobbyClientDisconnect (NetworkConnection conn){
-		Debug.Log("OnLobbyClientDisconnect ()");
-		base.OnLobbyClientDisconnect(conn);
-	}
-
-	public override void OnLobbyStartClient (NetworkClient client){
-		Debug.Log("OnLobbyStartClient ()");
-		base.OnLobbyStartClient(client);
-	}
-
-	public override void OnLobbyStopClient (){
-		Debug.Log("OnLobbyStopClient ()");
-		base.OnLobbyStopClient();
-	}
-
-	public override void OnLobbyClientSceneChanged (NetworkConnection conn){
-		Debug.Log("OnLobbyClientSceneChanged ()");
-		base.OnLobbyClientSceneChanged(conn);
-	}
-
-	public override void OnLobbyClientAddPlayerFailed (){
-		Debug.Log("OnLobbyClientAddPlayerFailed ()");
-		base.OnLobbyClientAddPlayerFailed();
+		Debug.LogError ("No matching playerControllerId in slots");
+		throw new ArgumentOutOfRangeException ();
 	}
 }

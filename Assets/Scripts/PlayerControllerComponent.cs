@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class PlayerControllerComponent : NetworkBehaviour
 {
 	[SyncVar]
-	public int playerNum;
+	public int playerIndex;
 
 	private LobbyManager _lobbyManager;
     private float _speed;
@@ -24,13 +24,10 @@ public class PlayerControllerComponent : NetworkBehaviour
     public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
 
 	public override void OnStartClient(){
-		if (isServer)
-			return;
-		
 		if(_lobbyManager == null)
 			_lobbyManager = GameObject.Find ("LobbyManager").GetComponent<LobbyManager>();
 
-		GameObject animator = Instantiate(_lobbyManager.playerAnimations [playerNum]) as GameObject;
+		GameObject animator = Instantiate(_lobbyManager.playerAnimations [playerIndex]) as GameObject;
 		animator.transform.SetParent (gameObject.transform);
 			// Changing the parent also changes the localPosition, need to reset it
 		animator.transform.localPosition = Vector3.zero; 	
@@ -74,7 +71,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
-        if (!_playerController.reverseMovement)
+		if (!_playerController.reverseMovement)
         {
             if (ver == 0.0f && hor != 0.0f)
             {
@@ -149,16 +146,16 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Upgrade")
-        {
-            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeType>().type).ApplyEffect(gameObject);
-            Destroy(other.gameObject);
-        }
-        else if (other.gameObject.tag == "Laser")
-        {
-            //TODO add destruction animation support
-            //Destroy(gameObject);
-        }
+//        if (other.gameObject.tag == "Upgrade")
+//        {
+//            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
+//            Destroy(other.gameObject);
+//        }
+//        else if (other.gameObject.tag == "Laser")
+//        {
+//            //TODO add destruction animation support
+//            //Destroy(gameObject);
+//        }
     }
 
     public IPlayerControllerModifier getPlayerControllerModifier()

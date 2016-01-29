@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-public enum Upgrades
+public enum UpgradeType
 {
+	None,
     Bomb,
     Laser,
     Line,
@@ -11,20 +12,21 @@ public enum Upgrades
 
 public static class UpgradeFactory
 {
-    public static IUpgrade getUpgrade(Upgrades upgrade)
+    public static IUpgrade getUpgrade(UpgradeType upgrade)
     {
         switch(upgrade)
         {
-        case Upgrades.Bomb:
+        case UpgradeType.Bomb:
             return new UpgradeBomb();
-        case Upgrades.Laser:
+        case UpgradeType.Laser:
             return new UpgradeLaser();
-        case Upgrades.Line:
+        case UpgradeType.Line:
             return new UpgradeBombLine();
-        case Upgrades.Kick:
+        case UpgradeType.Kick:
             return new UpgradeKick();
-		case Upgrades.Radioactive:
-			return new UpgradeRadioactive ();            
+		case UpgradeType.Radioactive:
+			return new UpgradeRadioactive ();   
+		case UpgradeType.None:
         default:
             Debug.LogError(upgrade + " is not a supported upgrade type");
             return null;                

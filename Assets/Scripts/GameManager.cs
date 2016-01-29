@@ -7,6 +7,6 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         boardManager = GetComponent<BoardManager>();
-        boardManager.CreateBoard();
+        //boardManager.CreateBoard();
     }
 }

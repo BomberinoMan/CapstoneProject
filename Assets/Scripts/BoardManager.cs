@@ -51,6 +51,7 @@ public class BoardManager : MonoBehaviour
     private GameObject[] playerInstance = new GameObject[4];
 
     private Transform boardHolder;
+	private GameObject lobbyManager;
     private List<GameObject> bombs = new List<GameObject>();
     private Coords indestructibleCoords = new Coords();
     private Coords destructibleCoords = new Coords();
@@ -84,7 +85,9 @@ public class BoardManager : MonoBehaviour
     public void CreateBoard()
     {
         boardHolder = new GameObject("Board").transform;
+
         InitializeBoardDefault();
+		/*
         GameObject newPlayer;
         GameObject newPlayerAnimation;
 
@@ -92,6 +95,7 @@ public class BoardManager : MonoBehaviour
         newPlayerAnimation = Instantiate(playerAnimationtest, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity) as GameObject;
         newPlayerAnimation.transform.SetParent(newPlayer.transform);
         newPlayer.transform.SetParent(boardHolder);
+        */
         //TODO remove the ability to spawn players
         //        InitializeDestructible();
         //        InitializePlayers();

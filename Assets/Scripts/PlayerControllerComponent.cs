@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class PlayerControllerComponent : MonoBehaviour
+public class PlayerControllerComponent : NetworkBehaviour
 {
+	[SyncVar]
+	public int playerNum;
+
+	private LobbyManager _lobbyManager;
     private float _speed;
     private float _flipFlopTime;
     private float _flipFlopDuration = 0.25f;
@@ -18,8 +23,23 @@ public class PlayerControllerComponent : MonoBehaviour
     public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
     public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
 
+	public override void OnStartClient(){
+		if (isServer)
+			return;
+		
+		if(_lobbyManager == null)
+			_lobbyManager = GameObject.Find ("LobbyManager").GetComponent<LobbyManager>();
+
+		GameObject animator = Instantiate(_lobbyManager.playerAnimations [playerNum]) as GameObject;
+		animator.transform.SetParent (gameObject.transform);
+			// Changing the parent also changes the localPosition, need to reset it
+		animator.transform.localPosition = Vector3.zero; 	
+	}
+
     void Start()
     {
+		if(_lobbyManager == null)
+			_lobbyManager = GameObject.Find ("LobbyManager").GetComponent<LobbyManager>();
         _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
@@ -49,6 +69,8 @@ public class PlayerControllerComponent : MonoBehaviour
 
     void FixedUpdate() //TODO Add reverse movement support to animation driver
     {
+		if (!isLocalPlayer)
+			return;
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
@@ -87,7 +109,7 @@ public class PlayerControllerComponent : MonoBehaviour
             }
         }
 
-        flipFlopColor();
+        //flipFlopColor(); //TODO uncomment this when ready
     }
 
     private void LayBomb()

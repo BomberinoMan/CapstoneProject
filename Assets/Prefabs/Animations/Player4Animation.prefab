@@ -11,6 +11,7 @@ GameObject:
   - 95: {fileID: 9545192}
   - 212: {fileID: 21284312}
   - 114: {fileID: 11423436}
+  - 114: {fileID: 11472378}
   m_Layer: 8
   m_Name: Player4Animation
   m_TagString: Untagged
@@ -58,6 +59,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e1121cc1770aad44b1901b3fc21d07c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11472378
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 153562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 77
+    i1: 245
+    i2: 234
+    i3: 215
+    i4: 44
+    i5: 24
+    i6: 36
+    i7: 113
+    i8: 104
+    i9: 21
+    i10: 146
+    i11: 131
+    i12: 34
+    i13: 210
+    i14: 15
+    i15: 44
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!212 &21284312
 SpriteRenderer:
   m_ObjectHideFlags: 1

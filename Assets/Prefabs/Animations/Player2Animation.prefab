@@ -11,6 +11,7 @@ GameObject:
   - 95: {fileID: 9545178}
   - 212: {fileID: 21277838}
   - 114: {fileID: 11422696}
+  - 114: {fileID: 11418188}
   m_Layer: 8
   m_Name: Player2Animation
   m_TagString: Untagged
@@ -47,6 +48,38 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11418188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 219
+    i1: 32
+    i2: 141
+    i3: 254
+    i4: 33
+    i5: 218
+    i6: 36
+    i7: 47
+    i8: 168
+    i9: 19
+    i10: 115
+    i11: 240
+    i12: 231
+    i13: 140
+    i14: 217
+    i15: 138
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &11422696
 MonoBehaviour:
   m_ObjectHideFlags: 1

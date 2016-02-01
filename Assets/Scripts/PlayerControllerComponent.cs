@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using System.Linq;
 
 public class PlayerControllerComponent : NetworkBehaviour
 {
-	[SyncVar]
-	public int playerIndex;
+    [SyncVar]
+    public int playerIndex;
 
-	private LobbyManager _lobbyManager;
+    private LobbyManager _lobbyManager;
     private float _speed;
     private float _flipFlopTime;
     private float _flipFlopDuration = 0.25f;
     private IPlayerControllerModifier _playerController;
+    private bool _bombBlock = false;
 
     public GameObject bombObject;
     private Rigidbody2D _rb;
-    private Transform _tempTransform;
+    private Transform _transform;
 
     public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
     public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
@@ -23,55 +25,62 @@ public class PlayerControllerComponent : NetworkBehaviour
     public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
     public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
 
-	public override void OnStartClient(){
-		if(_lobbyManager == null)
-			_lobbyManager = GameObject.Find ("LobbyManager").GetComponent<LobbyManager>();
-
-		GameObject animator = Instantiate(_lobbyManager.playerAnimations [playerIndex]) as GameObject;
-		animator.transform.SetParent (gameObject.transform);
-			// Changing the parent also changes the localPosition, need to reset it
-		animator.transform.localPosition = Vector3.zero; 	
-	}
-
-    void Start()
+    public override void OnStartClient()
     {
-		if(_lobbyManager == null)
-			_lobbyManager = GameObject.Find ("LobbyManager").GetComponent<LobbyManager>();
+        if (_lobbyManager == null)
+            _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
+
+        GameObject animator = Instantiate(_lobbyManager.playerAnimations[playerIndex]) as GameObject;
+        animator.transform.SetParent(gameObject.transform);
+        // Changing the parent also changes the localPosition, need to reset it
+        animator.transform.localPosition = Vector3.zero;
+
+        // To sync animations, we need to assign the NetworkAnimator to the new child animator
+        //          The animator on this (parent) object will be disabled
+        GetComponent<NetworkAnimator>().animator = GetComponentsInChildren<Animator>().Where(x => x.enabled).First();
+    }
+
+    public void Start()
+    {
+        if (_lobbyManager == null)
+            _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
         _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
         _rb = GetComponent<Rigidbody2D>();
-        _tempTransform = GetComponent<Transform>();
+        _transform = GetComponent<Transform>();
     }
 
     void Update()
     {
+        if (!isLocalPlayer)
+            return;
+
         if (Input.GetKeyDown("space") && _playerController.canLayBombs)
         {
-            if (!OnBomb())
+            if (!_bombBlock)
             {
-                LayBomb();
+                CmdLayBomb();
             }
             else if (_playerController.bombLine > 0)
             {
-                LayLineBomb();
+                CmdLayLineBomb();
             }
         }
-
-        if (_playerController.alwaysLayBombs && !OnBomb())
+        if (_playerController.alwaysLayBombs && !_bombBlock)
         {
-            LayBomb();
+            CmdLayBomb();
         }
     }
 
     void FixedUpdate() //TODO Add reverse movement support to animation driver
     {
-		if (!isLocalPlayer)
-			return;
+        if (!isLocalPlayer)
+            return;
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
-		if (!_playerController.reverseMovement)
+        if (!_playerController.reverseMovement)
         {
             if (ver == 0.0f && hor != 0.0f)
             {
@@ -109,31 +118,41 @@ public class PlayerControllerComponent : NetworkBehaviour
         //flipFlopColor(); //TODO uncomment this when ready
     }
 
-    private void LayBomb()
+    [ClientRpc]
+    private void RpcSetupBomb(GameObject player, GameObject bomb)
+    {
+        BombManager.SetupBomb(gameObject, bomb);
+    }
+
+    [Command]
+    private void CmdLayBomb()
     {
         if (_playerController.currNumBombs <= 0)
         {
             return;
         }
-
         GameObject bomb = Instantiate(
             bombObject,
             new Vector3(
-                AxisRounder.Round(_tempTransform.position.x),
-                AxisRounder.Round(_tempTransform.position.y),
+                AxisRounder.Round(_transform.position.x),
+                AxisRounder.Round(_transform.position.y),
                 0.0f),
             Quaternion.identity)
             as GameObject;
+
         BombManager.SetupBomb(gameObject, bomb);
+        NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+        RpcSetupBomb(gameObject, bomb);
     }
 
-    private void LayLineBomb()
+    [Command]
+    private void CmdLayLineBomb()
     {
         GameObject.FindGameObjectWithTag("GameController")
             .GetComponent<BoardManager>()
             .LineBomb(
-                (int)AxisRounder.Round(_tempTransform.position.x),
-                (int)AxisRounder.Round(_tempTransform.position.y),
+                (int)AxisRounder.Round(_transform.position.x),
+                (int)AxisRounder.Round(_transform.position.y),
                 gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(),
                 _playerController.currNumBombs,
                 gameObject);
@@ -141,21 +160,33 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     private bool OnBomb()
     {
-        return GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(_tempTransform.position.x), (int)AxisRounder.Round(_tempTransform.position.y));
+        return GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(_transform.position.x), (int)AxisRounder.Round(_transform.position.y));
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-//        if (other.gameObject.tag == "Upgrade")
-//        {
-//            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
-//            Destroy(other.gameObject);
-//        }
-//        else if (other.gameObject.tag == "Laser")
-//        {
-//            //TODO add destruction animation support
-//            //Destroy(gameObject);
-//        }
+        //        if (other.gameObject.tag == "Upgrade")
+        //        {
+        //            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
+        //            Destroy(other.gameObject);
+        //        }
+        //        else if (other.gameObject.tag == "Laser")
+        //        {
+        //            //TODO add destruction animation support
+        //            //Destroy(gameObject);
+        //        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "BombBlock")
+            _bombBlock = true;
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "BombBlock")
+            _bombBlock = false;
     }
 
     public IPlayerControllerModifier getPlayerControllerModifier()

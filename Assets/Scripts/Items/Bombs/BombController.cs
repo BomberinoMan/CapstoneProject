@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
 
-public class BombController : MonoBehaviour 
+public class BombController : NetworkBehaviour 
 {	
 	public float speed;
 	public float speedScalar;
+    [SyncVar]
 	public BombParams paramaters;
+    [SyncVar]
     public GameObject parentPlayer;
-	private bool hasExploded = false;
+    private bool hasExploded = false;
 
 	private bool isMoving = false;
 	private Vector3 direction = new Vector3();
@@ -15,18 +17,11 @@ public class BombController : MonoBehaviour
 
 	void Start()
 	{
-		rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
 
-			// Ignor collisions with player that planted the bomb
-		if (GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ().OnPlayer ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y))) {
-			foreach (Collider2D collider in gameObject.GetComponentsInChildren<Collider2D> ())	// Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
-				if (!collider.isTrigger)
-					Physics2D.IgnoreCollision (collider, parentPlayer.gameObject.GetComponent<Collider2D> ());
-				
-				// set parentPlayer in all child sub colliders
-			foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController> ())
-				collisionController.parentPlayer = parentPlayer;
-		}
+			// Set parentPlayer in all child sub colliders
+		foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController> ())
+			collisionController.parentPlayer = parentPlayer;
 
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
 			.AddBomb (gameObject);
@@ -55,25 +50,31 @@ public class BombController : MonoBehaviour
 		}
 	}
 
-	public void Explode(bool notifyBoard = true)
+	public void Explode()
 	{
 		StopMovement ();
-		if(notifyBoard)
-        {
-			GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
-				.ExplodeBomb ((int)AxisRounder.Round(gameObject.transform.position.x), (int)AxisRounder.Round(gameObject.transform.position.y));
-        }
 
-		try
+        try
         {
-			if(!hasExploded)
-				parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
+            if (!hasExploded)
+            {
+                parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
+
+                if (isLocalPlayer)
+                    CmdExplode();
+            }
 			hasExploded = true;
 		}
 		catch (MissingReferenceException)
         {
         }
 	}
+
+    [Command]
+    private void CmdExplode()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
 
     //TODO Add collision detection for lasers
 	void OnTriggerEnter2D(Collider2D collisionInfo)
@@ -98,7 +99,7 @@ public class BombController : MonoBehaviour
 
 	void OnTriggerStay2D(Collider2D collisionInfo)
 	{
-		if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb") {
+		if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb" || collisionInfo.gameObject.tag == "Player") {
 			StopMovement();
 		}
 	}

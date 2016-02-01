@@ -8,6 +8,7 @@ TagManager:
   - Laser
   - Upgrade
   - Blocking
+  - BombBlock
   layers:
   - Default
   - TransparentFX

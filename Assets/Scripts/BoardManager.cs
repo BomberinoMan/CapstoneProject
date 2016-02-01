@@ -199,7 +199,7 @@ public class BoardManager : MonoBehaviour
         {
             if (AxisRounder.Round(bomb.transform.position.x) == x && AxisRounder.Round(bomb.transform.position.y) == y)
             {
-                bomb.GetComponent<BombController>().Explode(false); // Give the player another bomb
+             //   bomb.GetComponent<BombController>().Explode(false); // Give the player another bomb
                 Destroy(bomb);  // Destroy bomb game oject
                 bombs.Remove(bomb); // Remove from list
                 return bomb.GetComponent<BombController>().paramaters;

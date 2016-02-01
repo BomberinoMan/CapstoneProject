@@ -91,6 +91,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &184566
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 481672}
+  - 61: {fileID: 6129050}
+  m_Layer: 10
+  m_Name: BombBlock
+  m_TagString: BombBlock
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &192934
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,6 +152,7 @@ Transform:
   - {fileID: 452788}
   - {fileID: 486480}
   - {fileID: 495458}
+  - {fileID: 481672}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &452788
@@ -150,6 +167,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 416978}
   m_RootOrder: 2
+--- !u!4 &481672
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 184566}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 416978}
+  m_RootOrder: 5
 --- !u!4 &486480
 Transform:
   m_ObjectHideFlags: 1
@@ -231,6 +260,20 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 0.06, y: 0.06}
+--- !u!61 &6129050
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 184566}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.5}
 --- !u!61 &6143818
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -416,24 +459,24 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
+    i0: 255
+    i1: 147
+    i2: 151
+    i3: 255
+    i4: 49
+    i5: 57
+    i6: 63
+    i7: 52
+    i8: 248
+    i9: 190
+    i10: 197
+    i11: 86
+    i12: 52
+    i13: 62
+    i14: 50
+    i15: 93
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &11492172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -538,7 +581,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_TagString
-      value: Finish
+      value: BombBlock
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: speedScalar
@@ -563,6 +606,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Constraints
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Name
+      value: BombBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPlayerAuthority
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 public static class Direction
 {
@@ -8,14 +9,19 @@ public static class Direction
     public static int Left = 4;
 }
 
-public class PlayerAnimationDriver : MonoBehaviour {
-     private Animator animator;
+public class PlayerAnimationDriver : NetworkBehaviour {
+    [SyncVar]
+    private Animator animator;
+    private new bool isLocalPlayer;
 
 	void Start () {
         animator = gameObject.GetComponent<Animator>();
-	}
+        isLocalPlayer = gameObject.GetComponentInParent<PlayerControllerComponent>().isLocalPlayer;
+    }
 	
 	void FixedUpdate () {
+        if (!isLocalPlayer)
+            return;
         //TODO need to implement reverse movement here aswell
         float vert = Input.GetAxisRaw("Vertical");
         float hor = Input.GetAxisRaw("Horizontal");

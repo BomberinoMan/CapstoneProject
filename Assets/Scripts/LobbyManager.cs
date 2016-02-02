@@ -5,15 +5,26 @@ using System.Collections.Generic;
 
 public class LobbyManager : NetworkLobbyManager
 {
-	private IList<int> playerOrder = new List<int>(); //TODO LIMIT ON THE NUMBER OF PLAYERS
-	private Vector3[] playerSpawnVectors = new Vector3[4]
+    public RectTransform lobbyGui;
+    public RectTransform menuGui;
+    public LobbyPanel lobbyPanel;
+	public GameObject[] playerAnimations;
+
+    private List<NetworkLobbyPlayer> _players = new List<NetworkLobbyPlayer>();
+    private RectTransform _currentPanel;
+	private IList<int> _playerOrder = new List<int>(); //TODO LIMIT ON THE NUMBER OF PLAYERS
+	private Vector3[] _playerSpawnVectors = new Vector3[4]
 	{   new Vector3(0.0f, 10.0f, 0.0f),
 		new Vector3(12.0f, 0.0f, 0.0f),
 		new Vector3(12.0f, 0.0f, 0.0f),
 		new Vector3(12.0f, 10.0f, 0.0f)
 	};
 
-	public GameObject[] playerAnimations;
+    void Start()
+    {
+        _currentPanel = menuGui;
+        //DontDestroyOnLoad(gameObject)     //already enable on unity script component
+    }
 
 	// **************SERVER**************
     public override void OnLobbyStartHost()
@@ -32,7 +43,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         Debug.Log("OnLobbyStartServer()");
 
-		playerOrder.Clear ();
+		_playerOrder.Clear ();
 
         base.OnLobbyStartServer();
     }
@@ -41,7 +52,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         Debug.Log("OnLobbyServerConnect(NetworkConnection networkConnection)");
 		if(networkConnection.address != "localServer")
-			playerOrder.Add (networkConnection.connectionId);
+			_playerOrder.Add (networkConnection.connectionId);
 		base.OnLobbyServerConnect (networkConnection);
     }
 
@@ -49,7 +60,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         Debug.Log("OnLobbyServerDisconnect(NetworkConnection networkConnection)");
 
-		playerOrder.Remove (networkConnection.connectionId);
+		_playerOrder.Remove (networkConnection.connectionId);
 
         base.OnLobbyServerDisconnect(networkConnection);
     }
@@ -74,7 +85,7 @@ public class LobbyManager : NetworkLobbyManager
 		GameObject newPlayer = null;
 		GameObject playerAnimation;
 
-		foreach(var id in playerOrder){
+		foreach(var id in _playerOrder){
 			if (id == networkConnection.connectionId)
 				break;
 			i++;
@@ -84,7 +95,7 @@ public class LobbyManager : NetworkLobbyManager
 
 		playerAnimation = Instantiate (playerAnimations [i]);
 		playerAnimation.transform.SetParent (newPlayer.transform);
-		newPlayer.transform.position = playerSpawnVectors [i];
+		newPlayer.transform.position = _playerSpawnVectors [i];
 
 		newPlayer.GetComponent<PlayerControllerComponent> ().playerNum = i;
 
@@ -101,6 +112,7 @@ public class LobbyManager : NetworkLobbyManager
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
     {
+        _currentPanel.gameObject.SetActive(false);
         Debug.Log("OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)");
         return base.OnLobbyServerSceneLoadedForPlayer(gameObject1, gameObject2);
     }
@@ -154,4 +166,56 @@ public class LobbyManager : NetworkLobbyManager
 		Debug.Log("OnLobbyClientAddPlayerFailed ()");
 		base.OnLobbyClientAddPlayerFailed();
 	}
+
+    public override void OnStartHost()
+    {
+        base.OnStartHost();
+        ChangePanel(lobbyGui);
+    }
+
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        base.OnClientConnect(conn);
+
+        ChangePanel(lobbyGui);
+        //if (!NetworkServer.active)
+        //{
+        //    ChangePanel(lobbyGui);
+        //}
+    }
+
+    public void ChangePanel(RectTransform newPanel)
+    {
+        if (_currentPanel != null)
+        {
+            _currentPanel.gameObject.SetActive(false);
+        }
+
+        if (newPanel != null)
+        {
+            newPanel.gameObject.SetActive(true);
+        }
+
+        _currentPanel = newPanel;
+    }
+
+    public void AddPlayer(LobbyPlayer player)
+    {
+        _players.Add(player);
+        //player.transform.parent = lobbyPanel.transform;
+        //player.transform.SetParent(lobbyPanel.playerListContent, false);
+
+        player.transform.SetParent(lobbyPanel.transform, false);
+        lobbyPanel.UpdateListContents();
+
+        //var t = lobbyPanel.transform.GetChild(1);
+        //t.gameObject.AddComponent<LobbyPlayer>(player);
+
+    }
+
+    public void RemovePlayer(LobbyPlayer player)
+    {
+        _players.Remove(player);
+        lobbyPanel.UpdateListContents();
+    }
 }

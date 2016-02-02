@@ -2,7 +2,6 @@
 
 public class PlayerController : IPlayerController
 {
-    private BombParams temp;
     public float speedScalar { get; set; }
     public int bombKick { get; set; }
     public int bombLine { get; set; }

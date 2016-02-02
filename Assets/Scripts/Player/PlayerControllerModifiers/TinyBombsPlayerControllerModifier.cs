@@ -13,7 +13,7 @@ public class TinyBombsPlayerControllerModifier : DefaultPlayerControllerModifier
 
 		temp.delayTime = _playerController.bombParams.delayTime;
 		temp.explodingDuration = _playerController.bombParams.explodingDuration;
-		temp.radius = 0;
+		temp.radius = 1;
 		temp.warningTime = _playerController.bombParams.warningTime;
 	}
 

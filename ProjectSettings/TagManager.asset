@@ -9,6 +9,7 @@ TagManager:
   - Upgrade
   - Blocking
   - BombBlock
+  - Destructible
   layers:
   - Default
   - TransparentFX

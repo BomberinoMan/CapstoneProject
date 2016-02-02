@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class LaserController : MonoBehaviour {
+public class LaserController : NetworkBehaviour {
     public BombParams paramaters;
-    private float creationTime;
+	public float creationTime;
 
-    void Start()
-    {
-        creationTime = Time.time;
-    }
+	[ClientRpc]
+	public void RpcSetupLaser(float creationTime, BombParams paramaters)
+	{
+		creationTime = Time.time;
+		paramaters = paramaters;
+	}
 
     void Update()
     {
+		if (paramaters == null)
+			return;
         if (creationTime + paramaters.explodingDuration <= Time.time)
             Destroy(gameObject);
     }

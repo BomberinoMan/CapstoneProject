@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df15896b5b15f0b47a0cd095f785478c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creationTime: 0
 --- !u!114 &11447894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -117,22 +118,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
+    i0: 94
+    i1: 33
+    i2: 113
+    i3: 235
+    i4: 253
+    i5: 136
+    i6: 89
+    i7: 20
+    i8: 250
+    i9: 105
+    i10: 107
+    i11: 203
+    i12: 137
+    i13: 96
+    i14: 247
+    i15: 244
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &11480834
@@ -146,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 0
+  m_TransformSyncMode: 1
   m_SendInterval: 0.1
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0

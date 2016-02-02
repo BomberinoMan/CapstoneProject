@@ -5,10 +5,12 @@ public class BombController : NetworkBehaviour
 {	
 	public float speed;
 	public float speedScalar;
-    [SyncVar]
+
+    //[SyncVar]
 	public BombParams paramaters;
-    [SyncVar]
+    //[SyncVar]
     public GameObject parentPlayer;
+
     private bool hasExploded = false;
 
 	private bool isMoving = false;
@@ -18,13 +20,9 @@ public class BombController : NetworkBehaviour
 	void Start()
 	{
         rb = GetComponent<Rigidbody2D>();
-
 			// Set parentPlayer in all child sub colliders
 		foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController> ())
 			collisionController.parentPlayer = parentPlayer;
-
-		GameObject.FindGameObjectWithTag ("GameController").GetComponent<BoardManager> ()
-			.AddBomb (gameObject);
 
 		parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
 		GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
@@ -58,23 +56,18 @@ public class BombController : NetworkBehaviour
         {
             if (!hasExploded)
             {
+				hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
 
-                if (isLocalPlayer)
-                    CmdExplode();
+				if (isServer){
+					gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
+				}
             }
-			hasExploded = true;
 		}
 		catch (MissingReferenceException)
         {
         }
 	}
-
-    [Command]
-    private void CmdExplode()
-    {
-        NetworkServer.Destroy(gameObject);
-    }
 
     //TODO Add collision detection for lasers
 	void OnTriggerEnter2D(Collider2D collisionInfo)
@@ -107,8 +100,6 @@ public class BombController : NetworkBehaviour
 	private void StopMovement()
 	{
 		isMoving = false;
-		direction = Vector3.zero;
-
 		rb.position = new Vector3 (AxisRounder.Round (rb.position.x), AxisRounder.Round (rb.position.y), 0.0f);
 	}
 }

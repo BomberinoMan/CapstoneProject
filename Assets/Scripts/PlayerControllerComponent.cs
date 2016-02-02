@@ -64,7 +64,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             }
             else if (_playerController.bombLine > 0)
             {
-                CmdLayLineBomb();
+				CmdLayLineBomb(gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
         }
         if (_playerController.alwaysLayBombs && !_bombBlock)
@@ -119,9 +119,9 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcSetupBomb(GameObject player, GameObject bomb)
+	private void RpcSetupBomb(GameObject player, GameObject bomb, bool setupColliders)
     {
-        BombManager.SetupBomb(gameObject, bomb);
+		BombManager.SetupBomb(gameObject, bomb, setupColliders);
     }
 
     [Command]
@@ -131,6 +131,8 @@ public class PlayerControllerComponent : NetworkBehaviour
         {
             return;
         }
+
+
         GameObject bomb = Instantiate(
             bombObject,
             new Vector3(
@@ -142,39 +144,52 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         BombManager.SetupBomb(gameObject, bomb);
         NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-        RpcSetupBomb(gameObject, bomb);
+		RpcSetupBomb(gameObject, bomb, true);
     }
 
     [Command]
-    private void CmdLayLineBomb()
+	private void CmdLayLineBomb(Vector2 direction)
     {
-        GameObject.FindGameObjectWithTag("GameController")
-            .GetComponent<BoardManager>()
-            .LineBomb(
-                (int)AxisRounder.Round(_transform.position.x),
-                (int)AxisRounder.Round(_transform.position.y),
-                gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection(),
-                _playerController.currNumBombs,
-                gameObject);
+		var emptySpace = Physics2D.RaycastAll(new Vector2(AxisRounder.Round(_transform.position.x), AxisRounder.Round(transform.position.y)), direction)
+			.Where(x => x.distance != 0)
+			.First();
+
+			//The number of bombs that will be spawned is either the amount of clear space, or the number of bombs
+		int numBombs = emptySpace.distance < currNumBombs ? (int)emptySpace.distance : currNumBombs;
+
+		for (int i = 1; i <= numBombs; i++) {
+			GameObject bomb = Instantiate(
+				bombObject,
+				new Vector3(
+					AxisRounder.Round(_transform.position.x + direction.x * i),
+					AxisRounder.Round(_transform.position.y + direction.y * i),
+					0.0f),
+				Quaternion.identity)
+				as GameObject;
+
+			BombManager.SetupBomb(gameObject, bomb, false);
+			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+			RpcSetupBomb(gameObject, bomb, false);
+		}
     }
 
-    private bool OnBomb()
-    {
-        return GameObject.FindGameObjectWithTag("GameController").GetComponent<BoardManager>().OnBomb((int)AxisRounder.Round(_transform.position.x), (int)AxisRounder.Round(_transform.position.y));
-    }
+	[Command]
+	private void CmdPickedUpUpgrade(GameObject upgrade){
+		NetworkServer.Destroy (upgrade);
+	}
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        //        if (other.gameObject.tag == "Upgrade")
-        //        {
-        //            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
-        //            Destroy(other.gameObject);
-        //        }
-        //        else if (other.gameObject.tag == "Laser")
-        //        {
-        //            //TODO add destruction animation support
-        //            //Destroy(gameObject);
-        //        }
+        if (other.gameObject.tag == "Upgrade")
+        {
+            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
+			CmdPickedUpUpgrade(other.gameObject);
+        }
+        else if (other.gameObject.tag == "Laser")
+        {
+            //TODO add destruction animation support
+			CmdPickedUpUpgrade(gameObject);
+        }
     }
 
     void OnTriggerStay2D(Collider2D other)

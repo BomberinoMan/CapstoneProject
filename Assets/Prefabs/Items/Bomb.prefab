@@ -66,6 +66,7 @@ GameObject:
   - 50: {fileID: 5078674}
   - 114: {fileID: 11464524}
   - 114: {fileID: 11453778}
+  - 114: {fileID: 11421224}
   m_Layer: 12
   m_Name: Bomb
   m_TagString: Bomb
@@ -100,7 +101,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 481672}
   - 61: {fileID: 6129050}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: BombBlock
   m_TagString: BombBlock
   m_Icon: {fileID: 0}
@@ -401,6 +402,24 @@ MonoBehaviour:
   speed: 0.12
   speedScalar: 1
   parentPlayer: {fileID: 0}
+--- !u!114 &11421224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c4c5d11772944dcb6058059cc3ab3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laserCross: {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
+  laserUp: {fileID: 164174, guid: 80b60945654382f4fb1f496975d6523b, type: 2}
+  laserDown: {fileID: 189166, guid: ac417a3cedcdadb46abb0e2de9d114fe, type: 2}
+  laserLeft: {fileID: 117164, guid: cd4eb78551b9beb4ebd2c4136f4713e7, type: 2}
+  laserRight: {fileID: 180182, guid: d7b28480e3c91a04b9b4222f3e842b44, type: 2}
+  laserHor: {fileID: 109734, guid: 9adbb3f820837b740b8d1225c2535b9e, type: 2}
+  laserVert: {fileID: 151648, guid: 52720c29d63eff64b9bf7d9a3d35fdce, type: 2}
 --- !u!114 &11433072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -615,6 +634,34 @@ Prefab:
       propertyPath: m_LocalPlayerAuthority
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: laserCross
+      value: 
+      objectReference: {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
+    - target: {fileID: 0}
+      propertyPath: laserDown
+      value: 
+      objectReference: {fileID: 189166, guid: ac417a3cedcdadb46abb0e2de9d114fe, type: 2}
+    - target: {fileID: 0}
+      propertyPath: laserHor
+      value: 
+      objectReference: {fileID: 109734, guid: 9adbb3f820837b740b8d1225c2535b9e, type: 2}
+    - target: {fileID: 0}
+      propertyPath: laserLeft
+      value: 
+      objectReference: {fileID: 117164, guid: cd4eb78551b9beb4ebd2c4136f4713e7, type: 2}
+    - target: {fileID: 0}
+      propertyPath: laserRight
+      value: 
+      objectReference: {fileID: 180182, guid: d7b28480e3c91a04b9b4222f3e842b44, type: 2}
+    - target: {fileID: 0}
+      propertyPath: laserUp
+      value: 
+      objectReference: {fileID: 164174, guid: 80b60945654382f4fb1f496975d6523b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: laserVert
+      value: 
+      objectReference: {fileID: 151648, guid: 52720c29d63eff64b9bf7d9a3d35fdce, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 163012}

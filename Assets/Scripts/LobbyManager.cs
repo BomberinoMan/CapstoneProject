@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -66,27 +67,27 @@ public class LobbyManager : NetworkLobbyManager
 
 	private void SpawnBoard(){
 		boardCreator = new BoardCreator ();
-
 		boardCreator.InitializeDestructible ();
 
-		foreach(var playerId in connectedPlayerIds)
-			if(playerId != null)
-					boardCreator.InitializeSpawn (playerSpawnVectors[getSlotIndex (playerId)]);
+			//Initialize spawn for all connected players
+		connectedPlayerIds.Where (x => x != null).ToList()
+			.ForEach (x => boardCreator.InitializeSpawn (playerSpawnVectors [getSlotIndex (x)]));
 
+			//Initialize all upgrades
 		boardCreator.InitializeUpgrades();
-
+			//Get the generated tiles in the board
 		var board = boardCreator.getBoard();
 
+			//Spawn all objects in the board
 		foreach (var tile in board.tiles) {
 			if (tile.isIndestructible) {
 				NetworkServer.Spawn (Instantiate (indestructible, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
 				continue;
-			}
-			else {
-				NetworkServer.Spawn (Instantiate(floor, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+			} else {
+				NetworkServer.Spawn (Instantiate (floor, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
 			}
 
-			if (tile.isDestructible)
+			if (tile.isDestructible && tile.isUpgrade)
 				NetworkServer.Spawn (Instantiate (destructible, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
 
 			if (tile.isUpgrade)

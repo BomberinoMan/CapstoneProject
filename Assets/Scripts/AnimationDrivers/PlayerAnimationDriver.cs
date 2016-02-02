@@ -46,15 +46,20 @@ public class PlayerAnimationDriver : NetworkBehaviour {
             animator.SetFloat("Speed", 0.0f);
     }
 
-    public string GetDirection()
+    public Vector2 GetDirection()
     {
         switch (animator.GetInteger("Direction"))
         {
-            case 1: return "Up";
-            case 2: return "Right";
-            case 3: return "Down";
-            case 4: return "Left";
-            default: return "Up";
+			case 1: 
+				return new Vector2(0.0f, 1.0f); // Up
+			case 2: 
+				return new Vector2(1.0f, 0.0f); // Right
+			case 3: 
+				return new Vector2(0.0f, -1.0f); // Down
+			case 4: 
+				return new Vector2(-1.0f, 0.0f); // Left
+			default: 
+ 				return new Vector2(1.0f, 0.0f); // Right
         }
     }
 }

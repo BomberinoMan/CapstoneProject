@@ -27,9 +27,10 @@ GameObject:
   - 4: {fileID: 416686}
   - 61: {fileID: 6119412}
   - 212: {fileID: 21228998}
-  - 114: {fileID: 11448178}
   - 114: {fileID: 11435496}
   - 114: {fileID: 11490370}
+  - 114: {fileID: 11432442}
+  - 148: {fileID: 14879624}
   m_Layer: 13
   m_Name: UpgradeBomb
   m_TagString: Upgrade
@@ -93,6 +94,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11432442
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73c042cdd5c94fb2a3564e03d4a080a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
 --- !u!114 &11435496
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -125,18 +138,6 @@ MonoBehaviour:
     i15: 29
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &11448178
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 176696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431507d2c5a8f864abd457a4db199ed0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
 --- !u!114 &11490370
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -157,6 +158,18 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!148 &14879624
+NetworkView:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176696}
+  m_Enabled: 1
+  m_StateSynchronization: 1
+  m_Observed: {fileID: 416686}
+  m_ViewID:
+    m_ID: 0
+    m_Type: 0
 --- !u!212 &21219840
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -235,6 +248,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Layer
       value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

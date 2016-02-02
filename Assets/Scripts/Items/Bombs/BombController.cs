@@ -12,7 +12,6 @@ public class BombController : NetworkBehaviour
     public GameObject parentPlayer;
 
     private bool hasExploded = false;
-
 	private bool isMoving = false;
 	private Vector3 direction = new Vector3();
 	private Rigidbody2D rb;

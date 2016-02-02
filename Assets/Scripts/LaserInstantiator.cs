@@ -49,8 +49,6 @@ public class LaserInstantiator : NetworkBehaviour {
 		var emptySpace = Physics2D.RaycastAll(location, direction)
 			.Where(h => h.distance != 0 && h.transform.tag != "Laser" && h.transform.tag != "Bomb" && h.transform.tag != "Player")
 			.First();
-		Debug.Log ("Distance : " + emptySpace.distance);
-		Debug.Log ("tag : " + emptySpace.transform.tag);
 
 		int numLasers = emptySpace.distance < paramaters.radius ? (int)emptySpace.distance : paramaters.radius;
 

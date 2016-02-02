@@ -16,6 +16,8 @@ public class LobbyManager : NetworkLobbyManager
 		new Vector3(1.0f, 1.0f, 0.0f)
 	};
 
+    private bool sceneLoaded = false;
+
 	public GameObject bombUpgrade;
 	public GameObject laserUpgrade;
 	public GameObject kickUpgrade;
@@ -55,8 +57,10 @@ public class LobbyManager : NetworkLobbyManager
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2) {
-		SpawnBoard ();
 
+        if(!sceneLoaded)
+            SpawnBoard ();
+        sceneLoaded = true;
 		return true;
     }
 
@@ -65,7 +69,7 @@ public class LobbyManager : NetworkLobbyManager
 		ServerChangeScene(playScene);
     }
 
-	private void SpawnBoard(){
+	private void SpawnBoard() {
 		boardCreator = new BoardCreator ();
 		boardCreator.InitializeDestructible ();
 
@@ -80,14 +84,15 @@ public class LobbyManager : NetworkLobbyManager
 
 			//Spawn all objects in the board
 		foreach (var tile in board.tiles) {
-			if (tile.isIndestructible) {
-				NetworkServer.Spawn (Instantiate (indestructible, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-				continue;
-			} else {
-				NetworkServer.Spawn (Instantiate (floor, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-			}
+            if (tile.isIndestructible)
+            {
+                NetworkServer.Spawn(Instantiate(indestructible, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+                continue;
+            }
 
-			if (tile.isDestructible && tile.isUpgrade)
+            NetworkServer.Spawn(Instantiate(floor, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
+
+            if (tile.isDestructible)
 				NetworkServer.Spawn (Instantiate (destructible, new Vector3 (tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
 
 			if (tile.isUpgrade)

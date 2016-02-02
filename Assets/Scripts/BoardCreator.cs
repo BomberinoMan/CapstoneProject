@@ -47,7 +47,7 @@ public class BoardCreator {
 		for (int x = 0; x < board.columns; x++)
 			for (int y = 0; y < board.rows; y++)
 			{
-				if (UnityEngine.Random.value <= boardParams.fillPercentage && !board.tiles [x, y].isIndestructible)
+				if (Random.value <= boardParams.fillPercentage && !board.tiles [x, y].isIndestructible)
 					board.tiles [x, y].isDestructible = true;
 			}
 	}

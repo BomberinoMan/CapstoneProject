@@ -21,7 +21,7 @@ public static class PlayerControllerModifierFactory {
 		case 7:
 			return new NeverLayBombsPlayerControllerModifier(playerController.removeMod());
 		default:
-			Debug.Log ("Default");
+			Debug.Log ("Applying default playerControllerModifier. Check the range of the random number genterator");
 			return new DefaultPlayerControllerModifier(playerController.removeMod());
 		}
 	}

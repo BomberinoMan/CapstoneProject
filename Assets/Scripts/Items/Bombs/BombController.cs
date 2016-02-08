@@ -18,6 +18,7 @@ public class BombController : NetworkBehaviour
 
 	void Start()
 	{
+        //TODO need to handle the case where two players are on top of the bomb on instantiation
         rb = GetComponent<Rigidbody2D>();
 			// Set parentPlayer in all child sub colliders
 		foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController> ())
@@ -47,7 +48,28 @@ public class BombController : NetworkBehaviour
 		}
 	}
 
-	public void Explode()
+    public void SetupBomb(GameObject player, bool setupColliders = true)
+    {
+        BombParams temp = new BombParams();
+        BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
+
+        temp.delayTime = playerBombParams.delayTime;
+        temp.explodingDuration = playerBombParams.explodingDuration;
+        temp.radius = playerBombParams.radius;
+        temp.warningTime = playerBombParams.warningTime;
+
+        paramaters = temp;
+
+        parentPlayer = player;
+        transform.SetParent(player.transform.parent);
+
+        if (setupColliders)
+            foreach (Collider2D collider in GetComponentsInChildren<Collider2D>())   // Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
+                if (!collider.isTrigger)
+                    Physics2D.IgnoreCollision(collider, player.GetComponent<Collider2D>());
+    }
+
+    public void Explode()
 	{
 		StopMovement ();
 

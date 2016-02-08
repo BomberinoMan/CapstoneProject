@@ -77,6 +77,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         if (!isLocalPlayer)
             return;
+
         float hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
@@ -119,19 +120,16 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [ClientRpc]
-	private void RpcSetupBomb(GameObject player, GameObject bomb, bool setupColliders)
+	private void RpcSetupBomb(GameObject bomb, bool setupColliders)
     {
-		BombManager.SetupBomb(gameObject, bomb, setupColliders);
+		bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
     }
 
     [Command]
     private void CmdLayBomb()
     {
         if (_playerController.currNumBombs <= 0)
-        {
             return;
-        }
-
 
         GameObject bomb = Instantiate(
             bombObject,
@@ -142,9 +140,9 @@ public class PlayerControllerComponent : NetworkBehaviour
             Quaternion.identity)
             as GameObject;
 
-        BombManager.SetupBomb(gameObject, bomb);
+        bomb.GetComponent<BombController>().SetupBomb(gameObject);
         NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-		RpcSetupBomb(gameObject, bomb, true);
+		RpcSetupBomb(bomb, true);
     }
 
     [Command]
@@ -167,9 +165,9 @@ public class PlayerControllerComponent : NetworkBehaviour
 				Quaternion.identity)
 				as GameObject;
 
-			BombManager.SetupBomb(gameObject, bomb, false);
+			bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
 			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-			RpcSetupBomb(gameObject, bomb, false);
+			RpcSetupBomb(bomb, false);
 		}
     }
 
@@ -188,7 +186,8 @@ public class PlayerControllerComponent : NetworkBehaviour
         else if (other.gameObject.tag == "Laser")
         {
             //TODO add destruction animation support
-			CmdPickedUpUpgrade(gameObject);
+            //TODO add support for notifying the LobbyManager about a player death
+			CmdPickedUpUpgrade(gameObject); // This destroys the player
         }
     }
 

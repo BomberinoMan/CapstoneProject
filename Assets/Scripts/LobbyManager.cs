@@ -5,28 +5,30 @@ using System.Collections.Generic;
 
 public class LobbyManager : NetworkLobbyManager
 {
+    public static LobbyManager _instance;
+
     public RectTransform lobbyGui;
     public RectTransform menuGui;
-    public LobbyPanel lobbyPanel;
-	public GameObject[] playerAnimations;
+    public GameObject[] playerAnimations;
 
     private List<NetworkLobbyPlayer> _players = new List<NetworkLobbyPlayer>();
     private RectTransform _currentPanel;
-	private IList<int> _playerOrder = new List<int>(); //TODO LIMIT ON THE NUMBER OF PLAYERS
-	private Vector3[] _playerSpawnVectors = new Vector3[4]
-	{   new Vector3(0.0f, 10.0f, 0.0f),
-		new Vector3(12.0f, 0.0f, 0.0f),
-		new Vector3(12.0f, 0.0f, 0.0f),
-		new Vector3(12.0f, 10.0f, 0.0f)
-	};
+    private IList<int> _playerOrder = new List<int>(); //TODO LIMIT ON THE NUMBER OF PLAYERS
+    private Vector3[] _playerSpawnVectors = new Vector3[4]
+    {   new Vector3(0.0f, 10.0f, 0.0f),
+        new Vector3(12.0f, 0.0f, 0.0f),
+        new Vector3(12.0f, 0.0f, 0.0f),
+        new Vector3(12.0f, 10.0f, 0.0f)
+    };
 
     void Start()
     {
+        _instance = this;
         _currentPanel = menuGui;
         //DontDestroyOnLoad(gameObject)     //already enable on unity script component
     }
 
-	// **************SERVER**************
+    // **************SERVER**************
     public override void OnLobbyStartHost()
     {
         Debug.Log("OnLobbyStartHost()");
@@ -43,7 +45,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         Debug.Log("OnLobbyStartServer()");
 
-		_playerOrder.Clear ();
+        _playerOrder.Clear();
 
         base.OnLobbyStartServer();
     }
@@ -51,16 +53,16 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyServerConnect(NetworkConnection networkConnection)
     {
         Debug.Log("OnLobbyServerConnect(NetworkConnection networkConnection)");
-		if(networkConnection.address != "localServer")
-			_playerOrder.Add (networkConnection.connectionId);
-		base.OnLobbyServerConnect (networkConnection);
+        if (networkConnection.address != "localServer")
+            _playerOrder.Add(networkConnection.connectionId);
+        base.OnLobbyServerConnect(networkConnection);
     }
 
     public override void OnLobbyServerDisconnect(NetworkConnection networkConnection)
     {
         Debug.Log("OnLobbyServerDisconnect(NetworkConnection networkConnection)");
 
-		_playerOrder.Remove (networkConnection.connectionId);
+        _playerOrder.Remove(networkConnection.connectionId);
 
         base.OnLobbyServerDisconnect(networkConnection);
     }
@@ -73,6 +75,7 @@ public class LobbyManager : NetworkLobbyManager
 
     public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)
     {
+
         Debug.Log("OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)");
         return base.OnLobbyServerCreateLobbyPlayer(networkConnection, other);
     }
@@ -81,27 +84,28 @@ public class LobbyManager : NetworkLobbyManager
     {
         Debug.Log("OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short other)");
 
-		int i = 0;
-		GameObject newPlayer = null;
-		GameObject playerAnimation;
+        int i = 0;
+        GameObject newPlayer = null;
+        GameObject playerAnimation;
 
-		foreach(var id in _playerOrder){
-			if (id == networkConnection.connectionId)
-				break;
-			i++;
-		}
+        foreach (var id in _playerOrder)
+        {
+            if (id == networkConnection.connectionId)
+                break;
+            i++;
+        }
 
-		newPlayer = Instantiate (playerPrefab.gameObject);
+        newPlayer = Instantiate(playerPrefab.gameObject);
 
-		playerAnimation = Instantiate (playerAnimations [i]);
-		playerAnimation.transform.SetParent (newPlayer.transform);
-		newPlayer.transform.position = _playerSpawnVectors [i];
+        playerAnimation = Instantiate(playerAnimations[i]);
+        playerAnimation.transform.SetParent(newPlayer.transform);
+        newPlayer.transform.position = _playerSpawnVectors[i];
 
-		newPlayer.GetComponent<PlayerControllerComponent> ().playerNum = i;
+        newPlayer.GetComponent<PlayerControllerComponent>().playerNum = i;
 
-		NetworkServer.Spawn (newPlayer);
+        NetworkServer.Spawn(newPlayer);
 
-		return newPlayer;
+        return newPlayer;
     }
 
     public override void OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)
@@ -115,6 +119,7 @@ public class LobbyManager : NetworkLobbyManager
         _currentPanel.gameObject.SetActive(false);
         Debug.Log("OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)");
         return base.OnLobbyServerSceneLoadedForPlayer(gameObject1, gameObject2);
+
     }
 
     public override void OnLobbyServerPlayersReady()
@@ -124,48 +129,56 @@ public class LobbyManager : NetworkLobbyManager
     }
 
 
-	// **************CLIENT**************
+    // **************CLIENT**************
 
-	public override void OnLobbyClientEnter (){
-		Debug.Log("OnLobbyClientEnter ()");
+    public override void OnLobbyClientEnter()
+    {
+        Debug.Log("OnLobbyClientEnter ()");
 
-		base.OnLobbyClientEnter();
-	}
+        base.OnLobbyClientEnter();
+    }
 
-	public override void OnLobbyClientExit (){
-		Debug.Log("OnLobbyClientExit ()");
-		base.OnLobbyClientExit();
-	}
+    public override void OnLobbyClientExit()
+    {
+        Debug.Log("OnLobbyClientExit ()");
+        base.OnLobbyClientExit();
+    }
 
-	public override void OnLobbyClientConnect (NetworkConnection conn){
-		Debug.Log("OnLobbyClientConnect ()");
-		base.OnLobbyClientConnect(conn);
-	}
+    public override void OnLobbyClientConnect(NetworkConnection conn)
+    {
+        Debug.Log("OnLobbyClientConnect ()");
+        base.OnLobbyClientConnect(conn);
+    }
 
-	public override void OnLobbyClientDisconnect (NetworkConnection conn){
-		Debug.Log("OnLobbyClientDisconnect ()");
-		base.OnLobbyClientDisconnect(conn);
-	}
+    public override void OnLobbyClientDisconnect(NetworkConnection conn)
+    {
+        Debug.Log("OnLobbyClientDisconnect ()");
+        base.OnLobbyClientDisconnect(conn);
+    }
 
-	public override void OnLobbyStartClient (NetworkClient client){
-		Debug.Log("OnLobbyStartClient ()");
-		base.OnLobbyStartClient(client);
-	}
+    public override void OnLobbyStartClient(NetworkClient client)
+    {
+        Debug.Log("OnLobbyStartClient ()");
+        base.OnLobbyStartClient(client);
+    }
 
-	public override void OnLobbyStopClient (){
-		Debug.Log("OnLobbyStopClient ()");
-		base.OnLobbyStopClient();
-	}
+    public override void OnLobbyStopClient()
+    {
+        Debug.Log("OnLobbyStopClient ()");
+        base.OnLobbyStopClient();
+    }
 
-	public override void OnLobbyClientSceneChanged (NetworkConnection conn){
-		Debug.Log("OnLobbyClientSceneChanged ()");
-		base.OnLobbyClientSceneChanged(conn);
-	}
+    public override void OnLobbyClientSceneChanged(NetworkConnection conn)
+    {
+        Debug.Log("OnLobbyClientSceneChanged ()");
+        base.OnLobbyClientSceneChanged(conn);
+    }
 
-	public override void OnLobbyClientAddPlayerFailed (){
-		Debug.Log("OnLobbyClientAddPlayerFailed ()");
-		base.OnLobbyClientAddPlayerFailed();
-	}
+    public override void OnLobbyClientAddPlayerFailed()
+    {
+        Debug.Log("OnLobbyClientAddPlayerFailed ()");
+        base.OnLobbyClientAddPlayerFailed();
+    }
 
     public override void OnStartHost()
     {
@@ -202,20 +215,11 @@ public class LobbyManager : NetworkLobbyManager
     public void AddPlayer(LobbyPlayer player)
     {
         _players.Add(player);
-        //player.transform.parent = lobbyPanel.transform;
-        //player.transform.SetParent(lobbyPanel.playerListContent, false);
-
-        player.transform.SetParent(lobbyPanel.transform, false);
-        lobbyPanel.UpdateListContents();
-
-        //var t = lobbyPanel.transform.GetChild(1);
-        //t.gameObject.AddComponent<LobbyPlayer>(player);
 
     }
 
     public void RemovePlayer(LobbyPlayer player)
     {
         _players.Remove(player);
-        lobbyPanel.UpdateListContents();
     }
 }

@@ -116,7 +116,7 @@ GameObject:
   - 224: {fileID: 22493548}
   - 222: {fileID: 22258028}
   - 114: {fileID: 11417806}
-  - 114: {fileID: 11430456}
+  - 114: {fileID: 11409754}
   m_Layer: 5
   m_Name: LobbyPanel
   m_TagString: Untagged
@@ -170,7 +170,7 @@ GameObject:
   - 114: {fileID: 11470696}
   - 114: {fileID: 11480164}
   m_Layer: 5
-  m_Name: PlayerListPanel
+  m_Name: PlayerList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -302,6 +302,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lobbyManager: {fileID: 11410578}
+--- !u!114 &11409754
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 153904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3728326c911d3747b06214729efa4f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerListContentTransform: {fileID: 22447182}
 --- !u!114 &11410578
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -378,8 +390,7 @@ MonoBehaviour:
   m_PlayScene: Game
   lobbySlots: []
   lobbyGui: {fileID: 22493548}
-  menuGui: {fileID: 22493548}
-  lobbyPanel: {fileID: 11430456}
+  menuGui: {fileID: 22423882}
   playerAnimations:
   - {fileID: 198336, guid: e0bdd4ddfaf624880aafbfec13ca8e9c, type: 2}
   - {fileID: 130842, guid: db208dfe21da242fa81373f0e78cd98a, type: 2}
@@ -487,19 +498,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &11430456
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 153904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff403a46e31d4f4bb7b952e8f6d80e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerListContent: {fileID: 0}
-  lobbyManager: {fileID: 11410578}
 --- !u!114 &11432540
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -49,6 +49,32 @@ public class PlayerControllerComponent : NetworkBehaviour
         _playerController = new DefaultPlayerControllerModifier();
         _rb = GetComponent<Rigidbody2D>();
         _transform = GetComponent<Transform>();
+
+        /*
+        // Singleton
+        var db = DBConnection.Instance();
+
+        // Example data
+        var password = "DarthMohawk";
+        var userName = "DarthMohawk";
+
+        // How to create a user
+        var responseCreateUser = db.CreateUser(new CreateUserMessage { UserName = userName, Password = password });
+
+        // How to login to a user
+        var responseLogin = db.Login(new LoginMessage { UserName = userName, Password = password });
+
+        // How to change password on user
+        var responseChangePassword = db.ChangePassword(new ChangePasswordMessage { UserName = userName, OldPassword = password, NewPassword = password });
+
+        /*
+            *IMPORTANT*
+                - All passwords are encoded in DBConnection, do NOT do it yourself as this will fuck up all of the things
+
+            All responses will have isSuccessful set to true if the request was successful
+            All responses will have UserId (guid) set if the request was successful
+            If there was a problem, then ErrorMessage will be set, otherwise it will be null
+        */
     }
 
     void Update()

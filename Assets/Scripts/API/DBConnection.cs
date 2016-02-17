@@ -9,6 +9,7 @@ public class DBConnection {
     private static DBConnection _instance;
     private static bool _hasInit = false;
     private string uri = "https://142.3.21.28/{0}.php?Action={1}";
+    private string superSecretCode = "21548b73-0f5e-42e9-9038-ffb14458119b";
 
     private DBConnection() { }
     public static DBConnection Instance()
@@ -52,6 +53,7 @@ public class DBConnection {
 
     private T Connect<T>(string endpoint, string action, NameValueCollection values)
     {
+        values.Add(new NameValueCollection() { { "SuperSecretCode", superSecretCode } });
         using (WebClient client = new WebClient())
         {
             try

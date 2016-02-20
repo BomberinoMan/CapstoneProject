@@ -115,6 +115,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
+        /*
         var touch = Input.touches.Where(x => x.position.x <= 300 && x.position.y <= 300).FirstOrDefault();
 
         Vector2 direction;
@@ -136,14 +137,16 @@ public class PlayerControllerComponent : NetworkBehaviour
             direction = prevDirection;
 
         prevDirection = direction;
+        */
 
         //float hor = Input.GetAxisRaw("Horizontal");
         //float ver = Input.GetAxisRaw("Vertical");
-        //float hor = dPad.currDirection.x;
-        //float ver = dPad.currDirection.y;
+        //float hor = direction.x;
+        //float ver = direction.y;
 
-        float hor = direction.x;
-        float ver = direction.y;
+        float hor = dPad.currDirection.x;
+        float ver = dPad.currDirection.y;
+
         if (!_playerController.reverseMovement)
         {
             if (ver == 0.0f && hor != 0.0f)

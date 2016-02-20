@@ -22,10 +22,10 @@ public class LobbyManager : NetworkLobbyManager
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
-        new Vector3(1.0f, 10.0f, 0.0f),
-        new Vector3(1.0f, 0.0f, 0.0f),
-        new Vector3(12.0f, 0.0f, 0.0f),
-        new Vector3(12.0f, 10.0f, 0.0f)
+        new Vector3(1.0f, 11.0f, 0.0f),
+        new Vector3(1.0f, 1.0f, 0.0f),
+        new Vector3(12.0f, 1.0f, 0.0f),
+        new Vector3(12.0f, 11.0f, 0.0f)
     };
 
     private bool sceneLoaded = false;
@@ -197,7 +197,6 @@ public class LobbyManager : NetworkLobbyManager
         //Initialize spawn for all connected players
         lobbySlots.Where(p => p != null).ToList()
             .ForEach(p => boardCreator.InitializeSpawn(_playerSpawnVectors[getSlotIndex(p.playerControllerId)]));
-        
 
         //Initialize all upgrades
         boardCreator.InitializeUpgrades();

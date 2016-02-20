@@ -6,10 +6,10 @@ public class LaserController : NetworkBehaviour {
 	public float creationTime;
 
 	[ClientRpc]
-	public void RpcSetupLaser(float creationTime, BombParams paramaters)
+	public void RpcSetupLaser(float creationTime, BombParams param)
 	{
 		creationTime = Time.time;
-		paramaters = paramaters;
+		paramaters = param;
 	}
 
     void Update()

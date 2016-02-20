@@ -10,6 +10,8 @@ TagManager:
   - Blocking
   - BombBlock
   - Destructible
+  - BombArea
+  - DPad
   layers:
   - Default
   - TransparentFX
@@ -61,4 +63,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 563877875
+    locked: 0
+  - name: TouchControlsOverlay
+    uniqueID: 2931865553
     locked: 0

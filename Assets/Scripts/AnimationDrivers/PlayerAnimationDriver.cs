@@ -13,18 +13,21 @@ public class PlayerAnimationDriver : NetworkBehaviour {
     [SyncVar]
     private Animator animator;
     private new bool isLocalPlayer;
+    private DPadController dPad;
 
-	void Start () {
+    void Start () {
         animator = gameObject.GetComponent<Animator>();
         isLocalPlayer = gameObject.GetComponentInParent<PlayerControllerComponent>().isLocalPlayer;
+        dPad = gameObject.GetComponentInParent<PlayerControllerComponent>().dPad;
     }
-	
-	void FixedUpdate () {
+
+    void FixedUpdate () {
         if (!isLocalPlayer)
             return;
         //TODO need to implement reverse movement here aswell
-        float vert = Input.GetAxisRaw("Vertical");
-        float hor = Input.GetAxisRaw("Horizontal");
+        //TODO refactor
+        float hor = dPad.currDirection.x;
+        float vert = dPad.currDirection.y;
 
         if (vert != 0.0) {
             animator.SetFloat("Speed", Mathf.Abs(vert));

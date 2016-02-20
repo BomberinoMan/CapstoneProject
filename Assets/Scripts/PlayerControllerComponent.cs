@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System.Linq;
+using System;
 
 public class PlayerControllerComponent : NetworkBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     public int playerIndex;
 
     private LobbyManager _lobbyManager;
+
     private float _speed;
     private float _flipFlopTime;
     private float _flipFlopDuration = 0.25f;
@@ -16,6 +18,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     private bool _bombBlock = false;
 
     public GameObject bombObject;
+    public DPadController dPad;
     private Rigidbody2D _rb;
     private Transform _transform;
 
@@ -29,6 +32,12 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         if (_lobbyManager == null)
             _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
+
+            // Get the touch input from the UI
+        if(dPad == null){
+            dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
+            GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
+        }
 
         GameObject animator = Instantiate(_lobbyManager.playerAnimations[playerIndex]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
@@ -44,6 +53,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         if (_lobbyManager == null)
             _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
+
         _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
@@ -77,12 +87,12 @@ public class PlayerControllerComponent : NetworkBehaviour
         */
     }
 
-    void Update()
+    public void TouchLayBomb()
     {
         if (!isLocalPlayer)
             return;
 
-        if (Input.GetKeyDown("space") && _playerController.canLayBombs)
+        if (_playerController.canLayBombs)
         {
             if (!_bombBlock)
             {
@@ -90,7 +100,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             }
             else if (_playerController.bombLine > 0)
             {
-				CmdLayLineBomb(gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
+                CmdLayLineBomb(gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
         }
         if (_playerController.alwaysLayBombs && !_bombBlock)
@@ -104,8 +114,11 @@ public class PlayerControllerComponent : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        float hor = Input.GetAxisRaw("Horizontal");
-        float ver = Input.GetAxisRaw("Vertical");
+        //float hor = Input.GetAxisRaw("Horizontal");
+        //float ver = Input.GetAxisRaw("Vertical");
+            // TODO refactor this method
+        float hor = dPad.currDirection.x;
+        float ver = dPad.currDirection.y;
 
         if (!_playerController.reverseMovement)
         {

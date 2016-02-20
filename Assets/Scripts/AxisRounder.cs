@@ -29,7 +29,7 @@ public static class AxisRounder
         float remainder = num % 1;
 
         if (remainder <= roundDownDecimal)
-			return sign * (num - remainder / 8.0f);
+			return sign * (num - remainder / 2.0f);
         else if (remainder >= roundUpDecimal)
 			return sign * (num + ((1.0f - remainder) / 8.0f));
 		

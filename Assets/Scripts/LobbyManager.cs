@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking.NetworkSystem;
+using UnityEngine.UI;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -10,7 +11,8 @@ public class LobbyManager : NetworkLobbyManager
 
     public RectTransform lobbyGui;
     public RectTransform menuGui;
-    //public LobbyCountdownPanel countdownGui;
+    public RectTransform countdownGui;
+    public Text countdownText;
     public GameObject[] playerAnimations;
     public float countdownTime = 5.0f;
 
@@ -30,26 +32,27 @@ public class LobbyManager : NetworkLobbyManager
         _currentPanel = menuGui;
     }
 
-    // **************SERVER**************
-    public override void OnLobbyStartHost()
-    {
-        //Debug.Log("OnLobbyStartHost()");
-        base.OnLobbyStartHost();
-    }
 
-    public override void OnLobbyStopHost()
-    {
-        //Debug.Log("OnLobbyStopHost()");
-        base.OnLobbyStopHost();
-    }
+    // **************SERVER**************
+
+    //public override void OnLobbyStartHost()
+    //{
+    //    base.OnLobbyStartHost();
+    //    Debug.Log("OnLobbyStartHost()");
+    //}
+
+    //public override void OnLobbyStopHost()
+    //{
+    //    base.OnLobbyStopHost();
+    //    Debug.Log("OnLobbyStopHost()");
+    //}
 
     public override void OnLobbyStartServer()
     {
-        //Debug.Log("OnLobbyStartServer()");
-
-        _playerOrder.Clear();
-
         base.OnLobbyStartServer();
+
+        //Debug.Log("OnLobbyStartServer()");
+        _playerOrder.Clear();
     }
 
     public override void OnLobbyServerConnect(NetworkConnection networkConnection)
@@ -69,19 +72,17 @@ public class LobbyManager : NetworkLobbyManager
         _playerOrder.Remove(networkConnection.connectionId);
     }
 
-    public override void OnLobbyServerSceneChanged(string name)
-    {
-        base.OnLobbyServerSceneChanged(name);
+    //public override void OnLobbyServerSceneChanged(string name)
+    //{
+    //    base.OnLobbyServerSceneChanged(name);
+    //    Debug.Log("OnLobbyServerSceneChanged(string name)" + name);
+    //}
 
-        Debug.Log("OnLobbyServerSceneChanged(string name)" + name);
-    }
-
-    public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)
-    {
-
-        //Debug.Log("OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)");
-        return base.OnLobbyServerCreateLobbyPlayer(networkConnection, other);
-    }
+    //public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)
+    //{
+    //    Debug.Log("OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)");
+    //    return base.OnLobbyServerCreateLobbyPlayer(networkConnection, other);
+    //}
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short other)
     {
@@ -111,19 +112,17 @@ public class LobbyManager : NetworkLobbyManager
         return newPlayer;
     }
 
-    public override void OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)
-    {
-        Debug.Log("OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)");
-        base.OnLobbyServerPlayerRemoved(networkConnection, other);
-    }
+    //public override void OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)
+    //{
+    //    Debug.Log("OnLobbyServerPlayerRemoved(NetworkConnection networkConnection, short other)");
+    //    base.OnLobbyServerPlayerRemoved(networkConnection, other);
+    //}
 
-    public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
-    {
-        //_currentPanel.gameObject.SetActive(false);
-        //Debug.Log("OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)");
-        return base.OnLobbyServerSceneLoadedForPlayer(gameObject1, gameObject2);
-
-    }
+    //public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
+    //{
+    //    Debug.Log("OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)");
+    //    return base.OnLobbyServerSceneLoadedForPlayer(gameObject1, gameObject2);
+    //}
 
     public override void OnLobbyServerPlayersReady()
     {
@@ -138,14 +137,15 @@ public class LobbyManager : NetworkLobbyManager
             }
         }
 
-        //StartCoroutine(CountDownCoroutine());
-        ServerChangeScene(playScene);
+        StartCoroutine(CountDownCoroutine());
+        //ServerChangeScene(playScene);
     }
 
     public IEnumerator CountDownCoroutine()
     {
         float remainingTime = countdownTime;
         int floorTime = Mathf.FloorToInt(remainingTime);
+        countdownGui.gameObject.SetActive(true);
 
         while (remainingTime > 0)
         {
@@ -158,25 +158,26 @@ public class LobbyManager : NetworkLobbyManager
             {
                 floorTime = newFloorTime;
 
-                for (int i = 0; i < lobbySlots.Length; ++i)
+                foreach (LobbyPlayer player in lobbySlots)
                 {
-                    if (lobbySlots[i] != null)
+                    if (player != null)
                     {
-                        (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(floorTime);
+                        player.RpcUpdateCountdown(floorTime);
                     }
                 }
             }
         }
 
         //Possibly remove this by setting <= 0
-        for (int i = 0; i < lobbySlots.Length; ++i)
+        foreach (LobbyPlayer player in lobbySlots)
         {
-            if (lobbySlots[i] != null)
+            if (player != null)
             {
-                (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
+                player.RpcUpdateCountdown(0);
             }
         }
 
+        countdownGui.gameObject.SetActive(false);
         ServerChangeScene(playScene);
     }
 
@@ -199,7 +200,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         base.OnLobbyClientEnter();
 
-        Debug.Log("OnLobbyClientEnter");
+        //Debug.Log("OnLobbyClientEnter");
         ChangePanel(lobbyGui);
     }
 
@@ -207,45 +208,50 @@ public class LobbyManager : NetworkLobbyManager
     {
         base.OnLobbyClientExit();
 
-        Debug.Log("OnLobbyClientExit");
+        //Debug.Log("OnLobbyClientExit");
         ChangePanel(menuGui);
     }
 
-    public override void OnLobbyClientConnect(NetworkConnection conn)
-    {
-        base.OnLobbyClientConnect(conn);
+    //public void OnRoundFinished()
+    //{
 
-        Debug.Log("OnLobbyClientConnect");
-        //ChangePanel(lobbyGui);
-    }
+    //}
 
-    public override void OnLobbyClientDisconnect(NetworkConnection conn)
-    {
-        base.OnLobbyClientDisconnect(conn);
+    //public void OnGameFinished()
+    //{
+    //    ServerChangeScene(lobbyScene);
+    //    ChangePanel(lobbyGui);
+    //}
 
-        Debug.Log("OnLobbyClientDisconnect");
-        //ChangePanel(menuGui);
-    }
+    //public override void OnLobbyClientConnect(NetworkConnection conn)
+    //{
+    //    base.OnLobbyClientConnect(conn);
+    //    Debug.Log("OnLobbyClientConnect");
+    //}
 
-    public override void OnLobbyStartClient(NetworkClient client)
-    {
-        base.OnLobbyStartClient(client);
+    //public override void OnLobbyClientDisconnect(NetworkConnection conn)
+    //{
+    //    base.OnLobbyClientDisconnect(conn);
+    //    Debug.Log("OnLobbyClientDisconnect");
+    //}
 
-        Debug.Log("OnLobbyStartClient");
-    }
+    //public override void OnLobbyStartClient(NetworkClient client)
+    //{
+    //    base.OnLobbyStartClient(client);
+    //    Debug.Log("OnLobbyStartClient");
+    //}
 
-    public override void OnLobbyStopClient()
-    {
-        base.OnLobbyStopClient();
-
-        Debug.Log("OnLobbyStopClient");
-    }
+    //public override void OnLobbyStopClient()
+    //{
+    //    base.OnLobbyStopClient();
+    //    Debug.Log("OnLobbyStopClient");
+    //}
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
         base.OnLobbyClientSceneChanged(conn);
 
-        Debug.Log("OnLobbyClientSceneChanged () = " + conn.connectionId);
+        //Debug.Log("OnLobbyClientSceneChanged () = " + conn.connectionId);
         _currentPanel.gameObject.SetActive(false);
     }
 

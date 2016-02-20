@@ -3,12 +3,15 @@ using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class LobbyPlayer : NetworkLobbyPlayer 
+public class LobbyPlayer : NetworkLobbyPlayer
 {
     public InputField nameInput;
     public Button readyButton;
     public Button removePlayerButton;
+    [SyncVar(hook = "HookNameChanged")]
     public string playerName = "";
+    [SyncVar(hook = "HookReadyChanged")]
+    public string readyText = "";
 
     public override void OnClientEnterLobby()
     {
@@ -24,7 +27,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
         base.OnStartLocalPlayer();
         SetupLocalPlayer();
     }
-    
+
     public override void OnClientExitLobby()
     {
         base.OnClientExitLobby();
@@ -37,7 +40,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
         readyButton.interactable = true;
         removePlayerButton.interactable = true;
 
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = "READY UP";
+        readyText = "NOT READY";
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
 
         nameInput.onEndEdit.RemoveAllListeners();
@@ -52,7 +55,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         nameInput.interactable = false;
         readyButton.interactable = false;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = "Not Ready...";
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
+        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
 
         if (isServer)
         {
@@ -77,12 +81,12 @@ public class LobbyPlayer : NetworkLobbyPlayer
         if (!readyToBegin)
         {
             SendReadyToBeginMessage();
-            readyButton.transform.GetChild(0).GetComponent<Text>().text = "READY";
+            CmdReadyChanged("READY");
         }
         else
         {
             SendNotReadyToBeginMessage();
-            readyButton.transform.GetChild(0).GetComponent<Text>().text = "READY UP";
+            CmdReadyChanged("NOT READY");
         }
     }
 
@@ -104,7 +108,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void OnDestroy()
     {
-        Debug.Log("PlayerDestroy");
         LobbyManager._instance.RemovePlayer(this);
     }
 
@@ -114,15 +117,41 @@ public class LobbyPlayer : NetworkLobbyPlayer
         playerName = name;
     }
 
-    [ClientRpc]
-    public void RpcUpdateCountdown(int countdown)
+    [Command]
+    public void CmdReadyChanged(string newReadyText)
     {
-        //LobbyManager._instance.countdownPanel.UIText.text = "Match Starting in " + RpcUpdateCountdown;
-        //LobbyManager._instance.countdownPanel.gameObject.SetActive(true);
+        readyText = newReadyText;
+    }
 
-        //if (countdown == 0)
-        //{
-        //    LobbyManager._instance.countdownPanel.gameObject.SetActive(false);
-        //}
+    //[ClientRpc]
+    //public void RpcUpdateReady(string newReadyText)
+    //{
+    //    readyText = newReadyText;
+    //    readyButton.transform.GetChild(0).GetComponent<Text>().text = newReadyText;
+    //}
+
+    //[ClientRpc]
+    //public void RpcUpdateName(string name)
+    //{
+    //    playerName = name;
+    //    nameInput.text = playerName;
+    //}
+
+    [ClientRpc]
+    public void RpcUpdateCountdown(int count)
+    {
+        LobbyManager._instance.countdownText.text = "Match Starting in " + (count + 1);
+    }
+
+    public void HookNameChanged(string name)
+    {
+        playerName = name;
+        nameInput.text = name;
+    }
+
+    public void HookReadyChanged(string text)
+    {
+        readyText = text;
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
     }
 }

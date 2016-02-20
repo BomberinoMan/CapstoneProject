@@ -85,6 +85,12 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &598168795 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11424826, guid: efbe864a1600d4a128d0e48c066737cc,
+    type: 2}
+  m_PrefabInternal: {fileID: 646778173}
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1001 &646778173
 Prefab:
   m_ObjectHideFlags: 0
@@ -124,6 +130,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11410578, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: countdownGui
+      value: 
+      objectReference: {fileID: 1113845539}
+    - target: {fileID: 11410578, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
+      propertyPath: countdownText
+      value: 
+      objectReference: {fileID: 598168795}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: efbe864a1600d4a128d0e48c066737cc, type: 2}
   m_IsPrefabParent: 0
@@ -188,6 +202,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!224 &1113845539 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 22413974, guid: efbe864a1600d4a128d0e48c066737cc,
+    type: 2}
+  m_PrefabInternal: {fileID: 646778173}
 --- !u!1 &1969215578
 GameObject:
   m_ObjectHideFlags: 0

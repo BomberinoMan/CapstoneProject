@@ -274,7 +274,8 @@ Prefab:
       propertyPath: m_Color.a
       value: 0.078431375
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11478822, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
   m_IsPrefabParent: 0
 --- !u!224 &570413007 stripped
@@ -332,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -350,7 +351,7 @@ Canvas:
   m_GameObject: {fileID: 1737761063}
   m_Enabled: 1
   serializedVersion: 2
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 2010935115}
   m_PlaneDistance: 100
   m_PixelPerfect: 1

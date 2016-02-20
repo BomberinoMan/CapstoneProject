@@ -21,6 +21,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     public DPadController dPad;
     private Rigidbody2D _rb;
     private Transform _transform;
+    private Vector2 prevDirection;
 
     public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
     public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
@@ -33,11 +34,11 @@ public class PlayerControllerComponent : NetworkBehaviour
         if (_lobbyManager == null)
             _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
 
-            // Get the touch input from the UI
-        if(dPad == null){
-            dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
-            GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
-        }
+        prevDirection = new Vector2(0.0f, 0.0f);
+
+        // Get the touch input from the UI
+        dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
+        GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
 
         GameObject animator = Instantiate(_lobbyManager.playerAnimations[playerIndex]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
@@ -114,12 +115,35 @@ public class PlayerControllerComponent : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
+        var touch = Input.touches.Where(x => x.position.x <= 300 && x.position.y <= 300).FirstOrDefault();
+
+        Vector2 direction;
+
+        if (touch.position.x == 0.0 && touch.position.y == 0.0)
+            direction = new Vector2(0.0f, 0.0f);
+        else if (Math.Abs(touch.deltaPosition.x) >= 2.0 || Math.Abs(touch.deltaPosition.y) >= 2.0)
+            if (Math.Abs(touch.deltaPosition.x) > Math.Abs(touch.deltaPosition.y))
+            {
+                direction.x = Math.Abs(touch.deltaPosition.x) / touch.deltaPosition.x;
+                direction.y = 0.0f;
+            }
+            else
+            {
+                direction.x = 0.0f;
+                direction.y = Math.Abs(touch.deltaPosition.y) / touch.deltaPosition.y;
+            }
+        else
+            direction = prevDirection;
+
+        prevDirection = direction;
+
         //float hor = Input.GetAxisRaw("Horizontal");
         //float ver = Input.GetAxisRaw("Vertical");
-            // TODO refactor this method
-        float hor = dPad.currDirection.x;
-        float ver = dPad.currDirection.y;
+        //float hor = dPad.currDirection.x;
+        //float ver = dPad.currDirection.y;
 
+        float hor = direction.x;
+        float ver = direction.y;
         if (!_playerController.reverseMovement)
         {
             if (ver == 0.0f && hor != 0.0f)

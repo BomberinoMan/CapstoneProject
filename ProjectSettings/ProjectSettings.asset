@@ -11,7 +11,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Capstone
   productName: BomberinoMan
-  defaultCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: fa7e3bed658a85848922a0d18555cc6c, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_ShowUnitySplashScreen: 1
   m_VirtualRealitySplashScreen: {fileID: 0}
@@ -162,7 +162,7 @@ PlayerSettings:
   AndroidKeyaliasName: 
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
-  androidEnableBanner: 1
+  androidEnableBanner: 0
   m_AndroidBanners:
   - width: 320
     height: 180
@@ -173,7 +173,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 0}
+      m_Icon: {fileID: 2800000, guid: fa7e3bed658a85848922a0d18555cc6c, type: 3}
       m_Width: 128
       m_Height: 128
   m_BuildTargetBatching: []

@@ -140,7 +140,13 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
+        LobbyManager._instance.countdownGui.gameObject.SetActive(true);
         LobbyManager._instance.countdownText.text = "Match Starting in " + (count + 1);
+
+        if (count < 0)
+        {
+            LobbyManager._instance.countdownGui.gameObject.SetActive(false);
+        }
     }
 
     public void HookNameChanged(string name)

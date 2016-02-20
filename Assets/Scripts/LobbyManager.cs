@@ -145,9 +145,8 @@ public class LobbyManager : NetworkLobbyManager
     {
         float remainingTime = countdownTime;
         int floorTime = Mathf.FloorToInt(remainingTime);
-        countdownGui.gameObject.SetActive(true);
 
-        while (remainingTime > 0)
+        while (remainingTime >= -1)
         {
             yield return null;
 
@@ -168,16 +167,6 @@ public class LobbyManager : NetworkLobbyManager
             }
         }
 
-        //Possibly remove this by setting <= 0
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                player.RpcUpdateCountdown(0);
-            }
-        }
-
-        countdownGui.gameObject.SetActive(false);
         ServerChangeScene(playScene);
     }
 

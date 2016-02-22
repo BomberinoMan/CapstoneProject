@@ -2,12 +2,10 @@
 using System.Collections;
 
 public class TinyBombsPlayerControllerModifier : DefaultPlayerControllerModifier {
-	private float startTime;
-	private IPlayerController _playerController;
 	private BombParams temp;
 
 	public TinyBombsPlayerControllerModifier(IPlayerController playerController) {
-		startTime = Time.time;
+		_startTime = Time.time;
 		_playerController = playerController;
 		temp = new BombParams ();
 
@@ -30,6 +28,4 @@ public class TinyBombsPlayerControllerModifier : DefaultPlayerControllerModifier
 			temp.delayTime = value.delayTime;
 			_playerController.bombParams = value; } 
 	}
-
-	public override bool isRadioactive { get { return startTime + duration >= Time.time; } }
 }

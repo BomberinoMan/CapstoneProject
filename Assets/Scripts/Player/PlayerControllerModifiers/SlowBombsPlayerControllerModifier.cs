@@ -2,12 +2,10 @@
 using System.Collections;
 
 public class SlowBombsPlayerControllerModifier : DefaultPlayerControllerModifier {
-	private float startTime;
-	private IPlayerController _playerController;
 	private BombParams temp;
 
 	public SlowBombsPlayerControllerModifier(IPlayerController playerController) {
-		startTime = Time.time;
+		_startTime = Time.time;
 		_playerController = playerController;
 		temp = new BombParams ();
 
@@ -32,6 +30,4 @@ public class SlowBombsPlayerControllerModifier : DefaultPlayerControllerModifier
 			temp.warningTime = value.warningTime;
 			_playerController.bombParams = value; } 
 	}
-
-	public override bool isRadioactive { get { return startTime + duration >= Time.time; } }
 }

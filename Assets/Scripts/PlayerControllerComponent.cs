@@ -181,7 +181,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             }
         }
 
-        //flipFlopColor(); //TODO uncomment this when ready
+        flipFlopColor(); //TODO uncomment this when ready
     }
 
     [ClientRpc]
@@ -287,7 +287,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         if (!_playerController.isRadioactive)
         {
-            gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+			gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;
             return;
         }
 
@@ -296,13 +296,13 @@ public class PlayerControllerComponent : NetworkBehaviour
             return;
         }
 
-        if (gameObject.GetComponentInChildren<SpriteRenderer>().color == Color.white)
+		if (gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color == Color.white)
         {
-            gameObject.GetComponentInChildren<SpriteRenderer>().color = new Color(0.678f, 0.698f, 0.741f);
+			gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.678f, 0.698f, 0.741f);
         }
         else
         {
-            gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+			gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;
         }
 
         _flipFlopTime = Time.time;

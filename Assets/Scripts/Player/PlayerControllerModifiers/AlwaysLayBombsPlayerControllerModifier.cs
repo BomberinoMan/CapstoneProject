@@ -3,13 +3,10 @@ using System.Collections;
 
 public class AlwaysLayBombsPlayerControllerModifier : DefaultPlayerControllerModifier
 {
-    private float startTime;
-    private IPlayerController _playerController;
-
     public AlwaysLayBombsPlayerControllerModifier(IPlayerController playerController)
     {
-        startTime = Time.time;
-        //_playerController = playerController;
+        _startTime = Time.time;
+        _playerController = playerController;
     }
 
     public override bool alwaysLayBombs
@@ -24,6 +21,4 @@ public class AlwaysLayBombsPlayerControllerModifier : DefaultPlayerControllerMod
             //Do nothing		
         }
     }
-
-    public override bool isRadioactive { get { return startTime + duration >= Time.time; } }
 }

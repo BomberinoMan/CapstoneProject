@@ -2,11 +2,8 @@
 using System.Collections;
 
 public class ReverseMovementPlayerControllerModifier : DefaultPlayerControllerModifier {
-	private float startTime;
-	private IPlayerController _playerController;
-
 	public ReverseMovementPlayerControllerModifier(IPlayerController playerController) {
-		startTime = Time.time;
+		_startTime = Time.time;
 		_playerController = playerController;
 	}
 
@@ -16,6 +13,4 @@ public class ReverseMovementPlayerControllerModifier : DefaultPlayerControllerMo
 		} 
 		set { _playerController.reverseMovement = value; } 
 	}
-
-	public override bool isRadioactive { get { return startTime + duration >= Time.time; } }
 }

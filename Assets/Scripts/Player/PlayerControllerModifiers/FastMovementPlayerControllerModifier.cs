@@ -2,11 +2,8 @@
 using System.Collections;
 
 public class FastMovementPlayerControllerModifier : DefaultPlayerControllerModifier {
-	private float startTime;
-	private IPlayerController _playerController;
-
 	public FastMovementPlayerControllerModifier(IPlayerController playerController) {
-		startTime = Time.time;
+		_startTime = Time.time;
 		_playerController = playerController;
 	}
 
@@ -18,6 +15,4 @@ public class FastMovementPlayerControllerModifier : DefaultPlayerControllerModif
 		} 
 		set { _playerController.speedScalar = value; } 
 	}
-
-	public override bool isRadioactive { get { return startTime + duration >= Time.time; } }
 }

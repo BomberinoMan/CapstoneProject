@@ -2,8 +2,9 @@
 using System.Collections;
 
 public class DefaultPlayerControllerModifier : IPlayerControllerModifier {
-	public float duration = 5.0f;
-	private IPlayerController _playerController;
+	protected float _startTime = -30.0f;
+	protected float _duration = 15.0f;
+	protected IPlayerController _playerController;
 
 	public DefaultPlayerControllerModifier(IPlayerController playerController) {
 		_playerController = playerController;
@@ -75,7 +76,7 @@ public class DefaultPlayerControllerModifier : IPlayerControllerModifier {
 	}
 
 	public virtual bool isRadioactive {
-		get { return _playerController.isRadioactive; }
+		get { return _startTime + _duration >= Time.time; }
 		set { _playerController.isRadioactive = value; } 
 	}
 }

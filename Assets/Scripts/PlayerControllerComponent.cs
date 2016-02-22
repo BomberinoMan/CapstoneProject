@@ -31,6 +31,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public override void OnStartClient()
     {
+        base.OnStartClient();
+
         if (_lobbyManager == null)
             _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
 
@@ -52,9 +54,6 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public void Start()
     {
-        if (_lobbyManager == null)
-            _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
-
         _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
@@ -242,6 +241,12 @@ public class PlayerControllerComponent : NetworkBehaviour
 		NetworkServer.Destroy (upgrade);
 	}
 
+    [Command]
+    private void CmdKillPlayer()
+    {
+        GameObject.Find("LobbyManager").GetComponent<LobbyManager>().PlayerDead(this);
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Upgrade")
@@ -252,8 +257,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         else if (other.gameObject.tag == "Laser")
         {
             //TODO add destruction animation support
-            //TODO add support for notifying the LobbyManager about a player death
-			CmdPickedUpUpgrade(gameObject); // This destroys the player
+            CmdKillPlayer();
         }
     }
 

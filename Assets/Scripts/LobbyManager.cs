@@ -9,6 +9,13 @@ using System.Linq;
 
 public class LobbyManager : NetworkLobbyManager
 {
+    private class Player
+    {
+        public int connectionId;
+        public bool isAlive;
+        public int score;
+    }
+
     public static LobbyManager _instance;
 
     public RectTransform lobbyGui;
@@ -18,7 +25,7 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
 
     private List<NetworkLobbyPlayer> _players = new List<NetworkLobbyPlayer>();
-    private List<int> connectedPlayerIds = new List<int>();         //TODO: limit number of players
+    private List<Player> connectedPlayerIds = new List<Player>();         //TODO: limit number of players
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
@@ -29,6 +36,7 @@ public class LobbyManager : NetworkLobbyManager
     };
 
     private bool sceneLoaded = false;
+    private int _gameEndCall = 0;
 
     public GameObject bombUpgrade;
     public GameObject laserUpgrade;
@@ -50,24 +58,9 @@ public class LobbyManager : NetworkLobbyManager
 
 
     // **************SERVER**************
-
-    //public override void OnLobbyStartHost()
-    //{
-    //    base.OnLobbyStartHost();
-    //    Debug.Log("OnLobbyStartHost()");
-    //}
-
-    //public override void OnLobbyStopHost()
-    //{
-    //    base.OnLobbyStopHost();
-    //    Debug.Log("OnLobbyStopHost()");
-    //}
-
     public override void OnLobbyStartServer()
     {
         base.OnLobbyStartServer();
-
-        //Debug.Log("OnLobbyStartServer()");
         connectedPlayerIds.Clear();
     }
 
@@ -75,10 +68,9 @@ public class LobbyManager : NetworkLobbyManager
     {
         base.OnLobbyServerConnect(conn);
 
-        //Debug.Log("OnLobbyServerConnect(NetworkConnection networkConnection)");
         if (conn.address != "localServer")
         {
-            connectedPlayerIds.Add(conn.connectionId);
+            connectedPlayerIds.Add( new Player() { connectionId = conn.connectionId, isAlive = true, score = 0 } );
         }
         
     }
@@ -86,33 +78,57 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
     {
         base.OnLobbyServerDisconnect(conn);
-
-        //Debug.Log("OnLobbyServerDisconnect(NetworkConnection networkConnection)");
-        connectedPlayerIds.Remove(conn.connectionId);
+        connectedPlayerIds.Remove(connectedPlayerIds.Where(x => x.connectionId == conn.connectionId).FirstOrDefault());
     }
-
-    //public override void OnLobbyServerSceneChanged(string name)
-    //{
-    //    base.OnLobbyServerSceneChanged(name);_playerOrder
-    //    Debug.Log("OnLobbyServerSceneChanged(string name)" + name);
-    //}
-
-    //public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)
-    //{
-    //    Debug.Log("OnLobbyServerCreateLobbyPlayer(NetworkConnection networkConnection, short other)");
-    //    return base.OnLobbyServerCreateLobbyPlayer(networkConnection, other);
-    //}
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
     {
         int i = getSlotIndex(networkConnection.connectionId);
 
-        GameObject newPlayer = Instantiate(playerPrefab.gameObject);
+        GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = _playerSpawnVectors[i];
         newPlayer.GetComponent<PlayerControllerComponent>().playerIndex = i;
 
         NetworkServer.Spawn(newPlayer);
         return newPlayer;
+    }
+
+    public void PlayerDead(PlayerControllerComponent player)
+    {
+        SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
+        SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
+        SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
+        SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
+
+        connectedPlayerIds[player.playerIndex].isAlive = false;
+
+        System.Threading.Timer timer = null;
+        timer = new System.Threading.Timer((obj) =>
+            {
+                CheckIfGameOver();
+                timer.Dispose();
+            }, null, 2000, System.Threading.Timeout.Infinite);
+        _gameEndCall++;
+
+        NetworkServer.Destroy(player.gameObject);
+    }
+
+    private void CheckIfGameOver()
+    {
+        _gameEndCall--;             // To make sure that this is the latest call from when a player last died, this needs to be 0
+        if (_gameEndCall != 0)
+            return;
+
+        if (connectedPlayerIds.Where(x => x.isAlive).Count() == 1)
+        {
+            connectedPlayerIds.Where(x => x.isAlive).First().score++;
+            connectedPlayerIds.Where(x => x.isAlive).First().isAlive = false;
+        }
+
+        if (connectedPlayerIds.Where(x => x.isAlive).Count() == 0)
+            //  ServerReturnToLobby(); // This call doesn't work for some reason
+            Debug.Log("GAME OVER!");
+
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
@@ -171,15 +187,7 @@ public class LobbyManager : NetworkLobbyManager
     public void KickPlayer(NetworkConnection conn)
     {
         conn.Disconnect();
-        //conn.Send(MsgType.RemovePlayer, new  RemovePlayerMessage());
     }
-
-    //public void KickedMessageHandler(NetworkMessage msg)
-    //{
-    //    infoPanel.Display("Kicked by server", "Close", null);
-    //    msg.conn.Disconnect();
-    //}
-
 
     // **************CLIENT**************
 
@@ -241,12 +249,44 @@ public class LobbyManager : NetworkLobbyManager
         }
     }
 
+    private void SpawnUpgradeInRandomLocation(UpgradeType upgradeType, int num = 0)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            Vector2 location = new Vector2();
+
+            do
+            {
+                location.x = UnityEngine.Random.Range(1, 13);   // Spawnable locations on the board
+                location.y = UnityEngine.Random.Range(1, 11);
+            } while (Physics2D.RaycastAll(location, new Vector2(1.0f, 1.0f), 0.2f).Length != 0);
+
+            switch (upgradeType)
+            {
+                case (UpgradeType.Bomb):
+                    NetworkServer.Spawn(Instantiate(bombUpgrade, location, Quaternion.identity) as GameObject);
+                    break;
+                case (UpgradeType.Kick):
+                    NetworkServer.Spawn(Instantiate(kickUpgrade, location, Quaternion.identity) as GameObject);
+                    break;
+                case (UpgradeType.Laser):
+                    NetworkServer.Spawn(Instantiate(laserUpgrade, location, Quaternion.identity) as GameObject);
+                    break;
+                case (UpgradeType.Line):
+                    NetworkServer.Spawn(Instantiate(lineUpgrade, location, Quaternion.identity) as GameObject);
+                    break;
+                default: // Do nothing
+                    break;
+            }
+        }
+    }
+
     private int getSlotIndex(int connectionId)
     {
         int i = 0;
-        foreach (var playerId in connectedPlayerIds)
+        foreach (var player in connectedPlayerIds)
         {
-            if (playerId == connectionId)
+            if (player.connectionId == connectionId)
                 return i;
             i++;
         }
@@ -259,66 +299,14 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyClientExit()
     {
         base.OnLobbyClientExit();
-
-        //Debug.Log("OnLobbyClientExit");
         ChangePanel(menuGui);
     }
-
-    //public void OnRoundFinished()
-    //{
-
-    //}
-
-    //public void OnGameFinished()
-    //{
-    //    ServerChangeScene(lobbyScene);
-    //    ChangePanel(lobbyGui);
-    //}
-
-    //public override void OnLobbyClientConnect(NetworkConnection conn)
-    //{
-    //    base.OnLobbyClientConnect(conn);
-    //    Debug.Log("OnLobbyClientConnect");
-    //}
-
-    //public override void OnLobbyClientDisconnect(NetworkConnection conn)
-    //{
-    //    base.OnLobbyClientDisconnect(conn);
-    //    Debug.Log("OnLobbyClientDisconnect");
-    //}
-
-    //public override void OnLobbyStartClient(NetworkClient client)
-    //{
-    //    base.OnLobbyStartClient(client);
-    //    Debug.Log("OnLobbyStartClient");
-    //}
-
-    //public override void OnLobbyStopClient()
-    //{
-    //    base.OnLobbyStopClient();
-    //    Debug.Log("OnLobbyStopClient");
-    //}
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
         base.OnLobbyClientSceneChanged(conn);
-
-        //Debug.Log("OnLobbyClientSceneChanged () = " + conn.connectionId);
         _currentPanel.gameObject.SetActive(false);
     }
-
-    //public override void OnLobbyClientAddPlayerFailed()
-    //{
-    //    Debug.Log("OnLobbyClientAddPlayerFailed ()");
-    //    base.OnLobbyClientAddPlayerFailed();
-    //}
-
-    //public override void OnStartHost()
-    //{
-    //    Debug.Log("OnStartHost");
-    //    base.OnStartHost();
-    //}
-
 
     // **************GUI**************
 

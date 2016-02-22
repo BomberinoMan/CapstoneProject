@@ -216,19 +216,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22415486, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -302
+      value: -275
       objectReference: {fileID: 0}
     - target: {fileID: 22415486, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -150
+      value: -124.94
       objectReference: {fileID: 0}
     - target: {fileID: 22415486, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 264.1
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 22415486, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 263.99
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 22415486, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
       propertyPath: m_AnchorMin.x
@@ -273,6 +273,18 @@ Prefab:
     - target: {fileID: 11494786, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
       propertyPath: m_Color.a
       value: 0.078431375
+      objectReference: {fileID: 0}
+    - target: {fileID: 22404890, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.9639445
+      objectReference: {fileID: 0}
+    - target: {fileID: 22404890, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.9639445
+      objectReference: {fileID: 0}
+    - target: {fileID: 22404890, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.9639445
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11478822, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
@@ -351,7 +363,7 @@ Canvas:
   m_GameObject: {fileID: 1737761063}
   m_Enabled: 1
   serializedVersion: 2
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 2010935115}
   m_PlaneDistance: 100
   m_PixelPerfect: 1

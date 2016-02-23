@@ -9,7 +9,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     [SyncVar]
     public int playerIndex;
 
-    private LobbyManager _lobbyManager;
+    public LobbyManager _lobbyManager;
 
     private float _speed;
     private float _flipFlopTime;
@@ -31,8 +31,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        if (_lobbyManager == null)
-            _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
+        //if (_lobbyManager == null)
+        //    _lobbyManager = GameObject.Find("LanLobbyManager").GetComponent<LobbyManager>();
 
         prevDirection = new Vector2(0.0f, 0.0f);
 
@@ -52,8 +52,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public void Start()
     {
-        if (_lobbyManager == null)
-            _lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
+        //if (_lobbyManager == null)
+        //    _lobbyManager = GameObject.Find("LanLobbyManager").GetComponent<LobbyManager>();
 
         _speed = 0.06f;
         _flipFlopTime = Time.time;

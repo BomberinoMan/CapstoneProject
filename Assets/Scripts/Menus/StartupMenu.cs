@@ -1,30 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class StartupMenu : MonoBehaviour
 {
-    public void ButtonRanked_OnClick()
+    public Button rankedButton;
+    public Button unrankedButton;
+    public Button settingsButton;
+    public Button quitButton;
+
+    public void OnEnable()
     {
-        Debug.Log("ButtonRanked");
-        SceneManager.LoadScene("LoginMenu");
+        rankedButton.onClick.RemoveAllListeners();
+        rankedButton.onClick.AddListener(Ranked_OnClick);
+
+        unrankedButton.onClick.RemoveAllListeners();
+        unrankedButton.onClick.AddListener(Unranked_OnClick);
+
+        settingsButton.onClick.RemoveAllListeners();
+        settingsButton.onClick.AddListener(Settings_OnClick);
+
+        quitButton.onClick.RemoveAllListeners();
+        quitButton.onClick.AddListener(Quit_OnClick);
     }
 
-    public void ButtonUnranked_OnClick()
+    public void Ranked_OnClick()
     {
-        Debug.Log("ButtonUnranked");
-        SceneManager.LoadScene("UnrankedMenu");
+        MenuManager._instance.ChangePanel(MenuManager._instance.loginGui);
     }
 
-    public void ButtonSettings_OnClick()
+    public void Unranked_OnClick()
     {
-        Debug.Log("ButtonSettings");
-        SceneManager.LoadScene("SettingsMenu");
+        SceneManager.LoadScene("LanLobby");
     }
 
-    public void ButtonQuit_OnClick()
+    public void Settings_OnClick()
     {
-        Debug.Log("ButtonQuit");
+        MenuManager._instance.ChangePanel(MenuManager._instance.settingsGui);
+    }
+
+    public void Quit_OnClick()
+    {
         Application.Quit();
     }
 }

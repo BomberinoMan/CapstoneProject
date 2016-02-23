@@ -3,11 +3,11 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LobbyMain : MonoBehaviour
+public class MmLobbyMain : MonoBehaviour
 {
-    public InputField joinIp;
+    public InputField hostRoomName;
     public Button hostButton;
-    public Button joinButton;
+    public Button findButton;
     public Button backButton;
 
     public void OnEnable()
@@ -15,8 +15,8 @@ public class LobbyMain : MonoBehaviour
         hostButton.onClick.RemoveAllListeners();
         hostButton.onClick.AddListener(OnClickHost);
 
-        joinButton.onClick.RemoveAllListeners();
-        joinButton.onClick.AddListener(OnClickJoin);
+        findButton.onClick.RemoveAllListeners();
+        findButton.onClick.AddListener(OnClickFind);
 
         backButton.onClick.RemoveAllListeners();
         backButton.onClick.AddListener(OnClickBack);
@@ -24,13 +24,13 @@ public class LobbyMain : MonoBehaviour
 
     public void OnClickHost()
     {
-        LobbyManager._instance.StartHost();
+        //LobbyManager._instance.StartHost();
     }
 
-    public void OnClickJoin()
+    public void OnClickFind()
     {
-        LobbyManager._instance.networkAddress = joinIp.text;
-        LobbyManager._instance.StartClient();
+        //LobbyManager._instance.networkAddress = joinIp.text;
+        //LobbyManager._instance.StartClient();
     }
 
     public void OnClickBack()

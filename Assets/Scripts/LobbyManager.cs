@@ -6,6 +6,7 @@ using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using UnityEngine.Networking.Match;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -49,6 +50,21 @@ public class LobbyManager : NetworkLobbyManager
     }
 
 
+    // **************GAME**************
+
+    //public void OnRoundFinished() { }
+
+    public void Update()
+    {
+        //if all players but one dead
+        //then return to lobby
+    }
+
+    public void OnGameFinished()
+    {
+        SendReturnToLobby();
+    }
+
     // **************SERVER**************
 
     //public override void OnLobbyStartHost()
@@ -80,7 +96,6 @@ public class LobbyManager : NetworkLobbyManager
         {
             connectedPlayerIds.Add(conn.connectionId);
         }
-        
     }
 
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
@@ -264,16 +279,12 @@ public class LobbyManager : NetworkLobbyManager
         ChangePanel(menuGui);
     }
 
-    //public void OnRoundFinished()
-    //{
+    public override void OnClientError(NetworkConnection conn, int errorCode)
+    {
+        base.OnClientError(conn, errorCode);
 
-    //}
-
-    //public void OnGameFinished()
-    //{
-    //    ServerChangeScene(lobbyScene);
-    //    ChangePanel(lobbyGui);
-    //}
+        Debug.Log("client error");
+    }
 
     //public override void OnLobbyClientConnect(NetworkConnection conn)
     //{
@@ -318,6 +329,46 @@ public class LobbyManager : NetworkLobbyManager
     //    Debug.Log("OnStartHost");
     //    base.OnStartHost();
     //}
+
+
+    // **************Matchmaking**************
+    
+    public void StartMatchMaker()
+    {
+
+    }
+
+    public void StopMatchMaker()
+    {
+
+    }
+
+    public override void OnMatchCreate(CreateMatchResponse mr)
+    {
+        base.OnMatchCreate(mr);
+
+        Debug.Log("ONMATCHCREATE: ");
+        //_currentMatchId = matchInfo.networkId;
+    }   
+
+    //public void OnMatchDestroyed(BasicResponse resp)
+    //{
+    //    if (_disconnectServer)
+    //    {
+    //        StopMatchMaker();
+    //        StopHost();
+    //    }
+    //}
+
+    public void OnMatchJoin()
+    {
+
+    }
+
+    public void OnMatchList()
+    {
+
+    }
 
 
     // **************GUI**************

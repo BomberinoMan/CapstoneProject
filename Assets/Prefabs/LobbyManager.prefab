@@ -371,7 +371,7 @@ MonoBehaviour:
   m_PlayerPrefab: {fileID: 142472, guid: 58d5cb0cd7e374eb38d4398c5b63fade, type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
-  m_OfflineScene: Lobby
+  m_OfflineScene: LanLobby
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
@@ -436,9 +436,14 @@ MonoBehaviour:
   m_LobbyPlayerPrefab: {fileID: 11422460, guid: 8614c5b25e4a14a69b8426eb1d1b6a09,
     type: 2}
   m_GamePlayerPrefab: {fileID: 142472, guid: 58d5cb0cd7e374eb38d4398c5b63fade, type: 2}
-  m_LobbyScene: Lobby
+  m_LobbyScene: LanLobby
   m_PlayScene: Game
   lobbySlots: []
+  lobbyGui: {fileID: 22493548}
+  menuGui: {fileID: 22423882}
+  countdownGui: {fileID: 22413974}
+  countdownText: {fileID: 11424826}
+  countdownTime: 5
   bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
   laserUpgrade: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
   kickUpgrade: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}
@@ -452,7 +457,6 @@ MonoBehaviour:
   - {fileID: 130842, guid: db208dfe21da242fa81373f0e78cd98a, type: 2}
   - {fileID: 134108, guid: e901fc60fe369453ba23daeacd596439, type: 2}
   - {fileID: 153562, guid: 4df5ead72c1824716815928322d20f2c, type: 2}
-  countdownTime: 5
 --- !u!114 &11410912
 MonoBehaviour:
   m_ObjectHideFlags: 1

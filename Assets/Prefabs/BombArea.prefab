@@ -29,7 +29,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4fc6f28e9d8a14c95d7a2d78c7477c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 11481418, guid: 58d5cb0cd7e374eb38d4398c5b63fade, type: 2}
 --- !u!114 &11456534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -42,7 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.262}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.322}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

@@ -246,10 +246,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowLobbyGUI: 1
+  scoreScreenPlayer: {fileID: 168736, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
   nameInput: {fileID: 11404624}
   readyButton: {fileID: 11436954}
   removePlayerButton: {fileID: 11476336}
   playerName: 
+  readyText: 
 --- !u!114 &11431892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -271,10 +273,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 3
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -372,10 +374,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 4
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -785,6 +787,10 @@ Prefab:
       propertyPath: m_AnchorMax.x
       value: 0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scoreScreenPlayer
+      value: 
+      objectReference: {fileID: 168736, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 129494}

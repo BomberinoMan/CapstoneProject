@@ -2,9 +2,13 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
 
 public class LobbyPlayer : NetworkLobbyPlayer
 {
+    public GameObject scoreScreenPlayer;
+
     public InputField nameInput;
     public Button readyButton;
     public Button removePlayerButton;
@@ -153,6 +157,18 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         playerName = name;
         nameInput.text = name;
+    }
+
+    [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
+    public void RpcAddPlayerToScoreList(string playerName, int playerScore)
+    {
+        LobbyManager._instance.scoreScreenGui.gameObject.SetActive(true);
+
+        var playerRow = Instantiate(scoreScreenPlayer);
+        playerRow.GetComponentInChildren<ScoreScreenPlayerName>().SetPlayerName(playerName);
+        playerRow.GetComponentInChildren<ScoreScreenPlayerScore>().SetPlayerScore(playerScore);
+
+        playerRow.transform.SetParent(LobbyManager._instance.scoreScreenPlayerList.transform);
     }
 
     public void HookReadyChanged(string text)

@@ -2,15 +2,15 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.UI;
 using System;
 using System.Linq;
 
 public class LobbyManager : NetworkLobbyManager
 {
-    private class Player
+    public class PlayerInfo
     {
+        public string name;
         public int connectionId;
         public bool isAlive;
         public int score;
@@ -18,14 +18,17 @@ public class LobbyManager : NetworkLobbyManager
 
     public static LobbyManager _instance;
 
+    public GameObject scoreScreenPlayerList;
+    public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
     public RectTransform menuGui;
     public RectTransform countdownGui;
     public Text countdownText;
     public float countdownTime = 5.0f;
+    public float scoreScreenTime = 5.0f;
 
     private List<NetworkLobbyPlayer> _players = new List<NetworkLobbyPlayer>();
-    private List<Player> connectedPlayerIds = new List<Player>();         //TODO: limit number of players
+    private List<PlayerInfo> connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
@@ -36,7 +39,6 @@ public class LobbyManager : NetworkLobbyManager
     };
 
     private bool sceneLoaded = false;
-    private int _gameEndCall = 0;
 
     public GameObject bombUpgrade;
     public GameObject laserUpgrade;
@@ -61,7 +63,7 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyStartServer()
     {
         base.OnLobbyStartServer();
-        connectedPlayerIds.Clear();
+        connectedPlayerInfo.Clear();
     }
 
     public override void OnLobbyServerConnect(NetworkConnection conn)
@@ -70,7 +72,7 @@ public class LobbyManager : NetworkLobbyManager
 
         if (conn.address != "localServer")
         {
-            connectedPlayerIds.Add( new Player() { connectionId = conn.connectionId, isAlive = true, score = 0 } );
+            connectedPlayerInfo.Add( new PlayerInfo() { connectionId = conn.connectionId, isAlive = true, score = 0, name = "Anonymous" } );
         }
         
     }
@@ -78,7 +80,7 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
     {
         base.OnLobbyServerDisconnect(conn);
-        connectedPlayerIds.Remove(connectedPlayerIds.Where(x => x.connectionId == conn.connectionId).FirstOrDefault());
+        connectedPlayerInfo.Remove(connectedPlayerInfo.Where(x => x.connectionId == conn.connectionId).FirstOrDefault());
     }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
@@ -100,35 +102,48 @@ public class LobbyManager : NetworkLobbyManager
         SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
         SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
 
-        connectedPlayerIds[player.playerIndex].isAlive = false;
+        connectedPlayerInfo[player.playerIndex].isAlive = false;
 
-        System.Threading.Timer timer = null;
-        timer = new System.Threading.Timer((obj) =>
-            {
-                CheckIfGameOver();
-                timer.Dispose();
-            }, null, 2000, System.Threading.Timeout.Infinite);
-        _gameEndCall++;
+        Invoke("CheckIfGameOver", 2);
 
         NetworkServer.Destroy(player.gameObject);
     }
 
     private void CheckIfGameOver()
     {
-        _gameEndCall--;             // To make sure that this is the latest call from when a player last died, this needs to be 0
-        if (_gameEndCall != 0)
-            return;
-
-        if (connectedPlayerIds.Where(x => x.isAlive).Count() == 1)
+        if (connectedPlayerInfo.Where(x => x.isAlive).Count() == 1)
         {
-            connectedPlayerIds.Where(x => x.isAlive).First().score++;
-            connectedPlayerIds.Where(x => x.isAlive).First().isAlive = false;
+            connectedPlayerInfo.Where(x => x.isAlive).First().score++;
+            connectedPlayerInfo.Where(x => x.isAlive).First().isAlive = false;
         }
 
-        if (connectedPlayerIds.Where(x => x.isAlive).Count() == 0)
+        if (connectedPlayerInfo.Where(x => x.isAlive).Count() == 0)
+        {
             //  ServerReturnToLobby(); // This call doesn't work for some reason
             Debug.Log("GAME OVER!");
+            StartCoroutine(GameOver());
+        }
+    }
 
+    private IEnumerator GameOver()
+    {
+        float remainingTime = scoreScreenTime;
+
+        foreach (LobbyPlayer player in lobbySlots)
+        {
+            if (player != null)
+            {
+                connectedPlayerInfo.ForEach(x => player.RpcAddPlayerToScoreList(x.name, x.score));
+            }
+        }
+
+        while (remainingTime >= -1)
+        {
+            yield return null;
+            remainingTime -= Time.deltaTime;
+        }
+
+        //ServerChangeScene(lobbyScene);
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
@@ -284,7 +299,7 @@ public class LobbyManager : NetworkLobbyManager
     private int getSlotIndex(int connectionId)
     {
         int i = 0;
-        foreach (var player in connectedPlayerIds)
+        foreach (var player in connectedPlayerInfo)
         {
             if (player.connectionId == connectionId)
                 return i;
@@ -324,7 +339,6 @@ public class LobbyManager : NetworkLobbyManager
 
         _currentPanel = newPanel;
     }
-
 
     // **************PLAYER LIST**************
 

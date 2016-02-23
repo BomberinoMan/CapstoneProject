@@ -10,12 +10,11 @@ public class DPadController : NetworkBehaviour
     private Vector2 origin = new Vector2();
     private float width;
     private float height;
-    private int setup = 100;
 
     void Start()
     {
         //This will only work on mobile if the dpad is on the bottom-left of the screen
-        var canvasScalar = GetComponentInParent<Canvas>().scaleFactor;
+        var canvasScalar = GameObject.Find("TouchControlOverlay").GetComponent<Canvas>().scaleFactor;
         width = GetComponent<RectTransform>().rect.width * canvasScalar;
         height  = GetComponent<RectTransform>().rect.height * canvasScalar;
 

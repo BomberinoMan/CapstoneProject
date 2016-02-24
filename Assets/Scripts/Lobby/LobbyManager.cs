@@ -65,6 +65,13 @@ public class LobbyManager : NetworkLobbyManager
         SendReturnToLobby();
     }
 
+    public void PlayerDeath()
+    {
+        // if (all players dead) {
+            //SendReturnToLobby();
+        // }
+    }
+
     // **************SERVER**************
 
     //public override void OnLobbyStartHost()
@@ -186,14 +193,7 @@ public class LobbyManager : NetworkLobbyManager
     public void KickPlayer(NetworkConnection conn)
     {
         conn.Disconnect();
-        //conn.Send(MsgType.RemovePlayer, new  RemovePlayerMessage());
     }
-
-    //public void KickedMessageHandler(NetworkMessage msg)
-    //{
-    //    infoPanel.Display("Kicked by server", "Close", null);
-    //    msg.conn.Disconnect();
-    //}
 
 
     // **************CLIENT**************
@@ -315,7 +315,7 @@ public class LobbyManager : NetworkLobbyManager
         base.OnLobbyClientSceneChanged(conn);
 
         //Debug.Log("OnLobbyClientSceneChanged () = " + conn.connectionId);
-        _currentPanel.gameObject.SetActive(false);
+        ChangePanel(null);
     }
 
     //public override void OnLobbyClientAddPlayerFailed()
@@ -333,23 +333,22 @@ public class LobbyManager : NetworkLobbyManager
 
     // **************Matchmaking**************
     
-    public void StartMatchMaker()
-    {
+    //public override void StartMatchMaker()
+    //{
 
-    }
+    //}
 
-    public void StopMatchMaker()
-    {
+    //public override void StopMatchMaker()
+    //{
 
-    }
+    //}
 
-    public override void OnMatchCreate(CreateMatchResponse mr)
-    {
-        base.OnMatchCreate(mr);
+    //public override void OnMatchCreate(CreateMatchResponse response)
+    //{
+    //    base.OnMatchCreate(response);
 
-        Debug.Log("ONMATCHCREATE: ");
-        //_currentMatchId = matchInfo.networkId;
-    }   
+    //    _currentMatchId = matchInfo.networkId;
+    //}   
 
     //public void OnMatchDestroyed(BasicResponse resp)
     //{
@@ -359,17 +358,6 @@ public class LobbyManager : NetworkLobbyManager
     //        StopHost();
     //    }
     //}
-
-    public void OnMatchJoin()
-    {
-
-    }
-
-    public void OnMatchList()
-    {
-
-    }
-
 
     // **************GUI**************
 

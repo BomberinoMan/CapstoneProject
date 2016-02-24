@@ -224,6 +224,10 @@ Prefab:
       propertyPath: cancelButton
       value: 
       objectReference: {fileID: 1397703895}
+    - target: {fileID: 11488428, guid: d9752638532057b4582f2e408e1544f2, type: 2}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9752638532057b4582f2e408e1544f2, type: 2}
   m_IsPrefabParent: 0

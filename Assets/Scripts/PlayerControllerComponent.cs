@@ -31,8 +31,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        //if (_lobbyManager == null)
-        //    _lobbyManager = GameObject.Find("LanLobbyManager").GetComponent<LobbyManager>();
+        if (_lobbyManager == null)
+            _lobbyManager = LobbyManager._instance;
 
         prevDirection = new Vector2(0.0f, 0.0f);
 
@@ -52,10 +52,10 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public void Start()
     {
-        //if (_lobbyManager == null)
-        //    _lobbyManager = GameObject.Find("LanLobbyManager").GetComponent<LobbyManager>();
+        if (_lobbyManager == null)
+            _lobbyManager = LobbyManager._instance;
 
-        _speed = 0.06f;
+            _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
         _rb = GetComponent<Rigidbody2D>();

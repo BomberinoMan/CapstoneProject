@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LobbyMain : MonoBehaviour
+public class LanLobbyMain : MonoBehaviour
 {
     public InputField joinIp;
     public Button hostButton;

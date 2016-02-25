@@ -451,12 +451,12 @@ PlayerSettings:
   - WebGL::emscriptenArgs
   - WebGL::template
   - additionalIl2CppArgs::additionalIl2CppArgs
-  Build_ServiceEnabled::Build_ServiceEnabled: False
-  UNet_ServiceEnabled::UNet_ServiceEnabled: False
+  Build_ServiceEnabled::Build_ServiceEnabled: True
+  UNet_ServiceEnabled::UNet_ServiceEnabled: True
   WebGL::emscriptenArgs: 
   WebGL::template: APPLICATION:Default
   additionalIl2CppArgs::additionalIl2CppArgs: 
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: f0a6f4a5-31e8-4140-95d2-ee3f1b4f8c0d
+  projectName: BomberinoMan
+  organizationId: e-4103118
   cloudEnabled: 0

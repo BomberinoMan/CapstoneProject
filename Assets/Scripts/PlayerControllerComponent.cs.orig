@@ -54,10 +54,14 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public void Start()
     {
+<<<<<<< HEAD
+        _speed = 0.06f;
+=======
         if (_lobbyManager == null)
             _lobbyManager = LobbyManager._instance;
 
             _speed = 0.06f;
+>>>>>>> master
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
         _rb = GetComponent<Rigidbody2D>();

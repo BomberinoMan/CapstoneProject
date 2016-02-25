@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using UnityEngine.Networking.Match;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -59,6 +60,28 @@ public class LobbyManager : NetworkLobbyManager
     }
 
 
+    // **************GAME**************
+
+    //public void OnRoundFinished() { }
+
+    public void Update()
+    {
+        //if all players but one dead
+        //then return to lobby
+    }
+
+    public void OnGameFinished()
+    {
+        SendReturnToLobby();
+    }
+
+    public void PlayerDeath()
+    {
+        // if (all players dead) {
+            //SendReturnToLobby();
+        // }
+    }
+
     // **************SERVER**************
     public override void OnLobbyStartServer()
     {
@@ -74,7 +97,6 @@ public class LobbyManager : NetworkLobbyManager
         {
             connectedPlayerInfo.Add( new PlayerInfo() { connectionId = conn.connectionId, isAlive = true, score = 0, name = "Anonymous" } );
         }
-        
     }
 
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
@@ -299,9 +321,9 @@ public class LobbyManager : NetworkLobbyManager
     private int getSlotIndex(int connectionId)
     {
         int i = 0;
-        foreach (var player in connectedPlayerInfo)
+        foreach (var playerId in connectedPlayerIds)
         {
-            if (player.connectionId == connectionId)
+            if (playerId == connectionId)
                 return i;
             i++;
         }
@@ -314,8 +336,41 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyClientExit()
     {
         base.OnLobbyClientExit();
+
+        //Debug.Log("OnLobbyClientExit");
         ChangePanel(menuGui);
     }
+
+    public override void OnClientError(NetworkConnection conn, int errorCode)
+    {
+        base.OnClientError(conn, errorCode);
+
+        Debug.Log("client error");
+    }
+
+    //public override void OnLobbyClientConnect(NetworkConnection conn)
+    //{
+    //    base.OnLobbyClientConnect(conn);
+    //    Debug.Log("OnLobbyClientConnect");
+    //}
+
+    //public override void OnLobbyClientDisconnect(NetworkConnection conn)
+    //{
+    //    base.OnLobbyClientDisconnect(conn);
+    //    Debug.Log("OnLobbyClientDisconnect");
+    //}
+
+    //public override void OnLobbyStartClient(NetworkClient client)
+    //{
+    //    base.OnLobbyStartClient(client);
+    //    Debug.Log("OnLobbyStartClient");
+    //}
+
+    //public override void OnLobbyStopClient()
+    //{
+    //    base.OnLobbyStopClient();
+    //    Debug.Log("OnLobbyStopClient");
+    //}
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {

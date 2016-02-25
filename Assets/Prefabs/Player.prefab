@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIndex: 0
+  _lobbyManager: {fileID: 11442320, guid: 4ca6b5186935059409146ccb71bf116f, type: 2}
   bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
   dPad: {fileID: 11468542, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
 --- !u!1001 &100100000
@@ -274,6 +275,11 @@ Prefab:
       propertyPath: dPad
       value: 
       objectReference: {fileID: 11468542, guid: c2e49f47531e7854ebe9cf3a79b05bcb,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: _lobbyManager
+      value: 
+      objectReference: {fileID: 11442320, guid: 4ca6b5186935059409146ccb71bf116f,
         type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

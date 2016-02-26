@@ -61,7 +61,6 @@ public class BoardCreator
 
     public void InitializeSpawn(Vector3 playerSpawn)
     {
-        Debug.Log(playerSpawn);
         int x = (int)playerSpawn.x;
         int y = (int)playerSpawn.y;
         board.tiles[x, y].isDestructible = false;

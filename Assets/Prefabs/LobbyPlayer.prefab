@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowLobbyGUI: 1
-  scoreScreenPlayer: {fileID: 168736, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
+  scoreScreenPlayer: {fileID: 119628, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
   nameInput: {fileID: 11404624}
   readyButton: {fileID: 11436954}
   removePlayerButton: {fileID: 11476336}
@@ -790,7 +790,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: scoreScreenPlayer
       value: 
-      objectReference: {fileID: 168736, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
+      objectReference: {fileID: 119628, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 129494}

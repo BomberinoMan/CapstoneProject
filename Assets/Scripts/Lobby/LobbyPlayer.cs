@@ -7,9 +7,6 @@ using System.Collections.Generic;
 
 public class LobbyPlayer : NetworkLobbyPlayer
 {
-    public string name;
-    public bool isAlive;
-    public int score;
     public GameObject scoreScreenPlayer;
 
     public InputField nameInput;
@@ -22,21 +19,18 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public override void OnClientEnterLobby()
     {
-        base.OnClientEnterLobby();
-        LobbyManager._instance.AddPlayer(this);
+		LobbyManager._instance.AddPlayer(this);
         LobbyPlayerList._instance.AddPlayer(this);
-
         SetupRemotePlayer();
     }
 
     public override void OnStartLocalPlayer()
     {
-        base.OnStartLocalPlayer();
         SetupLocalPlayer();
     }
 
     public override void OnClientExitLobby()
-    {
+    {	//TODO evan
         base.OnClientExitLobby();
         LobbyManager._instance.RemovePlayer(this);
     }
@@ -165,14 +159,23 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
     public void RpcAddPlayerToScoreList(string playerName, int playerScore)
     {
-        LobbyManager._instance.scoreScreenGui.gameObject.SetActive(true);
+		LobbyManager._instance.scoreScreenGui.gameObject.SetActive(true);
 
         var playerRow = Instantiate(scoreScreenPlayer);
         playerRow.GetComponentInChildren<ScoreScreenPlayerName>().SetPlayerName(playerName);
         playerRow.GetComponentInChildren<ScoreScreenPlayerScore>().SetPlayerScore(playerScore);
 
-        playerRow.transform.SetParent(LobbyManager._instance.scoreScreenPlayerList.transform);
+		playerRow.transform.SetParent(LobbyManager._instance.scoreScreenGui.transform);
     }
+
+	[ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
+	public void RpcClearScoreList()
+	{
+		for (int i = 0; i < LobbyManager._instance.scoreScreenGui.childCount; i++)
+			Destroy (LobbyManager._instance.scoreScreenGui.GetChild (i).gameObject);
+		
+		LobbyManager._instance.scoreScreenGui.gameObject.SetActive(false);
+	}
 
     public void HookReadyChanged(string text)
     {

@@ -12,15 +12,14 @@ public class LobbyManager : NetworkLobbyManager
     public class PlayerInfo
     {
         public string name;
-        public int playerControllerId;
+        public int slot;
         public bool isAlive;
         public int score;
     }
 
     public static LobbyManager _instance;
 
-    public GameObject scoreScreenPlayerList;
-    public RectTransform scoreScreenGui;
+	public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
     public RectTransform menuGui;
     public RectTransform countdownGui;
@@ -28,7 +27,6 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
     public float scoreScreenTime = 5.0f;
 
-    private List<NetworkLobbyPlayer> _players = new List<NetworkLobbyPlayer>();
     private List<PlayerInfo> connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
@@ -60,27 +58,9 @@ public class LobbyManager : NetworkLobbyManager
     }
 
 
-    // **************GAME**************
+    // **************GAME************** 
+	// TODO Jordan move game shit here
 
-    //public void OnRoundFinished() { }
-
-    public void Update()
-    {
-        //if all players but one dead
-        //then return to lobby
-    }
-
-    public void OnGameFinished()
-    {
-        SendReturnToLobby();
-    }
-
-    public void PlayerDeath()
-    {
-        // if (all players dead) {
-            //SendReturnToLobby();
-        // }
-    }
 
     // **************SERVER**************
     public override void OnLobbyStartServer()
@@ -91,24 +71,24 @@ public class LobbyManager : NetworkLobbyManager
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
     {
-        int i = getSlotIndex(playerControllerId);
-
+		// Figure out what slot the player is in based on the network connection and playerControllerId
+		var i = lobbySlots.Where (x => x != null && x.connectionToClient.connectionId == networkConnection.connectionId && x.playerControllerId == playerControllerId).First ().slot;
         GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = _playerSpawnVectors[i];
-        newPlayer.GetComponent<PlayerControllerComponent>().playerIndex = i;
+		newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
 
         NetworkServer.Spawn(newPlayer);
         return newPlayer;
     }
 
-    public void PlayerDead(PlayerControllerComponent player)
+	public void PlayerDead(PlayerControllerComponent player)
     {
         SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
         SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
         SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
         SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
 
-        connectedPlayerInfo[player.playerIndex].isAlive = false;
+		connectedPlayerInfo[player.slot].isAlive = false;
 
         Invoke("CheckIfGameOver", 2);
 
@@ -135,13 +115,13 @@ public class LobbyManager : NetworkLobbyManager
     {
         float remainingTime = scoreScreenTime;
 
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                connectedPlayerInfo.ForEach(x => player.RpcAddPlayerToScoreList(x.name, x.score));
-            }
-        }
+		foreach (LobbyPlayer player in lobbySlots){
+			if (player == null)
+				continue;
+			
+			var info = connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).FirstOrDefault ();
+			player.RpcAddPlayerToScoreList(info.name, info.score);
+		}
 
         while (remainingTime >= -1)
         {
@@ -149,7 +129,13 @@ public class LobbyManager : NetworkLobbyManager
             remainingTime -= Time.deltaTime;
         }
 
-        ServerReturnToLobby();
+		foreach (LobbyPlayer player in lobbySlots){
+			if (player == null)
+				continue;
+
+			player.RpcClearScoreList();
+		}
+		LobbyManager._instance.SendReturnToLobby();
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
@@ -223,13 +209,9 @@ public class LobbyManager : NetworkLobbyManager
         boardCreator = new BoardCreator();
         boardCreator.InitializeDestructible();
 
-        lobbySlots.Where(p => p != null).ToList()
-            .ForEach(p => Debug.Log("Connection ID: "  + p.playerControllerId));
-
-
         //Initialize spawn for all connected players
         lobbySlots.Where(p => p != null).ToList()
-            .ForEach(p => boardCreator.InitializeSpawn(_playerSpawnVectors[getSlotIndex(p.playerControllerId)]));
+			.ForEach(p => boardCreator.InitializeSpawn(_playerSpawnVectors[(int)p.slot]));
 
         //Initialize all upgrades
         boardCreator.InitializeUpgrades();
@@ -306,21 +288,6 @@ public class LobbyManager : NetworkLobbyManager
         }
     }
 
-    private int getSlotIndex(int playerControllerId)
-    {
-        int i = 0;
-        foreach (var player in connectedPlayerInfo)
-        {
-            if (player.playerControllerId == playerControllerId)
-                return i;
-            i++;
-        }
-
-        Debug.LogError("No matching playerControllerId in slots");
-        throw new ArgumentOutOfRangeException();
-    }
-
-
     public override void OnLobbyClientExit()
     {
         base.OnLobbyClientExit();
@@ -331,7 +298,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         base.OnClientError(conn, errorCode);
 
-        Debug.Log("client error");
+        Debug.LogError("client error");
     }
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -358,19 +325,16 @@ public class LobbyManager : NetworkLobbyManager
     }
 
     // **************PLAYER LIST**************
-    public void AddPlayer(LobbyPlayer player, bool isServer)
+    public void AddPlayer(LobbyPlayer player)
     {
-        _players.Add(player);
-        if (isServer)   //TODO this needs to be redone - actually make a plan this time so not everything gets fucky
-        {
-            var id = lobbySlots.Where(x => x != null && connectedPlayerInfo.Where(y => y != null && y.playerControllerId == x.playerControllerId).FirstOrDefault() == null).First().playerControllerId;
-            connectedPlayerInfo.Add(new PlayerInfo() { playerControllerId = id, isAlive = true, score = 0, name = "Anonymous" });   // TODO need to update to allow for login names to work
-        }
+			// This is called whenever a player enters the lobby, including coming back from the previous game
+			// 		Do not add players when they have already connected previouslys
+		if(connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).Count() == 0)
+			connectedPlayerInfo.Add(new PlayerInfo() { slot = player.slot, isAlive = true, score = 0, name = "Anonymous" });   // TODO need to update to allow for login names to work
     }
 
     public void RemovePlayer(LobbyPlayer player)
     {
-        _players.Remove(player);
-        connectedPlayerInfo.Remove(connectedPlayerInfo.Where(x => x != null && lobbySlots.Where(y => y != null && y.playerControllerId == x.playerControllerId).FirstOrDefault() != default(NetworkLobbyPlayer)).FirstOrDefault());
+		connectedPlayerInfo.Remove(connectedPlayerInfo.Where(x => x.slot == player.slot).FirstOrDefault());
     }
 }

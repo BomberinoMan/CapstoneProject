@@ -1,7 +1,7 @@
-﻿using UnityEngine.Networking;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
+using UnityEngine;
 
-public class ScoreScreenPlayerName : NetworkBehaviour {
+public class ScoreScreenPlayerName : MonoBehaviour {
     public void SetPlayerName(string playerName)
     {
         GetComponent<Text>().text = playerName;

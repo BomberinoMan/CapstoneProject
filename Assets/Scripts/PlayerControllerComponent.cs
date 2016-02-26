@@ -7,11 +7,7 @@ using System;
 public class PlayerControllerComponent : NetworkBehaviour
 {
     [SyncVar]
-    public int playerIndex;
-    [SyncVar]
-    public int playerControllerId;
-
-    public LobbyManager _lobbyManager;
+    public int slot;
 
     private float _speed;
     private float _flipFlopTime;
@@ -23,7 +19,6 @@ public class PlayerControllerComponent : NetworkBehaviour
     public DPadController dPad;
     private Rigidbody2D _rb;
     private Transform _transform;
-    private Vector2 prevDirection;
 
     public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
     public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
@@ -35,16 +30,11 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         base.OnStartClient();
 
-        if (_lobbyManager == null)
-            _lobbyManager = LobbyManager._instance;
-
-        prevDirection = new Vector2(0.0f, 0.0f);
-
         // Get the touch input from the UI
         dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
         GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
 
-        GameObject animator = Instantiate(_lobbyManager.playerAnimations[playerIndex]) as GameObject;
+		GameObject animator = Instantiate(LobbyManager._instance.playerAnimations[slot]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
         // Changing the parent also changes the localPosition, need to reset it
         animator.transform.localPosition = Vector3.zero;
@@ -56,10 +46,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public void Start()
     {
-        if (_lobbyManager == null)
-            _lobbyManager = LobbyManager._instance;
-
-            _speed = 0.06f;
+        _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
         _rb = GetComponent<Rigidbody2D>();
@@ -246,12 +233,6 @@ public class PlayerControllerComponent : NetworkBehaviour
 		NetworkServer.Destroy (upgrade);
 	}
 
-    [Command]
-    private void CmdKillPlayer()
-    {
-        _lobbyManager.PlayerDead(this);
-    }
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Upgrade")
@@ -262,7 +243,8 @@ public class PlayerControllerComponent : NetworkBehaviour
         else if (other.gameObject.tag == "Laser")
         {
             //TODO add destruction animation support
-            CmdKillPlayer();
+			if(isServer)
+				LobbyManager._instance.PlayerDead(this);
         }
     }
 

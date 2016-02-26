@@ -2,10 +2,10 @@ Mono path[0] = 'E:/Documents/CapstoneProject/game_Data/Managed'
 Mono path[1] = 'E:/Documents/CapstoneProject/game_Data/Mono'
 Mono config path = 'E:/Documents/CapstoneProject/game_Data/Mono/etc'
 PlayerConnection initialized from E:/Documents/CapstoneProject/game_Data (debug = 0)
-PlayerConnection initialized network socket : 0.0.0.0 55011
-Multi-casting "[IP] 192.168.1.70 [Port] 55011 [Flags] 2 [Guid] 91814579 [EditorId] 1901300781 [Version] 1048832 [Id] WindowsPlayer(JordanSelinger) [Debug] 0" to [225.0.0.222:54997]...
-PlayerConnection already initialized - listening to [192.168.1.70:55011]
-Initialize engine version: 5.3.1f1 (cc9cbbcc37b4)
+PlayerConnection initialized network socket : 0.0.0.0 55356
+Multi-casting "[IP] 192.168.1.70 [Port] 55356 [Flags] 2 [Guid] 2954800514 [EditorId] 356650861 [Version] 1048832 [Id] WindowsPlayer(JordanSelinger) [Debug] 0" to [225.0.0.222:54997]...
+PlayerConnection already initialized - listening to [192.168.1.70:55356]
+Initialize engine version: 5.3.2f1 (e87ab445ead0)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
@@ -21,125 +21,49 @@ Platform assembly: E:\Documents\CapstoneProject\game_Data\Managed\UnityEngine.UI
 Loading E:\Documents\CapstoneProject\game_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Documents\CapstoneProject\game_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Documents\CapstoneProject\game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.123 seconds
+- Completed reload, in  0.095 seconds
 Platform assembly: E:\Documents\CapstoneProject\game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Documents\CapstoneProject\game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.619374 ms
-Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.511717 ms
-System memory in use before: 24.6 MB.
-System memory in use after: 24.6 MB.
+UnloadTime: 23.717342 ms
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.422517 ms
+System memory in use before: 17.9 MB.
+System memory in use after: 17.9 MB.
 
-Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 607.
-Total: 0.274724 ms (FindLiveObjects: 0.020772 ms CreateObjectMapping: 0.030720 ms MarkObjects: 0.218550 ms  DeleteObjects: 0.004096 ms)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 839.
+Total: 0.979823 ms (FindLiveObjects: 0.026624 ms CreateObjectMapping: 0.031305 ms MarkObjects: 0.916335 ms  DeleteObjects: 0.004973 ms)
 
-ResetParameterOptions
+Exception in OnStartClient:Operation is not valid due to the current state of the object   at System.Linq.Enumerable.First[NetworkLobbyPlayer] (IEnumerable`1 source) [0x0005c] in /Users/builduser/buildslave/mono-runtime-and-classlibs/build/mcs/class/System.Core/System.Linq/Enumerable.cs:607 
+  at LobbyManager.AddPlayer (.LobbyPlayer player) [0x0000c] in E:\Documents\CapstoneProject\Assets\Scripts\Lobby\LobbyManager.cs:364 
+  at LobbyPlayer.OnClientEnterLobby () [0x00006] in E:\Documents\CapstoneProject\Assets\Scripts\Lobby\LobbyPlayer.cs:26 
+  at UnityEngine.Networking.NetworkLobbyPlayer.OnStartClient () [0x0002b] in C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkLobbyPlayer.cs:34 
+  at UnityEngine.Networking.NetworkIdentity.OnStartClient () [0x00085] in C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:377 
 UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
 UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
 UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-UnityEngine.Networking.NetworkAnimator:ResetParameterOptions() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkAnimator.cs:64)
-UnityEngine.Networking.NetworkAnimator:set_animator(Animator) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkAnimator.cs:28)
-PlayerControllerComponent:OnStartClient() (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:40)
-UnityEngine.Networking.NetworkIdentity:OnStartClient() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:366)
-UnityEngine.Networking.ClientScene:OnObjectSpawnFinished(NetworkMessage) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\ClientScene.cs:608)
+UnityEngine.Debug:LogError(Object)
+UnityEngine.Networking.NetworkIdentity:OnStartClient() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:381)
+UnityEngine.Networking.ClientScene:ApplySpawnPayload(NetworkIdentity, Vector3, Byte[], NetworkInstanceId, GameObject) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\ClientScene.cs:492)
+UnityEngine.Networking.ClientScene:OnObjectSpawn(NetworkMessage) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\ClientScene.cs:533)
 UnityEngine.Networking.NetworkConnection:HandleReader(NetworkReader, Int32, Int32) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkConnection.cs:430)
 UnityEngine.Networking.NetworkConnection:HandleBytes(Byte[], Int32, Int32) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkConnection.cs:386)
 UnityEngine.Networking.NetworkConnection:TransportRecieve(Byte[], Int32, Int32) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkConnection.cs:536)
 UnityEngine.Networking.NetworkClient:Update() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkClient.cs:648)
 UnityEngine.Networking.NetworkClient:UpdateClients() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkClient.cs:861)
-UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:1044)
+UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:1055)
  
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkAnimator.cs Line: 64)
+(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkIdentity.cs Line: 381)
 
-ResetParameterOptions
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:Log(Object)
-UnityEngine.Networking.NetworkAnimator:ResetParameterOptions() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkAnimator.cs:64)
-UnityEngine.Networking.NetworkAnimator:set_animator(Animator) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkAnimator.cs:28)
-PlayerControllerComponent:OnStartClient() (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:40)
-UnityEngine.Networking.NetworkIdentity:OnStartClient() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:366)
-UnityEngine.Networking.ClientScene:OnObjectSpawnFinished(NetworkMessage) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\ClientScene.cs:608)
-UnityEngine.Networking.NetworkConnection:HandleReader(NetworkReader, Int32, Int32) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkConnection.cs:430)
-UnityEngine.Networking.NetworkConnection:HandleBytes(Byte[], Int32, Int32) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkConnection.cs:386)
-UnityEngine.Networking.NetworkConnection:TransportRecieve(Byte[], Int32, Int32) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkConnection.cs:536)
-UnityEngine.Networking.NetworkClient:Update() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkClient.cs:648)
-UnityEngine.Networking.NetworkClient:UpdateClients() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkClient.cs:861)
-UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkIdentity.cs:1044)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkAnimator.cs Line: 64)
+DontDestroyOnLoad only work for root GameObjects or components on root GameObjects.
+UnityEngine.Object:DontDestroyOnLoad(Object)
+UnityEngine.Networking.NetworkLobbyPlayer:Start() (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkLobbyPlayer.cs:24)
 
-Trying to send command for object without authority.
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:LogWarning(Object)
-UnityEngine.Networking.NetworkBehaviour:SendCommandInternal(NetworkWriter, Int32, String) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkBehaviour.cs:58)
-PlayerControllerComponent:CallCmdPickedUpUpgrade(GameObject)
-PlayerControllerComponent:OnTriggerEnter2D(Collider2D) (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:191)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkBehaviour.cs Line: 58)
-
-Trying to send command for object without authority.
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:LogWarning(Object)
-UnityEngine.Networking.NetworkBehaviour:SendCommandInternal(NetworkWriter, Int32, String) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkBehaviour.cs:58)
-PlayerControllerComponent:CallCmdPickedUpUpgrade(GameObject)
-PlayerControllerComponent:OnTriggerEnter2D(Collider2D) (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:191)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkBehaviour.cs Line: 58)
-
-Trying to send command for object without authority.
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:LogWarning(Object)
-UnityEngine.Networking.NetworkBehaviour:SendCommandInternal(NetworkWriter, Int32, String) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkBehaviour.cs:58)
-PlayerControllerComponent:CallCmdPickedUpUpgrade(GameObject)
-PlayerControllerComponent:OnTriggerEnter2D(Collider2D) (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:191)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkBehaviour.cs Line: 58)
-
-Trying to send command for object without authority.
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:LogWarning(Object)
-UnityEngine.Networking.NetworkBehaviour:SendCommandInternal(NetworkWriter, Int32, String) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkBehaviour.cs:58)
-PlayerControllerComponent:CallCmdPickedUpUpgrade(GameObject)
-PlayerControllerComponent:OnTriggerEnter2D(Collider2D) (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:191)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkBehaviour.cs Line: 58)
-
-Trying to send command for object without authority.
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:LogWarning(Object)
-UnityEngine.Networking.NetworkBehaviour:SendCommandInternal(NetworkWriter, Int32, String) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkBehaviour.cs:58)
-PlayerControllerComponent:CallCmdPickedUpUpgrade(GameObject)
-PlayerControllerComponent:OnTriggerEnter2D(Collider2D) (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:191)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkBehaviour.cs Line: 58)
-
-Trying to send command for object without authority.
-UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
-UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
-UnityEngine.Logger:Log(LogType, Object)
-UnityEngine.Debug:LogWarning(Object)
-UnityEngine.Networking.NetworkBehaviour:SendCommandInternal(NetworkWriter, Int32, String) (at C:\buildslave\unity\build\Extensions\Networking\Runtime\NetworkBehaviour.cs:58)
-PlayerControllerComponent:CallCmdPickedUpUpgrade(GameObject)
-PlayerControllerComponent:OnTriggerEnter2D(Collider2D) (at E:\Documents\CapstoneProject\Assets\Scripts\PlayerControllerComponent.cs:191)
- 
-(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkBehaviour.cs Line: 58)
+[C:/buildslave/unity/build/Runtime/SceneManager/SceneManager.cpp line 367] 
+(Filename: C:/buildslave/unity/build/Extensions/Networking/Runtime/NetworkLobbyPlayer.cs Line: 24)
 
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 2190 -> priority: 1 
+  Thread -> id: 3714 -> priority: 1 

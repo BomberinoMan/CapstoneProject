@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 public class LobbyPlayer : NetworkLobbyPlayer
 {
+    public string name;
+    public bool isAlive;
+    public int score;
     public GameObject scoreScreenPlayer;
 
     public InputField nameInput;

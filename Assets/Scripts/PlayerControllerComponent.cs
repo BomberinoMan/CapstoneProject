@@ -8,6 +8,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 {
     [SyncVar]
     public int playerIndex;
+    [SyncVar]
+    public int playerControllerId;
 
     public LobbyManager _lobbyManager;
 
@@ -247,7 +249,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     [Command]
     private void CmdKillPlayer()
     {
-        GameObject.Find("LobbyManager").GetComponent<LobbyManager>().PlayerDead(this);
+        _lobbyManager.PlayerDead(this);
     }
 
     void OnTriggerEnter2D(Collider2D other)

@@ -12,7 +12,7 @@ public class LobbyManager : NetworkLobbyManager
     public class PlayerInfo
     {
         public string name;
-        public int connectionId;
+        public int playerControllerId;
         public bool isAlive;
         public int score;
     }
@@ -34,9 +34,9 @@ public class LobbyManager : NetworkLobbyManager
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
         new Vector3(1.0f, 11.0f, 0.0f),
-        new Vector3(1.0f, 1.0f, 0.0f),
-        new Vector3(12.0f, 1.0f, 0.0f),
-        new Vector3(12.0f, 11.0f, 0.0f)
+        new Vector3(13.0f, 1.0f, 0.0f),
+        new Vector3(13.0f, 11.0f, 0.0f),
+        new Vector3(1.0f, 1.0f, 0.0f)
     };
 
     private bool sceneLoaded = false;
@@ -89,25 +89,9 @@ public class LobbyManager : NetworkLobbyManager
         connectedPlayerInfo.Clear();
     }
 
-    public override void OnLobbyServerConnect(NetworkConnection conn)
-    {
-        base.OnLobbyServerConnect(conn);
-
-        if (conn.address != "localServer")
-        {
-            connectedPlayerInfo.Add( new PlayerInfo() { connectionId = conn.connectionId, isAlive = true, score = 0, name = "Anonymous" } );
-        }
-    }
-
-    public override void OnLobbyServerDisconnect(NetworkConnection conn)
-    {
-        base.OnLobbyServerDisconnect(conn);
-        connectedPlayerInfo.Remove(connectedPlayerInfo.Where(x => x.connectionId == conn.connectionId).FirstOrDefault());
-    }
-
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
     {
-        int i = getSlotIndex(networkConnection.connectionId);
+        int i = getSlotIndex(playerControllerId);
 
         GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = _playerSpawnVectors[i];
@@ -165,7 +149,7 @@ public class LobbyManager : NetworkLobbyManager
             remainingTime -= Time.deltaTime;
         }
 
-        //ServerChangeScene(lobbyScene);
+        ServerReturnToLobby();
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
@@ -238,6 +222,10 @@ public class LobbyManager : NetworkLobbyManager
     {
         boardCreator = new BoardCreator();
         boardCreator.InitializeDestructible();
+
+        lobbySlots.Where(p => p != null).ToList()
+            .ForEach(p => Debug.Log("Connection ID: "  + p.playerControllerId));
+
 
         //Initialize spawn for all connected players
         lobbySlots.Where(p => p != null).ToList()
@@ -318,12 +306,12 @@ public class LobbyManager : NetworkLobbyManager
         }
     }
 
-    private int getSlotIndex(int connectionId)
+    private int getSlotIndex(int playerControllerId)
     {
         int i = 0;
-        foreach (var playerId in connectedPlayerIds)
+        foreach (var player in connectedPlayerInfo)
         {
-            if (playerId == connectionId)
+            if (player.playerControllerId == playerControllerId)
                 return i;
             i++;
         }
@@ -336,8 +324,6 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyClientExit()
     {
         base.OnLobbyClientExit();
-
-        //Debug.Log("OnLobbyClientExit");
         ChangePanel(menuGui);
     }
 
@@ -347,30 +333,6 @@ public class LobbyManager : NetworkLobbyManager
 
         Debug.Log("client error");
     }
-
-    //public override void OnLobbyClientConnect(NetworkConnection conn)
-    //{
-    //    base.OnLobbyClientConnect(conn);
-    //    Debug.Log("OnLobbyClientConnect");
-    //}
-
-    //public override void OnLobbyClientDisconnect(NetworkConnection conn)
-    //{
-    //    base.OnLobbyClientDisconnect(conn);
-    //    Debug.Log("OnLobbyClientDisconnect");
-    //}
-
-    //public override void OnLobbyStartClient(NetworkClient client)
-    //{
-    //    base.OnLobbyStartClient(client);
-    //    Debug.Log("OnLobbyStartClient");
-    //}
-
-    //public override void OnLobbyStopClient()
-    //{
-    //    base.OnLobbyStopClient();
-    //    Debug.Log("OnLobbyStopClient");
-    //}
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
@@ -396,15 +358,19 @@ public class LobbyManager : NetworkLobbyManager
     }
 
     // **************PLAYER LIST**************
-
-    public void AddPlayer(LobbyPlayer player)
+    public void AddPlayer(LobbyPlayer player, bool isServer)
     {
         _players.Add(player);
-
+        if (isServer)   //TODO this needs to be redone - actually make a plan this time so not everything gets fucky
+        {
+            var id = lobbySlots.Where(x => x != null && connectedPlayerInfo.Where(y => y != null && y.playerControllerId == x.playerControllerId).FirstOrDefault() == null).First().playerControllerId;
+            connectedPlayerInfo.Add(new PlayerInfo() { playerControllerId = id, isAlive = true, score = 0, name = "Anonymous" });   // TODO need to update to allow for login names to work
+        }
     }
 
     public void RemovePlayer(LobbyPlayer player)
     {
         _players.Remove(player);
+        connectedPlayerInfo.Remove(connectedPlayerInfo.Where(x => x != null && lobbySlots.Where(y => y != null && y.playerControllerId == x.playerControllerId).FirstOrDefault() != default(NetworkLobbyPlayer)).FirstOrDefault());
     }
 }

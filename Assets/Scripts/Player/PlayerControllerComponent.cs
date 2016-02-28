@@ -242,9 +242,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         }
         else if (other.gameObject.tag == "Laser")
         {
-            //TODO add destruction animation support
-			if(isServer)
-				LobbyManager._instance.PlayerDead(this);
+			LobbyManager._instance.PlayerDead(this);
         }
     }
 

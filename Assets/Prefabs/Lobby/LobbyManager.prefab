@@ -335,7 +335,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aaa70d5749b3a142bee802d244d7efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyManager: {fileID: 11410578}
+  joinIp: {fileID: 0}
+  hostButton: {fileID: 0}
+  joinButton: {fileID: 0}
+  backButton: {fileID: 0}
 --- !u!114 &11409754
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -439,11 +442,13 @@ MonoBehaviour:
   m_LobbyScene: LanLobby
   m_PlayScene: Game
   lobbySlots: []
+  scoreScreenGui: {fileID: 0}
   lobbyGui: {fileID: 22493548}
   menuGui: {fileID: 22423882}
   countdownGui: {fileID: 22413974}
   countdownText: {fileID: 11424826}
   countdownTime: 5
+  scoreScreenTime: 5
   bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
   laserUpgrade: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
   kickUpgrade: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}

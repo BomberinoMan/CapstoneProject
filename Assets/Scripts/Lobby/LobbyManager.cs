@@ -76,7 +76,7 @@ public class LobbyManager : NetworkLobbyManager
         GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = _playerSpawnVectors[i];
 		newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
-
+        Debug.Log("When created: " + connectedPlayerInfo.Count);
         NetworkServer.Spawn(newPlayer);
         return newPlayer;
     }
@@ -87,8 +87,9 @@ public class LobbyManager : NetworkLobbyManager
         SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
         SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
         SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
+        Debug.Log("When playerDead: " + connectedPlayerInfo.Count);
 
-		connectedPlayerInfo[player.slot].isAlive = false;
+        connectedPlayerInfo[player.slot].isAlive = false;
 
         Invoke("CheckIfGameOver", 2);
 
@@ -203,7 +204,14 @@ public class LobbyManager : NetworkLobbyManager
         base.OnLobbyClientEnter();
         ChangePanel(lobbyGui);
     }
-
+    
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+        //TODO we need to save the connected player info from scene transitions
+        base.OnClientSceneChanged(conn);
+        Debug.Log("When sceneChanged: " + connectedPlayerInfo.Count);
+    }
+    
     private void SpawnBoard()
     {
         boardCreator = new BoardCreator();

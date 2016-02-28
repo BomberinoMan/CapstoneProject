@@ -8,16 +8,19 @@ public class MenuManager : MonoBehaviour
     public LoginMenu loginMenu;
     public StartupMenu startupMenu;
     public SettingsMenu settingsMenu;
+    public CreateAccountMenu accountMenu;
+
     public RectTransform loginGui;
     public RectTransform startupGui;
     public RectTransform settingsGui;
+    public RectTransform accountgui;
 
     private RectTransform _currentPanel;
 
     void Start()
     {
         _instance = this;
-        _currentPanel = startupGui;
+        _currentPanel = loginGui;
     }
 
     public void ChangePanel(RectTransform newPanel)

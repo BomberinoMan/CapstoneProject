@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -8,7 +7,7 @@ public class StartupMenu : MonoBehaviour
     public Button rankedButton;
     public Button unrankedButton;
     public Button settingsButton;
-    public Button quitButton;
+    public Button backButton;
 
     public void OnEnable()
     {
@@ -21,13 +20,13 @@ public class StartupMenu : MonoBehaviour
         settingsButton.onClick.RemoveAllListeners();
         settingsButton.onClick.AddListener(Settings_OnClick);
 
-        quitButton.onClick.RemoveAllListeners();
-        quitButton.onClick.AddListener(Quit_OnClick);
+        backButton.onClick.RemoveAllListeners();
+        backButton.onClick.AddListener(Back_OnClick);
     }
 
     public void Ranked_OnClick()
     {
-        MenuManager._instance.ChangePanel(MenuManager._instance.loginGui);
+        SceneManager.LoadScene("MatchMakingLobby");
     }
 
     public void Unranked_OnClick()
@@ -40,8 +39,11 @@ public class StartupMenu : MonoBehaviour
         MenuManager._instance.ChangePanel(MenuManager._instance.settingsGui);
     }
 
-    public void Quit_OnClick()
+    public void Back_OnClick()
     {
-        Application.Quit();
+        LoginInformation.userName = "";
+        LoginInformation.guid = System.Guid.Empty;
+        LoginInformation.loggedIn = false;
+        MenuManager._instance.ChangePanel(MenuManager._instance.loginGui);
     }
 }

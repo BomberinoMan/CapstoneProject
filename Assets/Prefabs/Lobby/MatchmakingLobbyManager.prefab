@@ -515,11 +515,13 @@ MonoBehaviour:
   m_LobbyScene: MatchMakingLobby
   m_PlayScene: Game
   lobbySlots: []
+  scoreScreenGui: {fileID: 0}
   lobbyGui: {fileID: 22484374}
   menuGui: {fileID: 22413948}
   countdownGui: {fileID: 22416394}
   countdownText: {fileID: 11486962}
   countdownTime: 5
+  scoreScreenTime: 5
   bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
   laserUpgrade: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
   kickUpgrade: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}

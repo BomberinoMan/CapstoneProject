@@ -16,7 +16,7 @@ public class DPadController : NetworkBehaviour
         //This will only work on mobile if the dpad is on the bottom-left of the screen
         var canvasScalar = GameObject.Find("TouchControlOverlay").GetComponent<Canvas>().scaleFactor;
         width = GetComponent<RectTransform>().rect.width * canvasScalar;
-        height  = GetComponent<RectTransform>().rect.height * canvasScalar;
+        height = GetComponent<RectTransform>().rect.height * canvasScalar;
 
         origin.x = width / 2;
         origin.y = height / 2;
@@ -26,12 +26,12 @@ public class DPadController : NetworkBehaviour
     {
         var touch = Input.touches.Where(x => x.position.x <= width && x.position.y <= height).FirstOrDefault();
 
-        if(touch.position.x != 0 && touch.position.y != 0)
+        if (touch.position.x != 0 && touch.position.y != 0)
         {
             float x = touch.position.x - origin.x;
             float y = touch.position.y - origin.y;
 
-            if(Math.Abs(x) > Math.Abs(y))
+            if (Math.Abs(x) > Math.Abs(y))
             {
                 y = 0.0f;
                 x = x / Math.Abs(x);

@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 using System.Linq;
-using System;
 
 public class PlayerControllerComponent : NetworkBehaviour
 {
@@ -34,7 +32,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
         GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
 
-		GameObject animator = Instantiate(LobbyManager._instance.playerAnimations[slot]) as GameObject;
+        GameObject animator = Instantiate(LobbyManager._instance.playerAnimations[slot]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
         // Changing the parent also changes the localPosition, need to reset it
         animator.transform.localPosition = Vector3.zero;
@@ -177,9 +175,9 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [ClientRpc]
-	private void RpcSetupBomb(GameObject bomb, bool setupColliders)
+    private void RpcSetupBomb(GameObject bomb, bool setupColliders)
     {
-		bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
+        bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
     }
 
     [Command]
@@ -199,50 +197,52 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         bomb.GetComponent<BombController>().SetupBomb(gameObject);
         NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-		RpcSetupBomb(bomb, true);
+        RpcSetupBomb(bomb, true);
     }
 
     [Command]
-	private void CmdLayLineBomb(Vector2 direction)
+    private void CmdLayLineBomb(Vector2 direction)
     {
-		var emptySpace = Physics2D.RaycastAll(new Vector2(AxisRounder.Round(_transform.position.x), AxisRounder.Round(transform.position.y)), direction)
-			.Where(x => x.distance != 0)
-			.First();
+        var emptySpace = Physics2D.RaycastAll(new Vector2(AxisRounder.Round(_transform.position.x), AxisRounder.Round(transform.position.y)), direction)
+            .Where(x => x.distance != 0)
+            .First();
 
-			//The number of bombs that will be spawned is either the amount of clear space, or the number of bombs
-		int numBombs = emptySpace.distance < currNumBombs ? (int)emptySpace.distance : currNumBombs;
+        //The number of bombs that will be spawned is either the amount of clear space, or the number of bombs
+        int numBombs = emptySpace.distance < currNumBombs ? (int)emptySpace.distance : currNumBombs;
 
-		for (int i = 1; i <= numBombs; i++) {
-			GameObject bomb = Instantiate(
-				bombObject,
-				new Vector3(
-					AxisRounder.Round(_transform.position.x + direction.x * i),
-					AxisRounder.Round(_transform.position.y + direction.y * i),
-					0.0f),
-				Quaternion.identity)
-				as GameObject;
+        for (int i = 1; i <= numBombs; i++)
+        {
+            GameObject bomb = Instantiate(
+                bombObject,
+                new Vector3(
+                    AxisRounder.Round(_transform.position.x + direction.x * i),
+                    AxisRounder.Round(_transform.position.y + direction.y * i),
+                    0.0f),
+                Quaternion.identity)
+                as GameObject;
 
-			bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
-			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-			RpcSetupBomb(bomb, false);
-		}
+            bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
+            NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+            RpcSetupBomb(bomb, false);
+        }
     }
 
-	[Command]
-	private void CmdPickedUpUpgrade(GameObject upgrade){
-		NetworkServer.Destroy (upgrade);
-	}
+    [Command]
+    private void CmdPickedUpUpgrade(GameObject upgrade)
+    {
+        NetworkServer.Destroy(upgrade);
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Upgrade")
         {
             UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
-			CmdPickedUpUpgrade(other.gameObject);
+            CmdPickedUpUpgrade(other.gameObject);
         }
         else if (other.gameObject.tag == "Laser")
         {
-			LobbyManager._instance.PlayerDead(this);
+            LobbyManager._instance.PlayerDead(this);
         }
     }
 
@@ -272,7 +272,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         if (!_playerController.isRadioactive)
         {
-			gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;
+            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;
             return;
         }
 
@@ -281,13 +281,13 @@ public class PlayerControllerComponent : NetworkBehaviour
             return;
         }
 
-		if (gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color == Color.white)
+        if (gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color == Color.white)
         {
-			gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.678f, 0.698f, 0.741f);
+            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.678f, 0.698f, 0.741f);
         }
         else
         {
-			gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;
+            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;
         }
 
         _flipFlopTime = Time.time;

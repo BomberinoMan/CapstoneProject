@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class PlayerController : IPlayerController
+﻿public class PlayerController : IPlayerController
 {
     public float speedScalar { get; set; }
     public int bombKick { get; set; }

@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using System;
-using System.Collections.Generic;
 
 public class LobbyPlayer : NetworkLobbyPlayer
 {
@@ -19,7 +16,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public override void OnClientEnterLobby()
     {
-		LobbyManager._instance.AddPlayer(this);
+        LobbyManager._instance.AddPlayer(this);
         LobbyPlayerList._instance.AddPlayer(this);
         SetupRemotePlayer();
     }
@@ -159,23 +156,23 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
     public void RpcAddPlayerToScoreList(string playerName, int playerScore)
     {
-		LobbyManager._instance.scoreScreenGui.gameObject.SetActive(true);
+        LobbyManager._instance.scoreScreenGui.gameObject.SetActive(true);
 
         var playerRow = Instantiate(scoreScreenPlayer);
         playerRow.GetComponentInChildren<ScoreScreenPlayerName>().SetPlayerName(playerName);
         playerRow.GetComponentInChildren<ScoreScreenPlayerScore>().SetPlayerScore(playerScore);
 
-		playerRow.transform.SetParent(LobbyManager._instance.scoreScreenGui.transform);
+        playerRow.transform.SetParent(LobbyManager._instance.scoreScreenGui.transform);
     }
 
-	[ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
-	public void RpcClearScoreList()
-	{
-		for (int i = 0; i < LobbyManager._instance.scoreScreenGui.childCount; i++)
-			Destroy (LobbyManager._instance.scoreScreenGui.GetChild (i).gameObject);
-		
-		LobbyManager._instance.scoreScreenGui.gameObject.SetActive(false);
-	}
+    [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
+    public void RpcClearScoreList()
+    {
+        for (int i = 0; i < LobbyManager._instance.scoreScreenGui.childCount; i++)
+            Destroy(LobbyManager._instance.scoreScreenGui.GetChild(i).gameObject);
+
+        LobbyManager._instance.scoreScreenGui.gameObject.SetActive(false);
+    }
 
     public void HookReadyChanged(string text)
     {

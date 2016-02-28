@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ReverseMovementPlayerControllerModifier : DefaultPlayerControllerModifier {
-	public ReverseMovementPlayerControllerModifier(IPlayerController playerController) {
-		_startTime = Time.time;
-		_playerController = playerController;
-	}
+public class ReverseMovementPlayerControllerModifier : DefaultPlayerControllerModifier
+{
+    public ReverseMovementPlayerControllerModifier(IPlayerController playerController)
+    {
+        _startTime = Time.time;
+        _playerController = playerController;
+    }
 
-	public override bool reverseMovement { 
-		get { 
-			return isRadioactive;
-		} 
-		set { _playerController.reverseMovement = value; } 
-	}
+    public override bool reverseMovement
+    {
+        get
+        {
+            return isRadioactive;
+        }
+        set { _playerController.reverseMovement = value; }
+    }
 }

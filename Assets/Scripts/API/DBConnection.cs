@@ -5,7 +5,8 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-public class DBConnection {
+public class DBConnection
+{
     private static DBConnection _instance;
     private static bool _hasInit = false;
     private string uri = "https://142.3.21.28/{0}.php?Action={1}";
@@ -14,7 +15,7 @@ public class DBConnection {
     private DBConnection() { }
     public static DBConnection Instance()
     {
-        if(_hasInit)
+        if (_hasInit)
             return _instance;
 
         ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);

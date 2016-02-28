@@ -38,20 +38,20 @@ public class SettingsMenu : MonoBehaviour
             return;
         }
 
-        var db = DBConnection.Instance();
+        var db = DBConnection.GetInstance();
 
-        var response = db.ChangePassword(new ChangePasswordMessage { UserName = LoginInformation.userName, OldPassword = oldPasswordInputField.text, NewPassword = newPasswordInputField.text });
+        var response = db.ChangePassword(new ChangePasswordMessage { userName = LoginInformation.userName, oldPassword = oldPasswordInputField.text, newPassword = newPasswordInputField.text });
 
         if (!response.isSuccessful)
-            errorText.text = response.ErrorMessage;
+            errorText.text = response.errorMessage;
         else
         {
-            MenuManager._instance.ChangePanel(MenuManager._instance.loginGui);
+            MenuManager.instance.ChangePanel(MenuManager.instance.loginGui);
         }
     }
 
     public void BackButton_OnClick()
     {
-        MenuManager._instance.ChangePanel(MenuManager._instance.startupGui);
+        MenuManager.instance.ChangePanel(MenuManager.instance.startupGui);
     }
 }

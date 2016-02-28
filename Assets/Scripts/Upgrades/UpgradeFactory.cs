@@ -12,7 +12,7 @@ public enum UpgradeType
 
 public static class UpgradeFactory
 {
-    public static IUpgrade getUpgrade(UpgradeType upgrade)
+    public static IUpgrade GetUpgrade(UpgradeType upgrade)
     {
         switch (upgrade)
         {

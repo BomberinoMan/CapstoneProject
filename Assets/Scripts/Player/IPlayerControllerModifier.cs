@@ -1,4 +1,4 @@
 ﻿public interface IPlayerControllerModifier : IPlayerController
 {
-    IPlayerController removeMod();
+    IPlayerController RemoveMod();
 }

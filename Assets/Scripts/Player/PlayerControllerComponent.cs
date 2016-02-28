@@ -32,7 +32,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
         GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
 
-        GameObject animator = Instantiate(LobbyManager._instance.playerAnimations[slot]) as GameObject;
+        GameObject animator = Instantiate(LobbyManager.instance.playerAnimations[slot]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
         // Changing the parent also changes the localPosition, need to reset it
         animator.transform.localPosition = Vector3.zero;
@@ -171,7 +171,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             }
         }
 
-        flipFlopColor(); //TODO uncomment this when ready
+        FlipFlopColor(); //TODO uncomment this when ready
     }
 
     [ClientRpc]
@@ -237,12 +237,12 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         if (other.gameObject.tag == "Upgrade")
         {
-            UpgradeFactory.getUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
+            UpgradeFactory.GetUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
             CmdPickedUpUpgrade(other.gameObject);
         }
         else if (other.gameObject.tag == "Laser")
         {
-            LobbyManager._instance.PlayerDead(this);
+            LobbyManager.instance.PlayerDead(this);
         }
     }
 
@@ -258,17 +258,17 @@ public class PlayerControllerComponent : NetworkBehaviour
             _bombBlock = false;
     }
 
-    public IPlayerControllerModifier getPlayerControllerModifier()
+    public IPlayerControllerModifier GetPlayerControllerModifier()
     {
         return _playerController;
     }
 
-    public void changePlayerControllerModifier(IPlayerControllerModifier newModifier)
+    public void ChangePlayerControllerModifier(IPlayerControllerModifier newModifier)
     {
         _playerController = newModifier;
     }
 
-    private void flipFlopColor()
+    private void FlipFlopColor()
     {
         if (!_playerController.isRadioactive)
         {

@@ -2,12 +2,12 @@
 
 public class LobbyPlayerList : MonoBehaviour
 {
-    public static LobbyPlayerList _instance = null;
+    public static LobbyPlayerList instance = null;
     public RectTransform playerListContentTransform;
 
     public void OnEnable()
     {
-        _instance = this;
+        instance = this;
     }
 
     public void AddPlayer(LobbyPlayer player)

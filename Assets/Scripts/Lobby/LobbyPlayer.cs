@@ -16,8 +16,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public override void OnClientEnterLobby()
     {
-        LobbyManager._instance.AddPlayer(this);
-        LobbyPlayerList._instance.AddPlayer(this);
+        LobbyManager.instance.AddPlayer(this);
+        LobbyPlayerList.instance.AddPlayer(this);
         SetupRemotePlayer();
     }
 
@@ -29,7 +29,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public override void OnClientExitLobby()
     {	//TODO evan
         base.OnClientExitLobby();
-        LobbyManager._instance.RemovePlayer(this);
+        LobbyManager.instance.RemovePlayer(this);
     }
 
     public void SetupLocalPlayer()
@@ -95,18 +95,18 @@ public class LobbyPlayer : NetworkLobbyPlayer
             connectionToClient.Disconnect();
             if (isLocalPlayer)
             {
-                LobbyManager._instance.StopHost();
+                LobbyManager.instance.StopHost();
             }
         }
         else
         {
-            LobbyManager._instance.StopClient();
+            LobbyManager.instance.StopClient();
         }
     }
 
     public void OnDestroy()
     {
-        LobbyManager._instance.RemovePlayer(this);
+        LobbyManager.instance.RemovePlayer(this);
     }
 
     [Command]
@@ -121,29 +121,15 @@ public class LobbyPlayer : NetworkLobbyPlayer
         readyText = newReadyText;
     }
 
-    //[ClientRpc]
-    //public void RpcUpdateReady(string newReadyText)
-    //{
-    //    readyText = newReadyText;
-    //    readyButton.transform.GetChild(0).GetComponent<Text>().text = newReadyText;
-    //}
-
-    //[ClientRpc]
-    //public void RpcUpdateName(string name)
-    //{
-    //    playerName = name;
-    //    nameInput.text = playerName;
-    //}
-
     [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
-        LobbyManager._instance.countdownGui.gameObject.SetActive(true);
-        LobbyManager._instance.countdownText.text = "Match Starting in " + (count + 1);
+        LobbyManager.instance.countdownGui.gameObject.SetActive(true);
+        LobbyManager.instance.countdownText.text = "Match Starting in " + (count + 1);
 
         if (count < 0)
         {
-            LobbyManager._instance.countdownGui.gameObject.SetActive(false);
+            LobbyManager.instance.countdownGui.gameObject.SetActive(false);
         }
     }
 
@@ -156,22 +142,22 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
     public void RpcAddPlayerToScoreList(string playerName, int playerScore)
     {
-        LobbyManager._instance.scoreScreenGui.gameObject.SetActive(true);
+        LobbyManager.instance.scoreScreenGui.gameObject.SetActive(true);
 
         var playerRow = Instantiate(scoreScreenPlayer);
         playerRow.GetComponentInChildren<ScoreScreenPlayerName>().SetPlayerName(playerName);
         playerRow.GetComponentInChildren<ScoreScreenPlayerScore>().SetPlayerScore(playerScore);
 
-        playerRow.transform.SetParent(LobbyManager._instance.scoreScreenGui.transform);
+        playerRow.transform.SetParent(LobbyManager.instance.scoreScreenGui.transform);
     }
 
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
     public void RpcClearScoreList()
     {
-        for (int i = 0; i < LobbyManager._instance.scoreScreenGui.childCount; i++)
-            Destroy(LobbyManager._instance.scoreScreenGui.GetChild(i).gameObject);
+        for (int i = 0; i < LobbyManager.instance.scoreScreenGui.childCount; i++)
+            Destroy(LobbyManager.instance.scoreScreenGui.GetChild(i).gameObject);
 
-        LobbyManager._instance.scoreScreenGui.gameObject.SetActive(false);
+        LobbyManager.instance.scoreScreenGui.gameObject.SetActive(false);
     }
 
     public void HookReadyChanged(string text)

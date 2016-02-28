@@ -11,15 +11,15 @@ public class BombController : NetworkBehaviour
     //[SyncVar]
     public GameObject parentPlayer;
 
-    private bool hasExploded = false;
-    private bool isMoving = false;
-    private Vector3 direction = new Vector3();
-    private Rigidbody2D rb;
+    private bool _hasExploded = false;
+    private bool _isMoving = false;
+    private Vector3 _direction = new Vector3();
+    private Rigidbody2D _rb;
 
     void Start()
     {
         //TODO need to handle the case where two players are on top of the bomb on instantiation
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
         // Set parentPlayer in all child sub colliders
         foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController>())
             collisionController.parentPlayer = parentPlayer;
@@ -30,23 +30,23 @@ public class BombController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (isMoving)
+        if (_isMoving)
         {
-            rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            if ((int)direction.x != 0)
+            _rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+            if ((int)_direction.x != 0)
             {
-                rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionY;
-                rb.position = new Vector3(
-                    rb.position.x + direction.x * speed * speedScalar,
-                    AxisRounder.Round(rb.position.y),
+                _rb.constraints = _rb.constraints | RigidbodyConstraints2D.FreezePositionY;
+                _rb.position = new Vector3(
+                    _rb.position.x + _direction.x * speed * speedScalar,
+                    AxisRounder.Round(_rb.position.y),
                     0.0f);
             }
-            else if ((int)direction.y != 0)
+            else if ((int)_direction.y != 0)
             {
-                rb.constraints = rb.constraints | RigidbodyConstraints2D.FreezePositionX;
-                rb.position = new Vector3(
-                    AxisRounder.Round(rb.position.x),
-                    rb.position.y + direction.y * speed * speedScalar,
+                _rb.constraints = _rb.constraints | RigidbodyConstraints2D.FreezePositionX;
+                _rb.position = new Vector3(
+                    AxisRounder.Round(_rb.position.x),
+                    _rb.position.y + _direction.y * speed * speedScalar,
                     0.0f);
             }
         }
@@ -79,9 +79,9 @@ public class BombController : NetworkBehaviour
 
         try
         {
-            if (!hasExploded)
+            if (!_hasExploded)
             {
-                hasExploded = true;
+                _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
 
                 if (isServer)
@@ -104,10 +104,10 @@ public class BombController : NetworkBehaviour
                 if (Physics2D.GetIgnoreCollision(bombCollider, collisionInfo.gameObject.GetComponent<Collider2D>()))
                     return; // Ignore collisions on colliders that are on the parent player before they leave the bomb
 
-            isMoving = true;
-            direction = -(collisionInfo.transform.position - transform.position).normalized;
-            direction.x = AxisRounder.Round(direction.x);
-            direction.y = AxisRounder.Round(direction.y);
+            _isMoving = true;
+            _direction = -(collisionInfo.transform.position - transform.position).normalized;
+            _direction.x = AxisRounder.Round(_direction.x);
+            _direction.y = AxisRounder.Round(_direction.y);
         }
         else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb")
         {
@@ -133,7 +133,7 @@ public class BombController : NetworkBehaviour
 
     private void StopMovement()
     {
-        isMoving = false;
-        rb.position = new Vector3(AxisRounder.Round(rb.position.x), AxisRounder.Round(rb.position.y), 0.0f);
+        _isMoving = false;
+        _rb.position = new Vector3(AxisRounder.Round(_rb.position.x), AxisRounder.Round(_rb.position.y), 0.0f);
     }
 }

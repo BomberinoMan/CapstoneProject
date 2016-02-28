@@ -15,7 +15,7 @@ public class LobbyManager : NetworkLobbyManager
         public int score;
     }
 
-    public static LobbyManager _instance;
+    public static LobbyManager instance;
 
     public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
@@ -25,7 +25,7 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
     public float scoreScreenTime = 5.0f;
 
-    private List<PlayerInfo> connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
+    private List<PlayerInfo> _connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
@@ -35,7 +35,7 @@ public class LobbyManager : NetworkLobbyManager
         new Vector3(1.0f, 1.0f, 0.0f)
     };
 
-    private bool sceneLoaded = false;
+    private bool _sceneLoaded = false;
 
     public GameObject bombUpgrade;
     public GameObject laserUpgrade;
@@ -47,11 +47,11 @@ public class LobbyManager : NetworkLobbyManager
     public GameObject destructible;
     public GameObject indestructible;
     public GameObject[] playerAnimations;
-    private BoardCreator boardCreator;
+    private BoardCreator _boardCreator;
 
     void Start()
     {
-        _instance = this;
+        instance = this;
         _currentPanel = menuGui;
     }
 
@@ -64,7 +64,7 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyStartServer()
     {
         base.OnLobbyStartServer();
-        connectedPlayerInfo.Clear();
+        _connectedPlayerInfo.Clear();
     }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
@@ -74,7 +74,7 @@ public class LobbyManager : NetworkLobbyManager
         GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = _playerSpawnVectors[i];
         newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
-        Debug.Log("When created: " + connectedPlayerInfo.Count);
+        Debug.Log("When created: " + _connectedPlayerInfo.Count);
         NetworkServer.Spawn(newPlayer);
         return newPlayer;
     }
@@ -85,9 +85,9 @@ public class LobbyManager : NetworkLobbyManager
         SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
         SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
         SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
-        Debug.Log("When playerDead: " + connectedPlayerInfo.Count);
+        Debug.Log("When playerDead: " + _connectedPlayerInfo.Count);
 
-        connectedPlayerInfo[player.slot].isAlive = false;
+        _connectedPlayerInfo[player.slot].isAlive = false;
 
         Invoke("CheckIfGameOver", 2);
 
@@ -96,13 +96,13 @@ public class LobbyManager : NetworkLobbyManager
 
     private void CheckIfGameOver()
     {
-        if (connectedPlayerInfo.Where(x => x.isAlive).Count() == 1)
+        if (_connectedPlayerInfo.Where(x => x.isAlive).Count() == 1)
         {
-            connectedPlayerInfo.Where(x => x.isAlive).First().score++;
-            connectedPlayerInfo.Where(x => x.isAlive).First().isAlive = false;
+            _connectedPlayerInfo.Where(x => x.isAlive).First().score++;
+            _connectedPlayerInfo.Where(x => x.isAlive).First().isAlive = false;
         }
 
-        if (connectedPlayerInfo.Where(x => x.isAlive).Count() == 0)
+        if (_connectedPlayerInfo.Where(x => x.isAlive).Count() == 0)
         {
             //  ServerReturnToLobby(); // This call doesn't work for some reason
             Debug.Log("GAME OVER!");
@@ -119,7 +119,7 @@ public class LobbyManager : NetworkLobbyManager
             if (player == null)
                 continue;
 
-            var info = connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
+            var info = _connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
             player.RpcAddPlayerToScoreList(info.name, info.score);
         }
 
@@ -136,14 +136,14 @@ public class LobbyManager : NetworkLobbyManager
 
             player.RpcClearScoreList();
         }
-        LobbyManager._instance.SendReturnToLobby();
+        LobbyManager.instance.SendReturnToLobby();
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
     {
-        if (!sceneLoaded)
+        if (!_sceneLoaded)
             SpawnBoard();
-        sceneLoaded = true;
+        _sceneLoaded = true;
         return true;
     }
 
@@ -209,22 +209,22 @@ public class LobbyManager : NetworkLobbyManager
     {
         //TODO we need to save the connected player info from scene transitions
         base.OnClientSceneChanged(conn);
-        Debug.Log("When sceneChanged: " + connectedPlayerInfo.Count);
+        Debug.Log("When sceneChanged: " + _connectedPlayerInfo.Count);
     }
 
     private void SpawnBoard()
     {
-        boardCreator = new BoardCreator();
-        boardCreator.InitializeDestructible();
+        _boardCreator = new BoardCreator();
+        _boardCreator.InitializeDestructible();
 
         //Initialize spawn for all connected players
         lobbySlots.Where(p => p != null).ToList()
-            .ForEach(p => boardCreator.InitializeSpawn(_playerSpawnVectors[(int)p.slot]));
+            .ForEach(p => _boardCreator.InitializeSpawn(_playerSpawnVectors[(int)p.slot]));
 
         //Initialize all upgrades
-        boardCreator.InitializeUpgrades();
+        _boardCreator.InitializeUpgrades();
         //Get the generated tiles in the board
-        var board = boardCreator.getBoard();
+        var board = _boardCreator.GetBoard();
 
         //Spawn all objects in the board
         foreach (var tile in board.tiles)
@@ -337,12 +337,12 @@ public class LobbyManager : NetworkLobbyManager
     {
         // This is called whenever a player enters the lobby, including coming back from the previous game
         // 		Do not add players when they have already connected previouslys
-        if (connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).Count() == 0)
-            connectedPlayerInfo.Add(new PlayerInfo() { slot = player.slot, isAlive = true, score = 0, name = "Anonymous" });   // TODO need to update to allow for login names to work
+        if (_connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).Count() == 0)
+            _connectedPlayerInfo.Add(new PlayerInfo() { slot = player.slot, isAlive = true, score = 0, name = "Anonymous" });   // TODO need to update to allow for login names to work
     }
 
     public void RemovePlayer(LobbyPlayer player)
     {
-        connectedPlayerInfo.Remove(connectedPlayerInfo.Where(x => x.slot == player.slot).FirstOrDefault());
+        _connectedPlayerInfo.Remove(_connectedPlayerInfo.Where(x => x.slot == player.slot).FirstOrDefault());
     }
 }

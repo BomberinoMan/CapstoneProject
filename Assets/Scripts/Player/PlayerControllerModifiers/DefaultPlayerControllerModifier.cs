@@ -28,7 +28,7 @@ public class DefaultPlayerControllerModifier : IPlayerControllerModifier
         _playerController.isRadioactive = false;
     }
 
-    public virtual IPlayerController removeMod()
+    public virtual IPlayerController RemoveMod()
     {
         return _playerController;
     }

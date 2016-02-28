@@ -1,7 +1,7 @@
 ﻿public static class BoardParamsFactory
 {
 
-    public static BoardParams getBoardParams(int i = 0)
+    public static BoardParams GetBoardParams(int i = 0)
     {
         switch (i)
         {

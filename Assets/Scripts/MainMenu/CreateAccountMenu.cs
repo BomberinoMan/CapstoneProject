@@ -40,18 +40,18 @@ public class CreateAccountMenu : MonoBehaviour
             return;
         }
 
-        var db = DBConnection.Instance();
+        var db = DBConnection.GetInstance();
 
-        var response = db.CreateUser(new CreateUserMessage { UserName = usernameInputField.text, Password = passwordInputField.text });
+        var response = db.CreateUser(new CreateUserMessage { userName = usernameInputField.text, password = passwordInputField.text });
 
         if (!response.isSuccessful)
-            errorText.text = response.ErrorMessage;
+            errorText.text = response.errorMessage;
         else
-            MenuManager._instance.ChangePanel(MenuManager._instance.loginGui);
+            MenuManager.instance.ChangePanel(MenuManager.instance.loginGui);
     }
 
     public void Back_OnClick()
     {
-        MenuManager._instance.ChangePanel(MenuManager._instance.startupGui);
+        MenuManager.instance.ChangePanel(MenuManager.instance.startupGui);
     }
 }

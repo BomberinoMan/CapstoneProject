@@ -31,18 +31,18 @@ public class LoginMenu : MonoBehaviour
 
     public void LoginButton_OnClick()
     {
-        var db = DBConnection.Instance();
+        var db = DBConnection.GetInstance();
 
-        var response = db.Login(new LoginMessage { UserName = usernameInputField.text, Password = passwordInputField.text });
+        var response = db.Login(new LoginMessage { userName = usernameInputField.text, password = passwordInputField.text });
 
         if (!response.isSuccessful)
-            errorText.text = response.ErrorMessage;
+            errorText.text = response.errorMessage;
         else
         {
             LoginInformation.userName = usernameInputField.text;
-            LoginInformation.guid = new System.Guid(response.UserId);
+            LoginInformation.guid = new System.Guid(response.userId);
             LoginInformation.loggedIn = false;
-            MenuManager._instance.ChangePanel(MenuManager._instance.startupGui);
+            MenuManager.instance.ChangePanel(MenuManager.instance.startupGui);
         }
     }
 

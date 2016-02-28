@@ -3,6 +3,6 @@
 [Serializable]
 public class LoginMessage
 {
-    public string UserName;
-    public string Password;
+    public string userName;
+    public string password;
 }

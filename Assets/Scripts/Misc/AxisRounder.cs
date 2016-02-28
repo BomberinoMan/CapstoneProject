@@ -2,7 +2,6 @@
 
 public static class AxisRounder
 {
-
     public static float Round(float roundDownDecimal, float roundUpDecimal, float num)
     {
         float sign = num < 0.0f ? -1.0f : 1.0f;

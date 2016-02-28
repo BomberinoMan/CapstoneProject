@@ -7,29 +7,29 @@ public class DPadController : NetworkBehaviour
 {
     public Vector2 currDirection;
 
-    private Vector2 origin = new Vector2();
-    private float width;
-    private float height;
+    private Vector2 _origin = new Vector2();
+    private float _width;
+    private float _height;
 
     void Start()
     {
         //This will only work on mobile if the dpad is on the bottom-left of the screen
         var canvasScalar = GameObject.Find("TouchControlOverlay").GetComponent<Canvas>().scaleFactor;
-        width = GetComponent<RectTransform>().rect.width * canvasScalar;
-        height = GetComponent<RectTransform>().rect.height * canvasScalar;
+        _width = GetComponent<RectTransform>().rect.width * canvasScalar;
+        _height = GetComponent<RectTransform>().rect.height * canvasScalar;
 
-        origin.x = width / 2;
-        origin.y = height / 2;
+        _origin.x = _width / 2;
+        _origin.y = _height / 2;
     }
 
     void FixedUpdate()
     {
-        var touch = Input.touches.Where(x => x.position.x <= width && x.position.y <= height).FirstOrDefault();
+        var touch = Input.touches.Where(x => x.position.x <= _width && x.position.y <= _height).FirstOrDefault();
 
         if (touch.position.x != 0 && touch.position.y != 0)
         {
-            float x = touch.position.x - origin.x;
-            float y = touch.position.y - origin.y;
+            float x = touch.position.x - _origin.x;
+            float y = touch.position.y - _origin.y;
 
             if (Math.Abs(x) > Math.Abs(y))
             {

@@ -4,19 +4,19 @@ public class BombAnimationDriver : MonoBehaviour
 {
     private Animator animator;
     public BombParams paramaters;
-    private float CreationTime;
+    private float _creationTime;
 
     void Start()
     {
         animator = gameObject.GetComponent<Animator>();
-        CreationTime = Time.time;
+        _creationTime = Time.time;
         paramaters = gameObject.GetComponentInParent<BombController>().paramaters;
     }
 
     void FixedUpdate()
     {
-        animator.SetBool("IsExploding", (CreationTime + paramaters.delayTime) <= Time.time);
-        animator.SetBool("IsDisapearing", (CreationTime + paramaters.delayTime + paramaters.explodingDuration) <= Time.time);
+        animator.SetBool("IsExploding", (_creationTime + paramaters.delayTime) <= Time.time);
+        animator.SetBool("IsDisapearing", (_creationTime + paramaters.delayTime + paramaters.explodingDuration) <= Time.time);
     }
 
     void KillMe()

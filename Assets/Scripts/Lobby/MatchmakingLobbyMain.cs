@@ -26,16 +26,16 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     public void OnClickCreate()
     {
-        var maxPlayers = (uint)LobbyManager._instance.maxPlayers;
-        LobbyManager._instance.StartMatchMaker();
-        LobbyManager._instance.matchMaker.CreateMatch(roomName.text, maxPlayers, true, "", LobbyManager._instance.OnMatchCreate);
+        var maxPlayers = (uint)LobbyManager.instance.maxPlayers;
+        LobbyManager.instance.StartMatchMaker();
+        LobbyManager.instance.matchMaker.CreateMatch(roomName.text, maxPlayers, true, "", LobbyManager.instance.OnMatchCreate);
     }
 
     public void OnClickFind()
     {
-        LobbyManager._instance.StartMatchMaker();
+        LobbyManager.instance.StartMatchMaker();
         //LobbyManager._instance.ChangePanel(LobbyManager._instance.lobbyServerList);
-        LobbyManager._instance.matchMaker.ListMatches(0, 10, "", OnMatchList);
+        LobbyManager.instance.matchMaker.ListMatches(0, 10, "", OnMatchList);
     }
 
     private void OnMatchList(ListMatchResponse response)
@@ -52,7 +52,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     public void OnClickBack()
     {
-        Destroy(LobbyManager._instance.gameObject);
+        Destroy(LobbyManager.instance.gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 }

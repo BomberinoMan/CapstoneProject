@@ -1,6 +1,5 @@
 ﻿public class Tile
 {
-
     private bool _isIndestructible;
     private bool _isUpgrade;
     private bool _isDestructible;

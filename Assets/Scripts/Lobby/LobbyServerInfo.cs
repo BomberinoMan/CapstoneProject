@@ -20,7 +20,7 @@ public class LobbyServerInfo : MonoBehaviour
 
     public void JoinMatchCallback(NetworkID networkId)
     {
-        LobbyManager._instance.matchMaker.JoinMatch(networkId, "", LobbyManager._instance.OnMatchJoined);
+        LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);
     }
 
 }

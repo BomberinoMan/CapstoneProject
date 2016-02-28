@@ -23,18 +23,18 @@ public class LanLobbyMain : MonoBehaviour
 
     public void OnClickHost()
     {
-        LobbyManager._instance.StartHost();
+        LobbyManager.instance.StartHost();
     }
 
     public void OnClickJoin()
     {
-        LobbyManager._instance.networkAddress = joinIp.text;
-        LobbyManager._instance.StartClient();
+        LobbyManager.instance.networkAddress = joinIp.text;
+        LobbyManager.instance.StartClient();
     }
 
     public void OnClickBack()
     {
-        Destroy(LobbyManager._instance.gameObject);
+        Destroy(LobbyManager.instance.gameObject);
         SceneManager.LoadScene("MainMenu");
     }
 }

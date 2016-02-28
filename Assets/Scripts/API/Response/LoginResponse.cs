@@ -3,7 +3,7 @@
 [Serializable]
 public class LoginResponse
 {
-    public string UserId;
+    public string userId;
     public bool isSuccessful;
-    public string ErrorMessage;
+    public string errorMessage;
 }

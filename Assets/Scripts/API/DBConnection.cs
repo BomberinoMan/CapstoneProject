@@ -9,11 +9,11 @@ public class DBConnection
 {
     private static DBConnection _instance;
     private static bool _hasInit = false;
-    private string uri = "https://142.3.21.28/{0}.php?Action={1}";
-    private string superSecretCode = "21548b73-0f5e-42e9-9038-ffb14458119b";
+    private string _uri = "https://142.3.21.28/{0}.php?Action={1}";
+    private string _superSecretCode = "21548b73-0f5e-42e9-9038-ffb14458119b";
 
     private DBConnection() { }
-    public static DBConnection Instance()
+    public static DBConnection GetInstance()
     {
         if (_hasInit)
             return _instance;
@@ -28,8 +28,8 @@ public class DBConnection
     {
         return Connect<LoginResponse>("User", "Login", new NameValueCollection()
         {
-            { "UserName", message.UserName },
-            { "Password", Hash(message.Password) }
+            { "UserName", message.userName },
+            { "Password", Hash(message.password) }
         });
     }
 
@@ -37,8 +37,8 @@ public class DBConnection
     {
         return Connect<CreateUserResponse>("User", "CreateUser", new NameValueCollection()
         {
-            { "UserName", message.UserName },
-            { "Password", Hash(message.Password) }
+            { "UserName", message.userName },
+            { "Password", Hash(message.password) }
         });
     }
 
@@ -46,20 +46,20 @@ public class DBConnection
     {
         return Connect<ChangePasswordResponse>("User", "ChangePassword", new NameValueCollection()
         {
-            { "UserName", message.UserName },
-            { "OldPassword", Hash(message.OldPassword) },
-            { "NewPassword", Hash(message.NewPassword) }
+            { "UserName", message.userName },
+            { "OldPassword", Hash(message.oldPassword) },
+            { "NewPassword", Hash(message.newPassword) }
         });
     }
 
     private T Connect<T>(string endpoint, string action, NameValueCollection values)
     {
-        values.Add(new NameValueCollection() { { "SuperSecretCode", superSecretCode } });
+        values.Add(new NameValueCollection() { { "SuperSecretCode", _superSecretCode } });
         using (WebClient client = new WebClient())
         {
             try
             {
-                byte[] response = client.UploadValues(string.Format(uri, endpoint, action), values);
+                byte[] response = client.UploadValues(string.Format(_uri, endpoint, action), values);
                 return JsonUtility.FromJson<T>(System.Text.Encoding.UTF8.GetString(response));
             }
             catch (WebException e)  // TODO better handling of error message from server, do we want to throw an exception if the sever is down?

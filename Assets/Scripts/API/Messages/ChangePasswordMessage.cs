@@ -3,7 +3,7 @@
 [Serializable]
 public class ChangePasswordMessage
 {
-    public string UserName;
-    public string OldPassword;
-    public string NewPassword;
+    public string userName;
+    public string oldPassword;
+    public string newPassword;
 }

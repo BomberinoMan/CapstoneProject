@@ -2,20 +2,20 @@
 
 public class FastBombsPlayerControllerModifier : DefaultPlayerControllerModifier
 {
-    private BombParams temp;
+    private BombParams _temp;
 
     public FastBombsPlayerControllerModifier(IPlayerController playerController)
     {
         _startTime = Time.time;
         _playerController = playerController;
-        temp = new BombParams();
+        _temp = new BombParams();
 
-        temp.delayTime = _playerController.bombParams.delayTime;
-        temp.explodingDuration = _playerController.bombParams.explodingDuration;
-        temp.radius = _playerController.bombParams.radius;
-        temp.warningTime = _playerController.bombParams.warningTime;
+        _temp.delayTime = _playerController.bombParams.delayTime;
+        _temp.explodingDuration = _playerController.bombParams.explodingDuration;
+        _temp.radius = _playerController.bombParams.radius;
+        _temp.warningTime = _playerController.bombParams.warningTime;
 
-        temp.delayTime = temp.delayTime / 4.0f;
+        _temp.delayTime = _temp.delayTime / 4.0f;
     }
 
     public override BombParams bombParams
@@ -25,13 +25,13 @@ public class FastBombsPlayerControllerModifier : DefaultPlayerControllerModifier
             if (!isRadioactive)
                 return _playerController.bombParams;
 
-            return temp;
+            return _temp;
         }
         set
         {
-            temp.explodingDuration = value.explodingDuration;
-            temp.radius = value.radius;
-            temp.warningTime = value.warningTime;
+            _temp.explodingDuration = value.explodingDuration;
+            _temp.radius = value.radius;
+            _temp.warningTime = value.warningTime;
             _playerController.bombParams = value;
         }
     }

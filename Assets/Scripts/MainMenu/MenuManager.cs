@@ -2,7 +2,7 @@
 
 public class MenuManager : MonoBehaviour
 {
-    static public MenuManager _instance;
+    static public MenuManager instance;
 
     public LoginMenu loginMenu;
     public StartupMenu startupMenu;
@@ -18,7 +18,7 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        _instance = this;
+        instance = this;
         _currentPanel = loginGui;
     }
 

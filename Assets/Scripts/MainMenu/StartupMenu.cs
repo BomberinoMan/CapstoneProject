@@ -36,7 +36,7 @@ public class StartupMenu : MonoBehaviour
 
     public void Settings_OnClick()
     {
-        MenuManager._instance.ChangePanel(MenuManager._instance.settingsGui);
+        MenuManager.instance.ChangePanel(MenuManager.instance.settingsGui);
     }
 
     public void Back_OnClick()
@@ -44,6 +44,6 @@ public class StartupMenu : MonoBehaviour
         LoginInformation.userName = "";
         LoginInformation.guid = System.Guid.Empty;
         LoginInformation.loggedIn = false;
-        MenuManager._instance.ChangePanel(MenuManager._instance.loginGui);
+        MenuManager.instance.ChangePanel(MenuManager.instance.loginGui);
     }
 }

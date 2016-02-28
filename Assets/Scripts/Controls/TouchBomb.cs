@@ -3,15 +3,15 @@ using UnityEngine.Networking;
 
 public class TouchBomb : NetworkBehaviour, IPointerDownHandler
 {
-    private PlayerControllerComponent player;
+    private PlayerControllerComponent _player;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        player.TouchLayBomb();
+        _player.TouchLayBomb();
     }
 
     public void SetPlayerController(PlayerControllerComponent playerController)
     {
-        player = playerController;
+        _player = playerController;
     }
 }

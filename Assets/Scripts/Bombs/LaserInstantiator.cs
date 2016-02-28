@@ -12,10 +12,10 @@ public class LaserInstantiator : NetworkBehaviour
     public GameObject laserHor;
     public GameObject laserVert;
 
-    private Vector2 up = new Vector2(0.0f, 1.0f);
-    private Vector2 down = new Vector2(0.0f, -1.0f);
-    private Vector2 left = new Vector2(-1.0f, 0.0f);
-    private Vector2 right = new Vector2(1.0f, 0.0f);
+    private Vector2 _up = new Vector2(0.0f, 1.0f);
+    private Vector2 _down = new Vector2(0.0f, -1.0f);
+    private Vector2 _left = new Vector2(-1.0f, 0.0f);
+    private Vector2 _right = new Vector2(1.0f, 0.0f);
 
     public void InstantiateLaser()
     {
@@ -37,10 +37,10 @@ public class LaserInstantiator : NetworkBehaviour
 
         laser.GetComponent<LaserController>().RpcSetupLaser(Time.time, paramaters);
 
-        InstantiateInDirection(location, up, paramaters);
-        InstantiateInDirection(location, down, paramaters);
-        InstantiateInDirection(location, left, paramaters);
-        InstantiateInDirection(location, right, paramaters);
+        InstantiateInDirection(location, _up, paramaters);
+        InstantiateInDirection(location, _down, paramaters);
+        InstantiateInDirection(location, _left, paramaters);
+        InstantiateInDirection(location, _right, paramaters);
 
         NetworkServer.Destroy(gameObject);
     }
@@ -62,9 +62,9 @@ public class LaserInstantiator : NetworkBehaviour
         {
             GameObject laser;
             if (i == paramaters.radius)
-                laser = Instantiate(getLaser(direction), new Vector3(location.x + direction.x * i, location.y + direction.y * i, 0.0f), Quaternion.identity) as GameObject;
+                laser = Instantiate(GetLaser(direction), new Vector3(location.x + direction.x * i, location.y + direction.y * i, 0.0f), Quaternion.identity) as GameObject;
             else
-                laser = Instantiate(getMiddleLaser(direction), new Vector3(location.x + direction.x * i, location.y + direction.y * i, 0.0f), Quaternion.identity) as GameObject;
+                laser = Instantiate(GetMiddleLaser(direction), new Vector3(location.x + direction.x * i, location.y + direction.y * i, 0.0f), Quaternion.identity) as GameObject;
 
             //TODO refactor all of this to make it cleaner/faster
             laser.GetComponent<LaserController>().creationTime = Time.time;
@@ -74,21 +74,21 @@ public class LaserInstantiator : NetworkBehaviour
         }
     }
 
-    private GameObject getMiddleLaser(Vector2 direction)
+    private GameObject GetMiddleLaser(Vector2 direction)
     {
-        if (direction == up || direction == down)
+        if (direction == _up || direction == _down)
             return laserVert;
         else
             return laserHor;
     }
 
-    private GameObject getLaser(Vector2 direction)
+    private GameObject GetLaser(Vector2 direction)
     {
-        if (direction == up)
+        if (direction == _up)
             return laserUp;
-        else if (direction == down)
+        else if (direction == _down)
             return laserDown;
-        else if (direction == left)
+        else if (direction == _left)
             return laserLeft;
         else
             return laserRight;

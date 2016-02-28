@@ -7,11 +7,11 @@ public class BoardCreator
 
     public BoardCreator(int i = 0)
     {
-        boardParams = BoardParamsFactory.getBoardParams(i);
+        boardParams = BoardParamsFactory.GetBoardParams(i);
         board = new Board();
     }
 
-    public Board getBoard()
+    public Board GetBoard()
     {
         return board;
     }

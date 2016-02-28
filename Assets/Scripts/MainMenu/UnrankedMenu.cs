@@ -5,7 +5,7 @@ public class UnrankedMenu : MonoBehaviour
 {
     public void SetUsername()
     {
-
+        // DO nothing
     }
 
     public void JoinButton_OnClick()

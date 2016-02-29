@@ -17,10 +17,11 @@
                 tiles[x, y].x = (float)x;
                 tiles[x, y].y = (float)y;
 
-                // Assign indestructible
-                if (x == 0 || y == 0 || x == columns - 1 || y == rows - 1) //Border
+                // Assign indestructible - Border
+                if (x == 0 || y == 0 || x == columns - 1 || y == rows - 1) 
                     tiles[x, y].isIndestructible = true;
-                else if (!blank && x % 2 == 0 && y % 2 == 0) // Rows and columns
+                // Rows and columns
+                else if (!blank && x % 2 == 0 && y % 2 == 0) 
                     tiles[x, y].isIndestructible = true;
             }
     }

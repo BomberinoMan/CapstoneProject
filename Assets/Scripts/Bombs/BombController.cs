@@ -5,10 +5,7 @@ public class BombController : NetworkBehaviour
 {
     public float speed;
     public float speedScalar;
-
-    //[SyncVar]
     public BombParams paramaters;
-    //[SyncVar]
     public GameObject parentPlayer;
 
     private bool _hasExploded = false;

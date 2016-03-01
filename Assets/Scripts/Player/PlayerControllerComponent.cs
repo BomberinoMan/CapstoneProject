@@ -242,7 +242,8 @@ public class PlayerControllerComponent : NetworkBehaviour
         }
         else if (other.gameObject.tag == "Laser")
         {
-            LobbyManager.instance.PlayerDead(this);
+			if(isServer)
+            	LobbyManager.instance.PlayerDead(this);
         }
     }
 

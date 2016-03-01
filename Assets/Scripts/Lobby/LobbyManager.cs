@@ -25,7 +25,7 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
     public float scoreScreenTime = 5.0f;
 
-    private List<PlayerInfo> _connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
+    private static List<PlayerInfo> _connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
@@ -63,7 +63,6 @@ public class LobbyManager : NetworkLobbyManager
         SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
         SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
         SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
-        Debug.Log("When playerDead: " + _connectedPlayerInfo.Count);
 
         _connectedPlayerInfo[player.slot].isAlive = false;
 
@@ -82,7 +81,6 @@ public class LobbyManager : NetworkLobbyManager
 
         if (_connectedPlayerInfo.Where(x => x.isAlive).Count() == 0)
         {
-            //  ServerReturnToLobby(); // This call doesn't work for some reason
             Debug.Log("GAME OVER!");
             StartCoroutine(GameOver());
         }
@@ -96,9 +94,9 @@ public class LobbyManager : NetworkLobbyManager
         {
             if (player == null)
                 continue;
-
             var info = _connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
-            player.RpcAddPlayerToScoreList(info.name, info.score);
+			if(info != null)
+            	player.RpcAddPlayerToScoreList(info.name, info.score);
         }
 
         while (remainingTime >= -1)
@@ -212,11 +210,12 @@ public class LobbyManager : NetworkLobbyManager
     {
         // Figure out what slot the player is in based on the network connection and playerControllerId
         var i = lobbySlots.Where(x => x != null && x.connectionToClient.connectionId == networkConnection.connectionId && x.playerControllerId == playerControllerId).First().slot;
-        GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
+        
+		GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = _playerSpawnVectors[i];
         newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
-        Debug.Log("When created: " + _connectedPlayerInfo.Count);
-        NetworkServer.Spawn(newPlayer);
+
+		NetworkServer.Spawn(newPlayer);
         return newPlayer;
     }
 
@@ -285,14 +284,7 @@ public class LobbyManager : NetworkLobbyManager
         base.OnLobbyClientEnter();
         ChangePanel(lobbyGui);
     }
-
-    public override void OnClientSceneChanged(NetworkConnection conn)
-    {
-        //TODO we need to save the connected player info from scene transitions
-        base.OnClientSceneChanged(conn);
-        Debug.Log("When sceneChanged: " + _connectedPlayerInfo.Count);
-    }
-
+		
     public override void OnLobbyClientExit()
     {
         base.OnLobbyClientExit();
@@ -302,7 +294,6 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         base.OnClientError(conn, errorCode);
-
         Debug.LogError("client error");
     }
 

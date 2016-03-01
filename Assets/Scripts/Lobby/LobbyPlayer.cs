@@ -29,7 +29,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public override void OnClientExitLobby()
     {	//TODO evan
         base.OnClientExitLobby();
-        LobbyManager.instance.RemovePlayer(this);
+        //LobbyManager.instance.RemovePlayer(this);
     }
 
     public void SetupLocalPlayer()

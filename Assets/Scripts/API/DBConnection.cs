@@ -60,6 +60,7 @@ public class DBConnection
             try
             {
                 byte[] response = client.UploadValues(string.Format(_uri, endpoint, action), values);
+                var test = JsonUtility.FromJson<T>(System.Text.Encoding.UTF8.GetString(response));
                 return JsonUtility.FromJson<T>(System.Text.Encoding.UTF8.GetString(response));
             }
             catch (WebException e)  // TODO better handling of error message from server, do we want to throw an exception if the sever is down?

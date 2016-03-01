@@ -19,7 +19,11 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         instance = this;
-        _currentPanel = loginGui;
+        
+        if (LoginInformation.loggedIn)
+            ChangePanel(startupGui);
+        else
+            ChangePanel(loginGui);
     }
 
     public void ChangePanel(RectTransform newPanel)

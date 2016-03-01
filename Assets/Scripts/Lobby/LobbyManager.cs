@@ -57,28 +57,6 @@ public class LobbyManager : NetworkLobbyManager
 
 
     // **************GAME************** 
-    // TODO Jordan move game shit here
-
-
-    // **************SERVER**************
-    public override void OnLobbyStartServer()
-    {
-        base.OnLobbyStartServer();
-        _connectedPlayerInfo.Clear();
-    }
-
-    public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
-    {
-        // Figure out what slot the player is in based on the network connection and playerControllerId
-        var i = lobbySlots.Where(x => x != null && x.connectionToClient.connectionId == networkConnection.connectionId && x.playerControllerId == playerControllerId).First().slot;
-        GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
-        newPlayer.transform.position = _playerSpawnVectors[i];
-        newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
-        Debug.Log("When created: " + _connectedPlayerInfo.Count);
-        NetworkServer.Spawn(newPlayer);
-        return newPlayer;
-    }
-
     public void PlayerDead(PlayerControllerComponent player)
     {
         SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
@@ -137,79 +115,6 @@ public class LobbyManager : NetworkLobbyManager
             player.RpcClearScoreList();
         }
         LobbyManager.instance.SendReturnToLobby();
-    }
-
-    public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
-    {
-        if (!_sceneLoaded)
-            SpawnBoard();
-        _sceneLoaded = true;
-        return true;
-    }
-
-    public override void OnLobbyServerPlayersReady()
-    {
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                if (!player.readyToBegin)
-                {
-                    return;
-                }
-            }
-        }
-
-        StartCoroutine(CountDownCoroutine());
-    }
-
-    public IEnumerator CountDownCoroutine()
-    {
-        float remainingTime = countdownTime;
-        int floorTime = Mathf.FloorToInt(remainingTime);
-
-        while (remainingTime >= -1)
-        {
-            yield return null;
-
-            remainingTime -= Time.deltaTime;
-            int newFloorTime = Mathf.FloorToInt(remainingTime);
-
-            if (newFloorTime != floorTime)
-            {
-                floorTime = newFloorTime;
-
-                foreach (LobbyPlayer player in lobbySlots)
-                {
-                    if (player != null)
-                    {
-                        player.RpcUpdateCountdown(floorTime);
-                    }
-                }
-            }
-        }
-
-        ServerChangeScene(playScene);
-    }
-
-    public void KickPlayer(NetworkConnection conn)
-    {
-        conn.Disconnect();
-    }
-
-    // **************CLIENT**************
-
-    public override void OnLobbyClientEnter()
-    {
-        base.OnLobbyClientEnter();
-        ChangePanel(lobbyGui);
-    }
-
-    public override void OnClientSceneChanged(NetworkConnection conn)
-    {
-        //TODO we need to save the connected player info from scene transitions
-        base.OnClientSceneChanged(conn);
-        Debug.Log("When sceneChanged: " + _connectedPlayerInfo.Count);
     }
 
     private void SpawnBoard()
@@ -294,6 +199,98 @@ public class LobbyManager : NetworkLobbyManager
                     break;
             }
         }
+    }
+
+    // **************SERVER**************
+    public override void OnLobbyStartServer()
+    {
+        base.OnLobbyStartServer();
+        _connectedPlayerInfo.Clear();
+    }
+
+    public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
+    {
+        // Figure out what slot the player is in based on the network connection and playerControllerId
+        var i = lobbySlots.Where(x => x != null && x.connectionToClient.connectionId == networkConnection.connectionId && x.playerControllerId == playerControllerId).First().slot;
+        GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
+        newPlayer.transform.position = _playerSpawnVectors[i];
+        newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
+        Debug.Log("When created: " + _connectedPlayerInfo.Count);
+        NetworkServer.Spawn(newPlayer);
+        return newPlayer;
+    }
+
+    public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
+    {
+        if (!_sceneLoaded)
+            SpawnBoard();
+        _sceneLoaded = true;
+        return true;
+    }
+
+    public override void OnLobbyServerPlayersReady()
+    {
+        foreach (LobbyPlayer player in lobbySlots)
+        {
+            if (player != null)
+            {
+                if (!player.readyToBegin)
+                {
+                    return;
+                }
+            }
+        }
+
+        StartCoroutine(CountDownCoroutine());
+    }
+
+    public IEnumerator CountDownCoroutine()
+    {
+        float remainingTime = countdownTime;
+        int floorTime = Mathf.FloorToInt(remainingTime);
+
+        while (remainingTime >= -1)
+        {
+            yield return null;
+
+            remainingTime -= Time.deltaTime;
+            int newFloorTime = Mathf.FloorToInt(remainingTime);
+
+            if (newFloorTime != floorTime)
+            {
+                floorTime = newFloorTime;
+
+                foreach (LobbyPlayer player in lobbySlots)
+                {
+                    if (player != null)
+                    {
+                        player.RpcUpdateCountdown(floorTime);
+                    }
+                }
+            }
+        }
+
+        ServerChangeScene(playScene);
+    }
+
+    public void KickPlayer(NetworkConnection conn)
+    {
+        conn.Disconnect();
+    }
+
+    // **************CLIENT**************
+
+    public override void OnLobbyClientEnter()
+    {
+        base.OnLobbyClientEnter();
+        ChangePanel(lobbyGui);
+    }
+
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+        //TODO we need to save the connected player info from scene transitions
+        base.OnClientSceneChanged(conn);
+        Debug.Log("When sceneChanged: " + _connectedPlayerInfo.Count);
     }
 
     public override void OnLobbyClientExit()

@@ -25,13 +25,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         SetupLocalPlayer();
     }
-
-    public override void OnClientExitLobby()
-    {	//TODO evan
-        base.OnClientExitLobby();
-        //LobbyManager.instance.RemovePlayer(this);
-    }
-
+		
     public void SetupLocalPlayer()
     {
         nameInput.interactable = true;
@@ -51,6 +45,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupRemotePlayer()
     {
+		if (isLocalPlayer)
+			return;
         nameInput.interactable = false;
         readyButton.interactable = false;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";

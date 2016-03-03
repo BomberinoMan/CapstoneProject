@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -81,7 +82,6 @@ public class LobbyManager : NetworkLobbyManager
 
         if (_connectedPlayerInfo.Where(x => x.isAlive).Count() == 0)
         {
-            Debug.Log("GAME OVER!");
             StartCoroutine(GameOver());
         }
     }
@@ -112,6 +112,8 @@ public class LobbyManager : NetworkLobbyManager
 
             player.RpcClearScoreList();
         }
+
+		_sceneLoaded = false;
         LobbyManager.instance.SendReturnToLobby();
     }
 
@@ -278,19 +280,15 @@ public class LobbyManager : NetworkLobbyManager
     }
 
     // **************CLIENT**************
+	public override void OnLobbyClientExit(){
+		ChangePanel(menuGui);
+	}
 
     public override void OnLobbyClientEnter()
     {
-        base.OnLobbyClientEnter();
         ChangePanel(lobbyGui);
     }
 		
-    public override void OnLobbyClientExit()
-    {
-        base.OnLobbyClientExit();
-        ChangePanel(menuGui);
-    }
-
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         base.OnClientError(conn, errorCode);
@@ -300,7 +298,8 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
         base.OnLobbyClientSceneChanged(conn);
-        _currentPanel.gameObject.SetActive(false);
+		if (SceneManager.GetActiveScene ().name == "Game")
+			_currentPanel.gameObject.SetActive (false);
     }
 
     // **************GUI**************

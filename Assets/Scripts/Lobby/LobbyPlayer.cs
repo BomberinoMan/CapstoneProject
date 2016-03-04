@@ -1,7 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.Networking.Match;
 using UnityEngine.UI;
 
 public class LobbyPlayer : NetworkLobbyPlayer
@@ -28,20 +26,25 @@ public class LobbyPlayer : NetworkLobbyPlayer
         SetupLocalPlayer();
     }
 
+    public override void OnClientExitLobby()
+    {	//TODO evan
+        base.OnClientExitLobby();
+        LobbyManager.instance.RemovePlayer(this);
+    }
+
     public void SetupLocalPlayer()
     {
         nameInput.interactable = true;
+        readyButton.interactable = true;
+        removePlayerButton.interactable = true;
+
+        readyText = "NOT READY";
+        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
+
         nameInput.onEndEdit.RemoveAllListeners();
         nameInput.onEndEdit.AddListener(OnNameChanged);
-
-        readyButton.interactable = true;
-        readyText = "NOT READY";
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
-
-        removePlayerButton.interactable = true;
-        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
         removePlayerButton.onClick.RemoveAllListeners();
         removePlayerButton.onClick.AddListener(OnRemovePlayerClick);
     }
@@ -49,11 +52,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void SetupRemotePlayer()
     {
         nameInput.interactable = false;
-        nameInput.text = playerName;
-
         readyButton.interactable = false;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
-
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
 
         if (isServer)
@@ -95,9 +95,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
             connectionToClient.Disconnect();
             if (isLocalPlayer)
             {
-                //TODO: destroy the match?
-                var id = LobbyManager.instance.matchInfo.networkId;
-                LobbyManager.instance.matchMaker.DestroyMatch(id, OnMatchDestroyed);
                 LobbyManager.instance.StopHost();
             }
         }
@@ -105,12 +102,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
         {
             LobbyManager.instance.StopClient();
         }
-    }
-
-    private void OnMatchDestroyed(BasicResponse response)
-    {
-        //throw new NotImplementedException();
-        Debug.Log("MATCH DESTROYED: " + response.ToString());
     }
 
     public void OnDestroy()
@@ -131,25 +122,21 @@ public class LobbyPlayer : NetworkLobbyPlayer
     }
 
     [ClientRpc]
-    public void RpcCancelCountdown()
-    {
-        removePlayerButton.interactable = true;
-        readyButton.interactable = true;
-        LobbyManager.instance.infoGui.gameObject.SetActive(false);
-    }
-
-    [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
-        LobbyManager.instance.infoGui.gameObject.SetActive(true);
-        //removePlayerButton.interactable = false;
-        readyButton.interactable = false;
-        LobbyManager.instance.infoText.text = "Match Starting in " + (count);
+        LobbyManager.instance.countdownGui.gameObject.SetActive(true);
+        LobbyManager.instance.countdownText.text = "Match Starting in " + (count + 1);
 
-        if (count <= -1)
+        if (count < 0)
         {
-            LobbyManager.instance.infoGui.gameObject.SetActive(false);
+            LobbyManager.instance.countdownGui.gameObject.SetActive(false);
         }
+    }
+
+    public void HookNameChanged(string name)
+    {
+        playerName = name;
+        nameInput.text = name;
     }
 
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
@@ -178,11 +165,4 @@ public class LobbyPlayer : NetworkLobbyPlayer
         readyText = text;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
     }
-
-    public void HookNameChanged(string name)
-    {
-        playerName = name;
-        nameInput.text = name;
-    }
-
 }

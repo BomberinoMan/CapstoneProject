@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
-using UnityEngine.Networking.Match;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -21,9 +20,8 @@ public class LobbyManager : NetworkLobbyManager
     public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
     public RectTransform menuGui;
-    public RectTransform infoGui;
-    public Button infoButton;
-    public Text infoText;
+    public RectTransform countdownGui;
+    public Text countdownText;
     public float countdownTime = 5.0f;
     public float scoreScreenTime = 5.0f;
 
@@ -67,15 +65,6 @@ public class LobbyManager : NetworkLobbyManager
     {
         base.OnLobbyStartServer();
         _connectedPlayerInfo.Clear();
-    }
-
-    public override void OnLobbyStopHost()
-    {
-        base.OnLobbyStopHost();
-
-        //TODO: destroy match if possible
-        // maybe create private var for matchId
-        // or blacklist match with that id
     }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
@@ -160,35 +149,31 @@ public class LobbyManager : NetworkLobbyManager
 
     public override void OnLobbyServerPlayersReady()
     {
-        if (ArePlayersReady())
+        foreach (LobbyPlayer player in lobbySlots)
         {
-            StartCoroutine(CountDownCoroutine());
+            if (player != null)
+            {
+                if (!player.readyToBegin)
+                {
+                    return;
+                }
+            }
         }
+
+        StartCoroutine(CountDownCoroutine());
     }
 
     public IEnumerator CountDownCoroutine()
     {
-        float remainingTime = countdownTime + 1;
+        float remainingTime = countdownTime;
         int floorTime = Mathf.FloorToInt(remainingTime);
-        int playerCount = _connectedPlayerInfo.Count;
 
-        while (remainingTime >= 0)
+        while (remainingTime >= -1)
         {
             yield return null;
+
             remainingTime -= Time.deltaTime;
             int newFloorTime = Mathf.FloorToInt(remainingTime);
-
-            if (!ArePlayersReady() || playerCount != _connectedPlayerInfo.Count)
-            {
-                foreach (LobbyPlayer player in lobbySlots)
-                {
-                    if (player != null)
-                    {
-                        player.RpcCancelCountdown();
-                    }
-                }
-                yield break;
-            }
 
             if (newFloorTime != floorTime)
             {
@@ -207,27 +192,25 @@ public class LobbyManager : NetworkLobbyManager
         ServerChangeScene(playScene);
     }
 
-    public bool ArePlayersReady()
-    {
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                if (!player.readyToBegin)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public void KickPlayer(NetworkConnection conn)
     {
         conn.Disconnect();
     }
 
     // **************CLIENT**************
+
+    public override void OnLobbyClientEnter()
+    {
+        base.OnLobbyClientEnter();
+        ChangePanel(lobbyGui);
+    }
+
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+        //TODO we need to save the connected player info from scene transitions
+        base.OnClientSceneChanged(conn);
+        Debug.Log("When sceneChanged: " + _connectedPlayerInfo.Count);
+    }
 
     private void SpawnBoard()
     {
@@ -313,24 +296,10 @@ public class LobbyManager : NetworkLobbyManager
         }
     }
 
-    public override void OnLobbyClientEnter()
-    {
-        base.OnLobbyClientEnter();
-        ChangePanel(lobbyGui);
-    }
-
-    public override void OnClientSceneChanged(NetworkConnection conn)
-    {
-        //TODO we need to save the connected player info from scene transitions
-        base.OnClientSceneChanged(conn);
-        Debug.Log("When sceneChanged: " + _connectedPlayerInfo.Count);
-    }
-
     public override void OnLobbyClientExit()
     {
         base.OnLobbyClientExit();
         ChangePanel(menuGui);
-        infoGui.gameObject.SetActive(false);
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)

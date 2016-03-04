@@ -20,7 +20,6 @@ public class LobbyServerInfo : MonoBehaviour
 
     public void JoinMatchCallback(NetworkID networkId)
     {
-        Debug.Log("NETWORKID: " + networkId);
         LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);
     }
 

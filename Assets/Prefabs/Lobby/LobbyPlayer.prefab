@@ -251,7 +251,7 @@ MonoBehaviour:
   readyButton: {fileID: 11436954}
   removePlayerButton: {fileID: 11476336}
   playerName: 
-  readyText: NOT READY
+  readyText: 
 --- !u!114 &11431892
 MonoBehaviour:
   m_ObjectHideFlags: 1

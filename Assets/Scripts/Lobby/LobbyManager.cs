@@ -10,7 +10,6 @@ public class LobbyManager : NetworkLobbyManager
 {
     public class PlayerInfo
     {
-        public string name;
         public int slot;
         public bool isAlive;
         public int score;
@@ -26,7 +25,7 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
     public float scoreScreenTime = 5.0f;
 
-    private static List<PlayerInfo> _connectedPlayerInfo = new List<PlayerInfo>();         //TODO: limit number of players
+    private static List<PlayerInfo> _connectedPlayerInfo = new List<PlayerInfo>();
     private RectTransform _currentPanel;
     private Vector3[] _playerSpawnVectors = new Vector3[4]
     {
@@ -95,8 +94,9 @@ public class LobbyManager : NetworkLobbyManager
             if (player == null)
                 continue;
             var info = _connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
+
 			if(info != null)
-            	player.RpcAddPlayerToScoreList(info.name, info.score);
+				player.RpcAddPlayerToScoreList(player.userName, info.score);
         }
 
         while (remainingTime >= -1)
@@ -163,7 +163,8 @@ public class LobbyManager : NetworkLobbyManager
                     case (UpgradeType.Radioactive):
                         NetworkServer.Spawn(Instantiate(radioactiveUpgrade, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
                         break;
-                    default: // Do nothing
+                    default: 
+						// Do nothing
                         break;
                 }
         }
@@ -177,7 +178,8 @@ public class LobbyManager : NetworkLobbyManager
 
             do
             {
-                location.x = UnityEngine.Random.Range(1, 13);   // Spawnable locations on the board
+				// Spawnable locations on the board
+                location.x = UnityEngine.Random.Range(1, 13);   
                 location.y = UnityEngine.Random.Range(1, 11);
             } while (Physics2D.RaycastAll(location, new Vector2(1.0f, 1.0f), 0.2f).Length != 0);
 
@@ -303,7 +305,6 @@ public class LobbyManager : NetworkLobbyManager
     }
 
     // **************GUI**************
-
     public void ChangePanel(RectTransform newPanel)
     {
         if (_currentPanel != null)
@@ -324,8 +325,8 @@ public class LobbyManager : NetworkLobbyManager
     {
         // This is called whenever a player enters the lobby, including coming back from the previous game
         // 		Do not add players when they have already connected previouslys
-        if (_connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).Count() == 0)
-            _connectedPlayerInfo.Add(new PlayerInfo() { slot = player.slot, isAlive = true, score = 0, name = "Anonymous" });   // TODO need to update to allow for login names to work
+		if (_connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).Count () == 0)
+				_connectedPlayerInfo.Add(new PlayerInfo() { slot = player.slot, isAlive = true, score = 0 });
     }
 
     public void RemovePlayer(LobbyPlayer player)

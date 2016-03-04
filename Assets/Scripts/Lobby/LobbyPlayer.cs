@@ -6,13 +6,14 @@ public class LobbyPlayer : NetworkLobbyPlayer
 {
     public GameObject scoreScreenPlayer;
 
-    public InputField nameInput;
+	public Text nameText;
     public Button readyButton;
     public Button removePlayerButton;
-    [SyncVar(hook = "HookNameChanged")]
-    public string playerName = "";
+
     [SyncVar(hook = "HookReadyChanged")]
     public string readyText = "";
+	[SyncVar]
+	public string userName;
 
     public override void OnClientEnterLobby()
     {
@@ -25,24 +26,16 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         SetupLocalPlayer();
     }
-
-    public override void OnClientExitLobby()
-    {	//TODO evan
-        base.OnClientExitLobby();
-        LobbyManager.instance.RemovePlayer(this);
-    }
-
+		
     public void SetupLocalPlayer()
     {
-        nameInput.interactable = true;
+		CmdNameChanged (LoginInformation.userName);
         readyButton.interactable = true;
         removePlayerButton.interactable = true;
 
         readyText = "NOT READY";
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
 
-        nameInput.onEndEdit.RemoveAllListeners();
-        nameInput.onEndEdit.AddListener(OnNameChanged);
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
         removePlayerButton.onClick.RemoveAllListeners();
@@ -51,7 +44,9 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupRemotePlayer()
     {
-        nameInput.interactable = false;
+		if (isLocalPlayer)
+			return;
+		
         readyButton.interactable = false;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
@@ -67,11 +62,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
         {
             removePlayerButton.interactable = false;
         }
-    }
-
-    public void OnNameChanged(string name)
-    {
-        CmdNameChanged(name);
     }
 
     public void OnReadyClick()
@@ -112,7 +102,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [Command]
     public void CmdNameChanged(string name)
     {
-        playerName = name;
+		nameText.text = name;
+		userName = name;
     }
 
     [Command]
@@ -131,12 +122,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
         {
             LobbyManager.instance.countdownGui.gameObject.SetActive(false);
         }
-    }
-
-    public void HookNameChanged(string name)
-    {
-        playerName = name;
-        nameInput.text = name;
     }
 
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls

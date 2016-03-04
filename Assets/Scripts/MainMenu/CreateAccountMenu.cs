@@ -52,6 +52,6 @@ public class CreateAccountMenu : MonoBehaviour
 
     public void Back_OnClick()
     {
-        MenuManager.instance.ChangePanel(MenuManager.instance.startupGui);
+        MenuManager.instance.ChangePanel(MenuManager.instance.loginGui);
     }
 }

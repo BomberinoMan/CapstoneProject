@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class LoginMenu : MonoBehaviour
 {
     public Button loginButton;
     public Button quitButton;
+    public Button createAccountButton;
+	public Button guestButton;
 
     public Text errorText;
 
@@ -19,14 +22,20 @@ public class LoginMenu : MonoBehaviour
         quitButton.onClick.RemoveAllListeners();
         quitButton.onClick.AddListener(QuitButton_OnClick);
 
+        createAccountButton.onClick.RemoveAllListeners();
+        createAccountButton.onClick.AddListener(CreateAccount_OnClick);
+
+		guestButton.onClick.RemoveAllListeners ();
+		guestButton.onClick.AddListener (GuestButton_OnClick);
+
         usernameInputField.ActivateInputField();
         passwordInputField.ActivateInputField();
 
         errorText.text = "";
+		passwordInputField.text = "";
 
         if (LoginInformation.userName != null && LoginInformation.userName != "" && LoginInformation.loggedIn)
             usernameInputField.text = LoginInformation.userName;
-        passwordInputField.text = "";
     }
 
     public void LoginButton_OnClick()
@@ -41,9 +50,23 @@ public class LoginMenu : MonoBehaviour
         {
             LoginInformation.userName = usernameInputField.text;
             LoginInformation.guid = new System.Guid(response.userId);
-            LoginInformation.loggedIn = false;
+            LoginInformation.loggedIn = true;
             MenuManager.instance.ChangePanel(MenuManager.instance.startupGui);
         }
+    }
+
+	public void GuestButton_OnClick()
+	{
+		LoginInformation.userName = "Guest";
+		LoginInformation.guid = Guid.Empty;
+		LoginInformation.loggedIn = true;
+
+		MenuManager.instance.ChangePanel (MenuManager.instance.startupGui);
+	}
+
+    public void CreateAccount_OnClick()
+    {
+        MenuManager.instance.ChangePanel(MenuManager.instance.accountgui);
     }
 
     public void QuitButton_OnClick()

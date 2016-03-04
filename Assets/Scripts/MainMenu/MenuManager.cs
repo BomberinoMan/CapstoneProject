@@ -19,20 +19,27 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         instance = this;
-        _currentPanel = loginGui;
+        
+        if (LoginInformation.loggedIn)
+            ChangePanel(startupGui);
+        else
+            ChangePanel(loginGui);
     }
 
     public void ChangePanel(RectTransform newPanel)
     {
-        if (_currentPanel != null)
-        {
-            _currentPanel.gameObject.SetActive(false);
-        }
+		if (_currentPanel != null)
+			_currentPanel.gameObject.SetActive (false);
+		else 
+		{
+			loginGui.gameObject.SetActive (false);
+			startupGui.gameObject.SetActive (false);
+			accountgui.gameObject.SetActive (false);
+			settingsGui.gameObject.SetActive (false);
+		}
 
         if (newPanel != null)
-        {
             newPanel.gameObject.SetActive(true);
-        }
 
         _currentPanel = newPanel;
     }

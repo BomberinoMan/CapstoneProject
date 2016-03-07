@@ -35,18 +35,27 @@ public class MatchmakingLobbyMain : MonoBehaviour
     {
         LobbyManager.instance.StartMatchMaker();
         //LobbyManager._instance.ChangePanel(LobbyManager._instance.lobbyServerList);
-        LobbyManager.instance.matchMaker.ListMatches(0, 10, "", OnMatchList);
+        LobbyManager.instance.matchMaker.ListMatches(0, 99, "", OnMatchList);
     }
 
     private void OnMatchList(ListMatchResponse response)
     {
         Debug.Log("MATCH COUNT: " + response.matches.Count);
 
+        ClearMatchList();
         foreach (MatchDesc match in response.matches)
         {
             GameObject go = Instantiate(serverInfoPrefab) as GameObject;
             go.GetComponent<LobbyServerInfo>().PopulateMatchInfo(match);
             go.transform.SetParent(listPanel, false);
+        }
+    }
+
+    private void ClearMatchList()
+    {
+        foreach (Transform child in listPanel)
+        {
+            Destroy(child.gameObject);
         }
     }
 

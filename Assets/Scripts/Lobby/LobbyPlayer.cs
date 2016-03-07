@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
 using UnityEngine.UI;
 
 public class LobbyPlayer : NetworkLobbyPlayer
 {
     public GameObject scoreScreenPlayer;
 
-	public Text nameText;
+    public Text nameText;
     public Button readyButton;
     public Button removePlayerButton;
 
     [SyncVar(hook = "HookReadyChanged")]
     public string readyText = "";
-	[SyncVar]
-	public string userName;
+    [SyncVar]
+    public string username;
 
     public override void OnClientEnterLobby()
     {
@@ -26,29 +27,32 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         SetupLocalPlayer();
     }
-		
+
     public void SetupLocalPlayer()
     {
-		CmdNameChanged (LoginInformation.userName);
+        CmdNameChanged(LoginInformation.userName);
+        
         readyButton.interactable = true;
-        removePlayerButton.interactable = true;
-
         readyText = "NOT READY";
-        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
-
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
+        
+        removePlayerButton.interactable = true;
+        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
         removePlayerButton.onClick.RemoveAllListeners();
         removePlayerButton.onClick.AddListener(OnRemovePlayerClick);
     }
 
     public void SetupRemotePlayer()
     {
-		if (isLocalPlayer)
-			return;
-		
+        if (isLocalPlayer)
+            return;
+
+        nameText.text = username;
+
         readyButton.interactable = false;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
 
         if (isServer)
@@ -85,6 +89,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
             connectionToClient.Disconnect();
             if (isLocalPlayer)
             {
+                var id = LobbyManager.instance.matchInfo.networkId;
+                LobbyManager.instance.matchMaker.DestroyMatch(id, OnMatchDestroyed);
                 LobbyManager.instance.StopHost();
             }
         }
@@ -92,6 +98,11 @@ public class LobbyPlayer : NetworkLobbyPlayer
         {
             LobbyManager.instance.StopClient();
         }
+    }
+
+    private void OnMatchDestroyed(BasicResponse response)
+    {
+        Debug.Log("MATCH DESTROYED: " + response.ToString());
     }
 
     public void OnDestroy()
@@ -102,8 +113,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [Command]
     public void CmdNameChanged(string name)
     {
-		nameText.text = name;
-		userName = name;
+        nameText.text = name;
+        username = name;
     }
 
     [Command]
@@ -113,14 +124,26 @@ public class LobbyPlayer : NetworkLobbyPlayer
     }
 
     [ClientRpc]
+    public void RpcCancelCountdown()
+    {
+        removePlayerButton.interactable = true;
+        readyButton.interactable = true;
+        LobbyManager.instance.infoGui.gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
-        LobbyManager.instance.countdownGui.gameObject.SetActive(true);
-        LobbyManager.instance.countdownText.text = "Match Starting in " + (count + 1);
+        LobbyManager.instance.infoGui.gameObject.SetActive(true);
+        LobbyManager.instance.infoButton.gameObject.SetActive(false);
+        removePlayerButton.interactable = false;
+        readyButton.interactable = false;
 
-        if (count < 0)
+        LobbyManager.instance.infoText.text = "Match Starting in " + (count);
+
+        if (count <= -1)
         {
-            LobbyManager.instance.countdownGui.gameObject.SetActive(false);
+            LobbyManager.instance.infoGui.gameObject.SetActive(false);
         }
     }
 

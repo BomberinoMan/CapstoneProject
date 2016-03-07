@@ -20,8 +20,9 @@ public class LobbyManager : NetworkLobbyManager
     public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
     public RectTransform menuGui;
-    public RectTransform countdownGui;
-    public Text countdownText;
+    public RectTransform infoGui;
+    public Text infoText;
+    public Button infoButton;
     public float countdownTime = 5.0f;
     public float scoreScreenTime = 5.0f;
 
@@ -96,7 +97,7 @@ public class LobbyManager : NetworkLobbyManager
             var info = _connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
 
 			if(info != null)
-				player.RpcAddPlayerToScoreList(player.userName, info.score);
+				player.RpcAddPlayerToScoreList(player.username, info.score);
         }
 
         while (remainingTime >= -1)
@@ -210,6 +211,15 @@ public class LobbyManager : NetworkLobbyManager
         _connectedPlayerInfo.Clear();
     }
 
+    public override void OnLobbyStopHost()
+    {
+        base.OnLobbyStopHost();
+
+        //TODO destroy match if possible
+        // maybe create private var for matchId
+        // or blacklist match with that id
+    }
+
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
     {
         // Figure out what slot the player is in based on the network connection and playerControllerId
@@ -233,6 +243,11 @@ public class LobbyManager : NetworkLobbyManager
 
     public override void OnLobbyServerPlayersReady()
     {
+        if (ArePlayersReady())
+        {
+            StartCoroutine(CountDownCoroutine());
+        }
+
         foreach (LobbyPlayer player in lobbySlots)
         {
             if (player != null)
@@ -243,21 +258,32 @@ public class LobbyManager : NetworkLobbyManager
                 }
             }
         }
-
-        StartCoroutine(CountDownCoroutine());
     }
 
     public IEnumerator CountDownCoroutine()
     {
-        float remainingTime = countdownTime;
+        float remainingTime = countdownTime + 1;
         int floorTime = Mathf.FloorToInt(remainingTime);
+        int playerCount = _connectedPlayerInfo.Count;
 
-        while (remainingTime >= -1)
+        while (remainingTime >= 0)
         {
             yield return null;
 
             remainingTime -= Time.deltaTime;
             int newFloorTime = Mathf.FloorToInt(remainingTime);
+
+            if (!ArePlayersReady() || playerCount != _connectedPlayerInfo.Count)
+            {
+                foreach (LobbyPlayer player in lobbySlots)
+                {
+                    if (player != null)
+                    {
+                        player.RpcCancelCountdown();
+                    }
+                }
+                yield break;
+            }
 
             if (newFloorTime != floorTime)
             {
@@ -276,6 +302,21 @@ public class LobbyManager : NetworkLobbyManager
         ServerChangeScene(playScene);
     }
 
+    public bool ArePlayersReady()
+    {
+        foreach (LobbyPlayer player in lobbySlots)
+        {
+            if (player != null)
+            {
+                if (!player.readyToBegin)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void KickPlayer(NetworkConnection conn)
     {
         conn.Disconnect();
@@ -283,11 +324,14 @@ public class LobbyManager : NetworkLobbyManager
 
     // **************CLIENT**************
 	public override void OnLobbyClientExit(){
+        base.OnLobbyClientExit();
 		ChangePanel(menuGui);
+        infoGui.gameObject.SetActive(false);
 	}
 
     public override void OnLobbyClientEnter()
     {
+        base.OnLobbyClientEnter();
         ChangePanel(lobbyGui);
     }
 		

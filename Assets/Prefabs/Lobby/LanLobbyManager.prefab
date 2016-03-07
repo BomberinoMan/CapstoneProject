@@ -226,7 +226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &165930
 GameObject:
   m_ObjectHideFlags: 1
@@ -804,8 +804,9 @@ MonoBehaviour:
   scoreScreenGui: {fileID: 22461302}
   lobbyGui: {fileID: 22442672}
   menuGui: {fileID: 22425330}
-  countdownGui: {fileID: 22465402}
-  countdownText: {fileID: 11484444}
+  infoGui: {fileID: 0}
+  infoText: {fileID: 0}
+  infoButton: {fileID: 0}
   countdownTime: 5
   scoreScreenTime: 5
   bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}

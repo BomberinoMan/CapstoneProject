@@ -28,10 +28,6 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         base.OnStartClient();
 
-        // Get the touch input from the UI
-        dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
-        GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
-
         GameObject animator = Instantiate(LobbyManager.instance.playerAnimations[slot]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
         // Changing the parent also changes the localPosition, need to reset it
@@ -50,31 +46,12 @@ public class PlayerControllerComponent : NetworkBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _transform = GetComponent<Transform>();
 
-        /*
-        // Singleton
-        var db = DBConnection.Instance();
-
-        // Example data
-        var password = "DarthMohawk";
-        var userName = "DarthMohawk";
-
-        // How to create a user
-        var responseCreateUser = db.CreateUser(new CreateUserMessage { UserName = userName, Password = password });
-
-        // How to login to a user
-        var responseLogin = db.Login(new LoginMessage { UserName = userName, Password = password });
-
-        // How to change password on user
-        var responseChangePassword = db.ChangePassword(new ChangePasswordMessage { UserName = userName, OldPassword = password, NewPassword = password });
-
-        /*
-            *IMPORTANT*
-                - All passwords are encoded in DBConnection, do NOT do it yourself as this will fuck up all of the things
-
-            All responses will have isSuccessful set to true if the request was successful
-            All responses will have UserId (guid) set if the request was successful
-            If there was a problem, then ErrorMessage will be set, otherwise it will be null
-        */
+		if (isLocalPlayer) 
+		{
+			// Get the touch input from the UI
+			dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
+			GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
+		}
     }
 
     public void TouchLayBomb()
@@ -101,6 +78,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     void FixedUpdate() //TODO Add reverse movement support to animation driver
     {
+		FlipFlopColor();
+
         if (!isLocalPlayer)
             return;
 
@@ -136,6 +115,11 @@ public class PlayerControllerComponent : NetworkBehaviour
         float hor = dPad.currDirection.x;
         float ver = dPad.currDirection.y;
 
+		if (hor == 0 && ver == 0) {
+			hor = Input.GetAxisRaw ("Horizontal");
+			ver = Input.GetAxisRaw ("Vertical");
+		}
+
         if (!_playerController.reverseMovement)
         {
             if (ver == 0.0f && hor != 0.0f)
@@ -170,8 +154,6 @@ public class PlayerControllerComponent : NetworkBehaviour
                     0.0f);
             }
         }
-
-        FlipFlopColor(); //TODO uncomment this when ready
     }
 
     [ClientRpc]
@@ -196,7 +178,8 @@ public class PlayerControllerComponent : NetworkBehaviour
             as GameObject;
 
         bomb.GetComponent<BombController>().SetupBomb(gameObject);
-        NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+		NetworkServer.Spawn (bomb);
+//        NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
         RpcSetupBomb(bomb, true);
     }
 
@@ -235,8 +218,11 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+		Debug.Log ("trigger enter : " + isLocalPlayer);
+
         if (other.gameObject.tag == "Upgrade")
         {
+			//CmdPickedUpUpgrade (gameObject);
             UpgradeFactory.GetUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
             CmdPickedUpUpgrade(other.gameObject);
         }

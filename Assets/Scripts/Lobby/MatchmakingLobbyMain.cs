@@ -10,6 +10,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
     public Button findButton;
     public Button backButton;
     public RectTransform listPanel;
+    public RectTransform matchListWarning;
     public GameObject serverInfoPrefab;
 
     public void OnEnable()
@@ -48,7 +49,11 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
         if (response.matches.Count == 0)
         {
-            // TODO no matches found
+            matchListWarning.gameObject.SetActive(true);
+        } 
+        else
+        {
+            matchListWarning.gameObject.SetActive(false);
         }
 
         foreach (MatchDesc match in response.matches)

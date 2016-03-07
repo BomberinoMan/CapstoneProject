@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
+using UnityEngine.Events;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -332,13 +334,14 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyClientEnter()
     {
         base.OnLobbyClientEnter();
+        HideInfoPanel();
         ChangePanel(lobbyGui);
     }
 		
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         base.OnClientError(conn, errorCode);
-        Debug.LogError("client error");
+        Debug.LogError("CLIENT ERROR" + errorCode);
     }
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -346,6 +349,13 @@ public class LobbyManager : NetworkLobbyManager
         base.OnLobbyClientSceneChanged(conn);
 		if (SceneManager.GetActiveScene ().name == "Game")
 			_currentPanel.gameObject.SetActive (false);
+    }
+
+    public void StopClientCallback()
+    {
+        StopClient();
+        StopMatchMaker();
+        ChangePanel(menuGui);
     }
 
     // **************GUI**************
@@ -362,6 +372,21 @@ public class LobbyManager : NetworkLobbyManager
         }
 
         _currentPanel = newPanel;
+    }
+
+    public void DisplayInfoPanel(string infoString, UnityAction onCancel)
+    {
+        infoText.text = infoString;
+        infoButton.onClick.RemoveAllListeners();
+        infoButton.onClick.AddListener(onCancel);
+
+        LobbyManager.instance.infoButton.gameObject.SetActive(true);
+        LobbyManager.instance.infoGui.gameObject.SetActive(true);
+    }
+
+    public void HideInfoPanel()
+    {
+        infoGui.gameObject.SetActive(false);
     }
 
     // **************PLAYER LIST**************

@@ -27,22 +27,30 @@ public class MatchmakingLobbyMain : MonoBehaviour
     public void OnClickCreate()
     {
         var maxPlayers = (uint)LobbyManager.instance.maxPlayers;
+        LobbyManager.instance.DisplayInfoPanel("Creating...", LobbyManager.instance.StopClientCallback);       //TODO stop client callback or stop host callback ?
+
         LobbyManager.instance.StartMatchMaker();
         LobbyManager.instance.matchMaker.CreateMatch(roomName.text, maxPlayers, true, "", LobbyManager.instance.OnMatchCreate);
     }
 
     public void OnClickFind()
     {
+        LobbyManager.instance.DisplayInfoPanel("Finding matches...", LobbyManager.instance.StopClientCallback);
         LobbyManager.instance.StartMatchMaker();
-        //LobbyManager._instance.ChangePanel(LobbyManager._instance.lobbyServerList);
         LobbyManager.instance.matchMaker.ListMatches(0, 99, "", OnMatchList);
     }
 
     private void OnMatchList(ListMatchResponse response)
     {
         Debug.Log("MATCH COUNT: " + response.matches.Count);
-
+        LobbyManager.instance.HideInfoPanel();
         ClearMatchList();
+
+        if (response.matches.Count == 0)
+        {
+            // TODO no matches found
+        }
+
         foreach (MatchDesc match in response.matches)
         {
             GameObject go = Instantiate(serverInfoPrefab) as GameObject;

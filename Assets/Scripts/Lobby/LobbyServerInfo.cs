@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
+using System;
 
 public class LobbyServerInfo : MonoBehaviour
 {
@@ -15,12 +16,12 @@ public class LobbyServerInfo : MonoBehaviour
         slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString();
 
         joinButton.onClick.RemoveAllListeners();
-        joinButton.onClick.AddListener(() => { JoinMatchCallback(match.networkId); });
+        joinButton.onClick.AddListener(() => { OnClickJoin(match.networkId); });
     }
 
-    public void JoinMatchCallback(NetworkID networkId)
+    public void OnClickJoin(NetworkID networkId)
     {
+        LobbyManager.instance.DisplayInfoPanel("JOINING", LobbyManager.instance.StopClientCallback);
         LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);
     }
-
 }

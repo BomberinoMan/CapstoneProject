@@ -12,6 +12,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     private float _flipFlopDuration = 0.25f;
     private IPlayerControllerModifier _playerController;
     private bool _bombBlock = false;
+    private bool _animatorSetup = false;
 
     public GameObject bombObject;
     public DPadController dPad;
@@ -36,6 +37,8 @@ public class PlayerControllerComponent : NetworkBehaviour
         // To sync animations, we need to assign the NetworkAnimator to the new child animator
         //          The animator on this (parent) object will be disabled
         GetComponent<NetworkAnimator>().animator = GetComponentsInChildren<Animator>().Where(x => x.enabled).First();
+
+        _animatorSetup = true;
     }
 
     public void Start()
@@ -59,20 +62,20 @@ public class PlayerControllerComponent : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (_playerController.canLayBombs)
+        if (_playerController.canLayBombs && _playerController.currNumBombs > 0)
         {
             if (!_bombBlock)
             {
-                CmdLayBomb();
+                CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
             }
             else if (_playerController.bombLine > 0)
             {
-                CmdLayLineBomb(gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
+                CmdLayLineBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime, gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
         }
-        if (_playerController.alwaysLayBombs && !_bombBlock)
+        if (_playerController.alwaysLayBombs && _playerController.currNumBombs > 0 && !_bombBlock)
         {
-            CmdLayBomb();
+            CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
         }
     }
 
@@ -163,10 +166,12 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [Command]
-    private void CmdLayBomb()
+    private void CmdLayBomb(float delayTime, float explodingDuration, int radius, float warningTime)
     {
-        if (_playerController.currNumBombs <= 0)
-            return;
+        bombParams.delayTime = delayTime;
+        bombParams.explodingDuration = explodingDuration;
+        bombParams.radius = radius;
+        bombParams.warningTime = warningTime;
 
         GameObject bomb = Instantiate(
             bombObject,
@@ -179,13 +184,18 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         bomb.GetComponent<BombController>().SetupBomb(gameObject);
 		NetworkServer.Spawn (bomb);
-//        NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+//      NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
         RpcSetupBomb(bomb, true);
     }
 
     [Command]
-    private void CmdLayLineBomb(Vector2 direction)
+    private void CmdLayLineBomb(float delayTime, float explodingDuration, int radius, float warningTime, Vector2 direction)
     {
+        bombParams.delayTime = delayTime;
+        bombParams.explodingDuration = explodingDuration;
+        bombParams.radius = radius;
+        bombParams.warningTime = warningTime;
+
         var emptySpace = Physics2D.RaycastAll(new Vector2(AxisRounder.Round(_transform.position.x), AxisRounder.Round(transform.position.y)), direction)
             .Where(x => x.distance != 0)
             .First();
@@ -205,7 +215,8 @@ public class PlayerControllerComponent : NetworkBehaviour
                 as GameObject;
 
             bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
-            NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+            NetworkServer.Spawn(bomb);
+            //NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
             RpcSetupBomb(bomb, false);
         }
     }
@@ -218,11 +229,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-		Debug.Log ("trigger enter : " + isLocalPlayer);
-
         if (other.gameObject.tag == "Upgrade")
         {
-			//CmdPickedUpUpgrade (gameObject);
             UpgradeFactory.GetUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
             CmdPickedUpUpgrade(other.gameObject);
         }
@@ -257,6 +265,9 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     private void FlipFlopColor()
     {
+        if (!_animatorSetup)
+            return;
+
         if (!_playerController.isRadioactive)
         {
             gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;

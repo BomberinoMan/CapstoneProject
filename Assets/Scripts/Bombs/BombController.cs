@@ -10,6 +10,7 @@ public class BombController : NetworkBehaviour
 
     private bool _hasExploded = false;
     private bool _isMoving = false;
+    private float _startTime;
     private Vector3 _direction = new Vector3();
     private Rigidbody2D _rb;
 
@@ -27,6 +28,9 @@ public class BombController : NetworkBehaviour
 
     void FixedUpdate()
     {
+        if (_startTime + paramaters.delayTime <= Time.time)
+            Explode();
+
         if (_isMoving)
         {
             _rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
@@ -51,15 +55,14 @@ public class BombController : NetworkBehaviour
 
     public void SetupBomb(GameObject player, bool setupColliders = true)
     {
-        BombParams temp = new BombParams();
+        _startTime = Time.time;
+        paramaters = new BombParams();
         BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
 
-        temp.delayTime = playerBombParams.delayTime;
-        temp.explodingDuration = playerBombParams.explodingDuration;
-        temp.radius = playerBombParams.radius;
-        temp.warningTime = playerBombParams.warningTime;
-
-        paramaters = temp;
+        paramaters.delayTime = playerBombParams.delayTime;
+        paramaters.explodingDuration = playerBombParams.explodingDuration;
+        paramaters.radius = playerBombParams.radius;
+        paramaters.warningTime = playerBombParams.warningTime;
 
         parentPlayer = player;
         transform.SetParent(player.transform.parent);
@@ -80,11 +83,7 @@ public class BombController : NetworkBehaviour
             {
                 _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
-
-                if (isServer)
-                {
-                    gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
-                }
+                gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
             }
         }
         catch (MissingReferenceException)
@@ -92,14 +91,14 @@ public class BombController : NetworkBehaviour
         }
     }
 
-    //TODO Add collision detection for lasers
     void OnTriggerEnter2D(Collider2D collisionInfo)
     {
         if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().bombKick > 0)
         {
             foreach (Collider2D bombCollider in gameObject.GetComponentsInChildren<Collider2D>())
                 if (Physics2D.GetIgnoreCollision(bombCollider, collisionInfo.gameObject.GetComponent<Collider2D>()))
-                    return; // Ignore collisions on colliders that are on the parent player before they leave the bomb
+                    // Ignore collisions on colliders that are on the parent player before they leave the bomb
+                    return;
 
             _isMoving = true;
             _direction = -(collisionInfo.transform.position - transform.position).normalized;

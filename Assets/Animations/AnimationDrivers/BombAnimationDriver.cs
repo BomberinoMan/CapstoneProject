@@ -18,9 +18,4 @@ public class BombAnimationDriver : MonoBehaviour
         animator.SetBool("IsExploding", (_creationTime + paramaters.delayTime) <= Time.time);
         animator.SetBool("IsDisapearing", (_creationTime + paramaters.delayTime + paramaters.explodingDuration) <= Time.time);
     }
-
-    void KillMe()
-    {
-        gameObject.transform.parent.GetComponent<BombController>().Explode();
-    }
 }

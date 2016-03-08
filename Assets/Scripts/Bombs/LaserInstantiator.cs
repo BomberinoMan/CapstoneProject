@@ -30,12 +30,10 @@ public class LaserInstantiator : NetworkBehaviour
         var location = new Vector2(AxisRounder.Round(gameObject.transform.position.x), AxisRounder.Round(gameObject.transform.position.y));
 
         GameObject laser = Instantiate(laserCross, location, Quaternion.identity) as GameObject;
+
         //TODO refactor this too
         laser.GetComponent<LaserController>().creationTime = Time.time;
         laser.GetComponent<LaserController>().paramaters = paramaters;
-        NetworkServer.Spawn(laser);
-
-        laser.GetComponent<LaserController>().RpcSetupLaser(Time.time, paramaters);
 
         InstantiateInDirection(location, _up, paramaters);
         InstantiateInDirection(location, _down, paramaters);
@@ -69,8 +67,6 @@ public class LaserInstantiator : NetworkBehaviour
             //TODO refactor all of this to make it cleaner/faster
             laser.GetComponent<LaserController>().creationTime = Time.time;
             laser.GetComponent<LaserController>().paramaters = paramaters;
-            NetworkServer.Spawn(laser);
-            laser.GetComponent<LaserController>().RpcSetupLaser(Time.time, paramaters);
         }
     }
 

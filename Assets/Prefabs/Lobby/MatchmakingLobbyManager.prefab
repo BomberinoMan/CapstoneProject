@@ -70,7 +70,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &117138
 GameObject:
   m_ObjectHideFlags: 1
@@ -670,7 +670,7 @@ MonoBehaviour:
   matchMaker: {fileID: 0}
   matchName: default
   matchSize: 4
-  m_ShowLobbyGUI: 1
+  m_ShowLobbyGUI: 0
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 0
@@ -1543,7 +1543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
-  showGUI: 1
+  showGUI: 0
   offsetX: 0
   offsetY: 0
 --- !u!114 &11471874
@@ -2357,11 +2357,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22432698}
-  m_Father: {fileID: 22466920}
-  m_RootOrder: 2
+  m_Father: {fileID: 22465058}
+  m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 511.5, y: -174.345}
+  m_AnchoredPosition: {x: 511.5, y: -50}
   m_SizeDelta: {x: 1023, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22465058
@@ -2374,9 +2374,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 22464142}
   - {fileID: 22475480}
   m_Father: {fileID: 22466920}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.7}
   m_AnchoredPosition: {x: 0, y: -10}
@@ -2394,7 +2395,6 @@ RectTransform:
   m_Children:
   - {fileID: 22485620}
   - {fileID: 22455074}
-  - {fileID: 22464142}
   - {fileID: 22465058}
   m_Father: {fileID: 22413948}
   m_RootOrder: 1
@@ -2466,7 +2466,7 @@ RectTransform:
   m_Children:
   - {fileID: 22434986}
   m_Father: {fileID: 22465058}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}

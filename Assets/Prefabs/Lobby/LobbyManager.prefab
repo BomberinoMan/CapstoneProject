@@ -432,7 +432,7 @@ MonoBehaviour:
   matchMaker: {fileID: 0}
   matchName: default
   matchSize: 4
-  m_ShowLobbyGUI: 1
+  m_ShowLobbyGUI: 0
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 0
@@ -445,8 +445,9 @@ MonoBehaviour:
   scoreScreenGui: {fileID: 0}
   lobbyGui: {fileID: 22493548}
   menuGui: {fileID: 22423882}
-  countdownGui: {fileID: 22413974}
-  countdownText: {fileID: 11424826}
+  infoGui: {fileID: 0}
+  infoText: {fileID: 0}
+  infoButton: {fileID: 0}
   countdownTime: 5
   scoreScreenTime: 5
   bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}

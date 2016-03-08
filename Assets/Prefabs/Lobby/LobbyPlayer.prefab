@@ -164,12 +164,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6783b0380570614488e2d7ab61c465a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowLobbyGUI: 1
+  ShowLobbyGUI: 0
   scoreScreenPlayer: {fileID: 119628, guid: 16af8ab1f6ce9b7479b74701be8884d5, type: 2}
   nameText: {fileID: 11476208}
   readyButton: {fileID: 11436954}
   removePlayerButton: {fileID: 11476336}
   readyText: 
+  username: 
 --- !u!114 &11431892
 MonoBehaviour:
   m_ObjectHideFlags: 1

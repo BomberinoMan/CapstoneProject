@@ -39,11 +39,12 @@ public class LaserInstantiator : NetworkBehaviour
         InstantiateInDirection(location, _down, paramaters);
         InstantiateInDirection(location, _left, paramaters);
         InstantiateInDirection(location, _right, paramaters);
-
-        NetworkServer.Destroy(gameObject);
     }
 
-
+	[Command]
+	private void CmdDestroyThis(GameObject thing){
+		NetworkServer.Destroy (thing);
+	}
 
     private void InstantiateInDirection(Vector2 location, Vector2 direction, BombParams paramaters)
     {
@@ -54,7 +55,7 @@ public class LaserInstantiator : NetworkBehaviour
         int numLasers = emptySpace.distance < paramaters.radius ? (int)emptySpace.distance : paramaters.radius;
 
         if ((emptySpace.transform.tag == "Destructible" || emptySpace.transform.tag == "Upgrade") && emptySpace.distance <= paramaters.radius)
-            NetworkServer.Destroy(emptySpace.transform.gameObject);
+			CmdDestroyThis(emptySpace.transform.gameObject);
 
         for (int i = 1; i <= numLasers; i++)
         {

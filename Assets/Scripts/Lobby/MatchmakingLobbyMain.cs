@@ -31,6 +31,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
         LobbyManager.instance.DisplayInfoPanel("Creating...", LobbyManager.instance.StopClientCallback);       //TODO stop client callback or stop host callback ?
 
         LobbyManager.instance.StartMatchMaker();
+		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.CreateMatch(roomName.text, maxPlayers, true, "", LobbyManager.instance.OnMatchCreate);
     }
 
@@ -38,6 +39,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
     {
         LobbyManager.instance.DisplayInfoPanel("Finding matches...", LobbyManager.instance.StopClientCallback);
         LobbyManager.instance.StartMatchMaker();
+		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.ListMatches(0, 99, "", OnMatchList);
     }
 

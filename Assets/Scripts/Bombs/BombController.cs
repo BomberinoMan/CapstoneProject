@@ -26,10 +26,17 @@ public class BombController : NetworkBehaviour
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
+	void OnDestroy(){
+		if(!_hasExploded)
+			parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
+	}
+
     void FixedUpdate()
     {
-        if (_startTime + paramaters.delayTime <= Time.time)
-            Explode();
+		if (_startTime + paramaters.delayTime <= Time.time) {
+			Explode ();
+		}
+         
 
         if (_isMoving)
         {
@@ -84,6 +91,7 @@ public class BombController : NetworkBehaviour
                 _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
                 gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
+				Destroy(gameObject);
             }
         }
         catch (MissingReferenceException)

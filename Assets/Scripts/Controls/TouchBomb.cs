@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using UnityEngine;
 
-public class TouchBomb : NetworkBehaviour, IPointerDownHandler
+public class TouchBomb : MonoBehaviour, IPointerDownHandler
 {
     private PlayerControllerComponent _player;
 

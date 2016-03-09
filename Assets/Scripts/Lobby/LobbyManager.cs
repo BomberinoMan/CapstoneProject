@@ -58,7 +58,6 @@ public class LobbyManager : NetworkLobbyManager
         _currentPanel = menuGui;
     }
 
-
     // **************GAME************** 
     public void PlayerDead(PlayerControllerComponent player)
     {

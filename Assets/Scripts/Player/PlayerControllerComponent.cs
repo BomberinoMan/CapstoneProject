@@ -184,7 +184,6 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         bomb.GetComponent<BombController>().SetupBomb(gameObject);
 		NetworkServer.Spawn (bomb);
-//      NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
         RpcSetupBomb(bomb, true);
     }
 
@@ -216,7 +215,6 @@ public class PlayerControllerComponent : NetworkBehaviour
 
             bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
             NetworkServer.Spawn(bomb);
-            //NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
             RpcSetupBomb(bomb, false);
         }
     }
@@ -227,6 +225,11 @@ public class PlayerControllerComponent : NetworkBehaviour
         NetworkServer.Destroy(upgrade);
     }
 
+	[Command]
+	private void CmdPlayerDead(){
+		LobbyManager.instance.PlayerDead (this);
+	}
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Upgrade")
@@ -236,8 +239,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         }
         else if (other.gameObject.tag == "Laser")
         {
-			if(isServer)
-            	LobbyManager.instance.PlayerDead(this);
+			CmdPlayerDead ();
         }
     }
 

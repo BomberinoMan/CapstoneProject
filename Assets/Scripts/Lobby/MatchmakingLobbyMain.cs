@@ -52,10 +52,12 @@ public class MatchmakingLobbyMain : MonoBehaviour
         if (response.matches.Count == 0)
         {
             matchListWarning.gameObject.SetActive(true);
+            listPanel.gameObject.SetActive(false);
         } 
         else
         {
             matchListWarning.gameObject.SetActive(false);
+            listPanel.gameObject.SetActive(true);
         }
 
         foreach (MatchDesc match in response.matches)

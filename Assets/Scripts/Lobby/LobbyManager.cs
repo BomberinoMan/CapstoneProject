@@ -98,7 +98,7 @@ public class LobbyManager : NetworkLobbyManager
             var info = _connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
 
 			if(info != null)
-				player.RpcAddPlayerToScoreList(player.username, info.score);
+				player.RpcAddPlayerToScoreList(player.GetUsername(), info.score);
         }
 
         while (remainingTime >= -1)

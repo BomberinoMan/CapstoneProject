@@ -34,8 +34,8 @@ public class LoginMenu : MonoBehaviour
         errorText.text = "";
 		passwordInputField.text = "";
 
-        if (LoginInformation.userName != null && LoginInformation.userName != "" && LoginInformation.loggedIn)
-            usernameInputField.text = LoginInformation.userName;
+        if (LoginInformation.username != null && LoginInformation.username != "" && LoginInformation.loggedIn)
+            usernameInputField.text = LoginInformation.username;
     }
 
     public void LoginButton_OnClick()
@@ -48,7 +48,7 @@ public class LoginMenu : MonoBehaviour
             errorText.text = response.errorMessage;
         else
         {
-            LoginInformation.userName = usernameInputField.text;
+            LoginInformation.username = usernameInputField.text;
             LoginInformation.guid = new System.Guid(response.userId);
             LoginInformation.loggedIn = true;
             MenuManager.instance.ChangePanel(MenuManager.instance.startupGui);
@@ -57,7 +57,7 @@ public class LoginMenu : MonoBehaviour
 
 	public void GuestButton_OnClick()
 	{
-		LoginInformation.userName = "Guest";
+		LoginInformation.username = "Guest";
 		LoginInformation.guid = Guid.Empty;
 		LoginInformation.loggedIn = true;
 

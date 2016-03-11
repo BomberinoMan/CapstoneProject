@@ -15,6 +15,8 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     public void OnEnable()
     {
+        ClearMatchList();
+
         createButton.onClick.RemoveAllListeners();
         createButton.onClick.AddListener(OnClickCreate);
 

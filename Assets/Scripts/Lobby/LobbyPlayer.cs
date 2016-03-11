@@ -11,10 +11,16 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public Button readyButton;
     public Button removePlayerButton;
 
-    [SyncVar(hook = "HookReadyChanged")]
-    public string readyText = "";
+    [SyncVar(hook = "OnReadyChanged")]
+    private string readyText;
     [SyncVar]
-    public string username;
+    private string username;
+
+    public LobbyPlayer()
+    {
+        readyText = "NOT READY";
+        username = LoginInformation.username;
+    }
 
     public override void OnClientEnterLobby()
     {
@@ -30,10 +36,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupLocalPlayer()
     {
-        CmdNameChanged(LoginInformation.userName);
-        
+        nameText.text = username;
         readyButton.interactable = true;
-        readyText = "NOT READY";
         readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
@@ -47,10 +51,11 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void SetupRemotePlayer()
     {
         if (isLocalPlayer)
+        {
             return;
+        }
 
         nameText.text = username;
-
         readyButton.interactable = false;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
@@ -168,9 +173,13 @@ public class LobbyPlayer : NetworkLobbyPlayer
         LobbyManager.instance.scoreScreenGui.gameObject.SetActive(false);
     }
 
-    public void HookReadyChanged(string text)
+    public void OnReadyChanged(string text)
     {
-        readyText = text;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
+    }
+
+    public string GetUsername()
+    {
+        return username;
     }
 }

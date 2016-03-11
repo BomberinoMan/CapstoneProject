@@ -41,7 +41,7 @@ public class StartupMenu : MonoBehaviour
 
     public void Back_OnClick()
     {
-        LoginInformation.userName = "";
+        LoginInformation.username = "";
         LoginInformation.guid = System.Guid.Empty;
         LoginInformation.loggedIn = false;
         MenuManager.instance.ChangePanel(MenuManager.instance.loginGui);

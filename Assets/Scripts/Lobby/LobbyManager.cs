@@ -23,6 +23,7 @@ public class LobbyManager : NetworkLobbyManager
     public RectTransform lobbyGui;
     public RectTransform menuGui;
     public RectTransform infoGui;
+    public RectTransform inGameMenu;
     public Text infoText;
     public Button infoButton;
     public float countdownTime = 5.0f;
@@ -204,6 +205,17 @@ public class LobbyManager : NetworkLobbyManager
             }
         }
     }
+
+    public void HideInGameMenu()
+    {
+        inGameMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowInGameMenu()
+    {
+        inGameMenu.gameObject.SetActive(true);
+    }
+
 
     // **************SERVER**************
     public override void OnLobbyStartServer()

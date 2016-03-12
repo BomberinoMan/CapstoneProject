@@ -40,6 +40,7 @@ public class LobbyManager : NetworkLobbyManager
     };
 
     private bool _sceneLoaded = false;
+	private bool _gameOver = false;
 
     public GameObject bombUpgrade;
     public GameObject laserUpgrade;
@@ -90,6 +91,10 @@ public class LobbyManager : NetworkLobbyManager
 
     private IEnumerator GameOver()
     {
+		if (_gameOver)
+			yield break;
+		
+		_gameOver = true;
         float remainingTime = scoreScreenTime;
 
         foreach (LobbyPlayer player in lobbySlots)
@@ -116,6 +121,7 @@ public class LobbyManager : NetworkLobbyManager
             player.RpcClearScoreList();
         }
 
+		_gameOver = false;
 		_sceneLoaded = false;
         LobbyManager.instance.SendReturnToLobby();
     }
@@ -220,7 +226,6 @@ public class LobbyManager : NetworkLobbyManager
     // **************SERVER**************
     public override void OnLobbyStartServer()
     {
-        base.OnLobbyStartServer();
         _connectedPlayerInfo.Clear();
     }
 
@@ -256,20 +261,10 @@ public class LobbyManager : NetworkLobbyManager
 
     public override void OnLobbyServerPlayersReady()
     {
+		Debug.Log ("OnLobbyServerPlayersReady");
         if (ArePlayersReady())
         {
             StartCoroutine(CountDownCoroutine());
-        }
-
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                if (!player.readyToBegin)
-                {
-                    return;
-                }
-            }
         }
     }
 
@@ -404,9 +399,11 @@ public class LobbyManager : NetworkLobbyManager
     public void AddPlayer(LobbyPlayer player)
     {
         // This is called whenever a player enters the lobby, including coming back from the previous game
-        // 		Do not add players when they have already connected previouslys
-		if (_connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).Count () == 0)
-				_connectedPlayerInfo.Add(new PlayerInfo() { slot = player.slot, isAlive = true, score = 0 });
+        // 		Do not add players when they have already connected previously
+		if (_connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).Count () == 0) {
+			Debug.Log ("Adding player, resetting score");
+			_connectedPlayerInfo.Add (new PlayerInfo () { slot = player.slot, isAlive = true, score = 0 });
+		}
     }
 
     public void RemovePlayer(LobbyPlayer player)

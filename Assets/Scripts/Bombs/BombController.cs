@@ -27,8 +27,9 @@ public class BombController : NetworkBehaviour
     }
 
 	void OnDestroy(){
-		if(!_hasExploded)
-			parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
+		if (!_hasExploded) {
+			parentPlayer.GetComponent<PlayerControllerComponent> ().currNumBombs++;
+		}
 	}
 
     void FixedUpdate()
@@ -36,7 +37,6 @@ public class BombController : NetworkBehaviour
 		if (_startTime + paramaters.delayTime <= Time.time) {
 			Explode ();
 		}
-         
 
         if (_isMoving)
         {
@@ -101,7 +101,7 @@ public class BombController : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D collisionInfo)
     {
-        if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().bombKick > 0)
+		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().bombKick > 0)
         {
             foreach (Collider2D bombCollider in gameObject.GetComponentsInChildren<Collider2D>())
                 if (Physics2D.GetIgnoreCollision(bombCollider, collisionInfo.gameObject.GetComponent<Collider2D>()))

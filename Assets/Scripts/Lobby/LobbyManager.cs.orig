@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
@@ -144,8 +144,14 @@ public class LobbyManager : NetworkLobbyManager
 
     // **************CLIENT**************
 	public override void OnLobbyClientExit(){
+<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
+        base.OnLobbyClientExit();
+		ChangePanel(menuGui);
+        HideInfoPanel();
+=======
 		ChangePanel (menuGui);
 		HideInfoPanel ();
+>>>>>>> Pushing changes to work at home
 	}
 
     public override void OnLobbyClientEnter()
@@ -154,11 +160,14 @@ public class LobbyManager : NetworkLobbyManager
 		HideInfoPanel ();
     }
 		
+<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
+=======
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         Debug.LogError("CLIENT ERROR" + errorCode);
     }
 
+>>>>>>> Pushing changes to work at home
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
 		if (SceneManager.GetActiveScene ().name == "Game")
@@ -186,9 +195,17 @@ public class LobbyManager : NetworkLobbyManager
 		_currentPanel = newPanel;
 	}
 
+<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
+    public void DisplayInfoAlert(string infoString, UnityAction onCancel)
+    {
+        infoText.text = infoString;
+        infoButton.onClick.RemoveAllListeners();
+        infoButton.onClick.AddListener(onCancel);
+=======
 	public void HideInfoPanel(){
 		infoGui.gameObject.SetActive (false);
 	}
+>>>>>>> Pushing changes to work at home
 
 	public void DisableAllPanels(){
 		scoreScreenGui.gameObject.SetActive (false);
@@ -198,6 +215,30 @@ public class LobbyManager : NetworkLobbyManager
 		inGameMenu.gameObject.SetActive (false);
 	}
 
+<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
+    public void DisplayInfoNotification(string infoString)
+    {
+        infoText.text = infoString;
+
+        LobbyManager.instance.infoButton.gameObject.SetActive(false);
+        LobbyManager.instance.infoGui.gameObject.SetActive(true);
+    }
+
+    public void HideInfoPanel()
+    {
+        infoGui.gameObject.SetActive(false);
+    }
+
+    // **************PLAYER LIST**************
+    public void AddPlayer(LobbyPlayer player)
+    {
+        // This is called whenever a player enters the lobby, including coming back from the previous game
+        // 		Do not add players when they have already connected previously
+		if (_connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).Count () == 0) {
+			_connectedPlayerInfo.Add (new PlayerInfo () { slot = player.slot, isAlive = true, score = 0 });
+		}
+    }
+=======
 	public void HideInGameMenu()
 	{
 		inGameMenu.gameObject.SetActive(false);
@@ -207,6 +248,7 @@ public class LobbyManager : NetworkLobbyManager
 	{
 		inGameMenu.gameObject.SetActive(true);
 	}
+>>>>>>> Pushing changes to work at home
 
     public void StopClientCallback()
     {

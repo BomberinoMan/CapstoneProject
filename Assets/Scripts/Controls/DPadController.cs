@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class DPadController : NetworkBehaviour
+public class DPadController : MonoBehaviour
 {
     public Vector2 currDirection;
 

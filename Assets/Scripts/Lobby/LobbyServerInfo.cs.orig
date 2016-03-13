@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
@@ -21,7 +21,11 @@ public class LobbyServerInfo : MonoBehaviour
 
     public void OnClickJoin(NetworkID networkId, NodeID nodeId)
     {
+<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
         LobbyManager.instance.DisplayInfoNotification("Joining...");
+=======
+		LobbyManager.instance.DisplayInfoPanel("Joining...", LobbyManager.instance.StopClientCallback);
+>>>>>>> Pushing changes to work at home
         LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);
     }
 }

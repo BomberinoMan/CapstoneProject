@@ -115,7 +115,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 440136}
   - 114: {fileID: 11404474}
-  - 114: {fileID: 11470396}
   m_Layer: 0
   m_Name: MatchmakingLobbyManager
   m_TagString: Untagged
@@ -526,6 +525,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &175468
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 461606}
+  - 114: {fileID: 11465208}
+  - 114: {fileID: 11436596}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &179754
 GameObject:
   m_ObjectHideFlags: 1
@@ -678,8 +694,21 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22447310}
+  - {fileID: 461606}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &461606
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175468}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 440136}
+  m_RootOrder: 1
 --- !u!114 &11400444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -764,7 +793,7 @@ MonoBehaviour:
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
   m_DontDestroyOnLoad: 1
-  m_RunInBackground: 1
+  m_RunInBackground: 0
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 1
@@ -839,6 +868,7 @@ MonoBehaviour:
   m_LobbyScene: MatchMakingLobby
   m_PlayScene: Game
   lobbySlots: []
+  gameManager: {fileID: 175468}
   scoreScreenGui: {fileID: 22458962}
   lobbyGui: {fileID: 22484374}
   menuGui: {fileID: 22413948}
@@ -847,20 +877,6 @@ MonoBehaviour:
   infoText: {fileID: 11486962}
   infoButton: {fileID: 11404188}
   countdownTime: 5
-  scoreScreenTime: 5
-  bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
-  laserUpgrade: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
-  kickUpgrade: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}
-  lineUpgrade: {fileID: 114058, guid: cff52736efd2f8342ae4c2e889500934, type: 2}
-  radioactiveUpgrade: {fileID: 111694, guid: 9920a51739a4ac848af1b142346cdda2, type: 2}
-  floor: {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
-  destructible: {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
-  indestructible: {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
-  playerAnimations:
-  - {fileID: 198336, guid: e0bdd4ddfaf624880aafbfec13ca8e9c, type: 2}
-  - {fileID: 130842, guid: db208dfe21da242fa81373f0e78cd98a, type: 2}
-  - {fileID: 134108, guid: e901fc60fe369453ba23daeacd596439, type: 2}
-  - {fileID: 153562, guid: 4df5ead72c1824716815928322d20f2c, type: 2}
 --- !u!114 &11404724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1129,6 +1145,31 @@ MonoBehaviour:
   resumeButton: {fileID: 11438156}
   scoreButton: {fileID: 11473568}
   quitButton: {fileID: 11476880}
+--- !u!114 &11436596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca30f9eb6ea49499497a6716c25a48ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreScreenTime: 5
+  playerAnimations:
+  - {fileID: 198336, guid: e0bdd4ddfaf624880aafbfec13ca8e9c, type: 2}
+  - {fileID: 130842, guid: db208dfe21da242fa81373f0e78cd98a, type: 2}
+  - {fileID: 134108, guid: e901fc60fe369453ba23daeacd596439, type: 2}
+  - {fileID: 153562, guid: 4df5ead72c1824716815928322d20f2c, type: 2}
+  bombUpgrade: {fileID: 176696, guid: 19add9627aeba6545adf9276e6402f1d, type: 2}
+  laserUpgrade: {fileID: 168288, guid: 3502be1c52d67ac40ad02554f394caa3, type: 2}
+  kickUpgrade: {fileID: 147488, guid: 861f9be1cf137bc4ba03423afd75e1be, type: 2}
+  lineUpgrade: {fileID: 114058, guid: cff52736efd2f8342ae4c2e889500934, type: 2}
+  radioactiveUpgrade: {fileID: 111694, guid: 9920a51739a4ac848af1b142346cdda2, type: 2}
+  floor: {fileID: 142690, guid: e4856c8a0a65c774d8329f33dab27c94, type: 2}
+  destructible: {fileID: 153416, guid: af8e796c012e1b0458cb9480eccf207f, type: 2}
+  indestructible: {fileID: 120266, guid: 115ca9acc05870d47a270d50beb2ed86, type: 2}
 --- !u!114 &11438156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1593,8 +1634,8 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0
+  m_ChildAlignment: 4
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
 --- !u!114 &11456082
@@ -1720,6 +1761,38 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &11465208
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 116
+    i1: 188
+    i2: 60
+    i3: 25
+    i4: 133
+    i5: 238
+    i6: 48
+    i7: 84
+    i8: 26
+    i9: 193
+    i10: 132
+    i11: 12
+    i12: 159
+    i13: 172
+    i14: 28
+    i15: 247
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &11465526
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1887,21 +1960,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Create a Match
---- !u!114 &11470396
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 121424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 227461547, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  showGUI: 0
-  offsetX: 0
-  offsetY: 0
 --- !u!114 &11471874
 MonoBehaviour:
   m_ObjectHideFlags: 1

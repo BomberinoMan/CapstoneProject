@@ -55,7 +55,8 @@ public class LaserInstantiator : NetworkBehaviour
         int numLasers = emptySpace.distance < paramaters.radius ? (int)emptySpace.distance : paramaters.radius;
 
         if ((emptySpace.transform.tag == "Destructible" || emptySpace.transform.tag == "Upgrade") && emptySpace.distance <= paramaters.radius)
-			CmdDestroyThis(emptySpace.transform.gameObject);
+			if(isServer)
+				CmdDestroyThis(emptySpace.transform.gameObject);
 
         for (int i = 1; i <= numLasers; i++)
         {

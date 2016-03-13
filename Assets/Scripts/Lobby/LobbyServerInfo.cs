@@ -21,7 +21,7 @@ public class LobbyServerInfo : MonoBehaviour
 
     public void OnClickJoin(NetworkID networkId)
     {
-        LobbyManager.instance.DisplayInfoPanel("Joining...", LobbyManager.instance.StopClientCallback);
+		LobbyManager.instance.DisplayInfoPanel("Joining...", LobbyManager.instance.StopClientCallback);
         LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);
     }
 }

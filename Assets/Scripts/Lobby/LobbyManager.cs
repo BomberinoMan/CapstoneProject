@@ -10,225 +10,36 @@ using UnityEngine.Events;
 
 public class LobbyManager : NetworkLobbyManager
 {
-    public class PlayerInfo
-    {
-        public int slot;
-        public bool isAlive;
-        public int score;
-    }
+	public GameObject gameManager;
 
+	public RectTransform scoreScreenGui;
+	public RectTransform lobbyGui;
+	public RectTransform menuGui;
+	public RectTransform infoGui;
+	public RectTransform inGameMenu;
+	public Text infoText;
+	public Button infoButton;
+	public float countdownTime = 5.0f;
     public static LobbyManager instance;
 
-    public RectTransform scoreScreenGui;
-    public RectTransform lobbyGui;
-    public RectTransform menuGui;
-    public RectTransform infoGui;
-    public RectTransform inGameMenu;
-    public Text infoText;
-    public Button infoButton;
-    public float countdownTime = 5.0f;
-    public float scoreScreenTime = 5.0f;
-
-    private static List<PlayerInfo> _connectedPlayerInfo = new List<PlayerInfo>();
-    private RectTransform _currentPanel;
-    private Vector3[] _playerSpawnVectors = new Vector3[4]
-    {
-        new Vector3(1.0f, 11.0f, 0.0f),
-        new Vector3(13.0f, 1.0f, 0.0f),
-        new Vector3(13.0f, 11.0f, 0.0f),
-        new Vector3(1.0f, 1.0f, 0.0f)
-    };
-
+	private RectTransform _currentPanel;
     private bool _sceneLoaded = false;
-	private bool _gameOver = false;
-
-    public GameObject bombUpgrade;
-    public GameObject laserUpgrade;
-    public GameObject kickUpgrade;
-    public GameObject lineUpgrade;
-    public GameObject radioactiveUpgrade;
-
-    public GameObject floor;
-    public GameObject destructible;
-    public GameObject indestructible;
-    public GameObject[] playerAnimations;
-    private BoardCreator _boardCreator;
 
     void Start()
-    {
+	{
         instance = this;
-        _currentPanel = menuGui;
+
+		// Activate needed objects to play the game
+		gameManager.SetActive (true);
+		ChangePanel (menuGui);
     }
 
-    // **************GAME************** 
-    public void PlayerDead(PlayerControllerComponent player)
-    {
-        SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
-        SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
-        SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
-        SpawnUpgradeInRandomLocation(UpgradeType.Line, player.bombLine);
-
-        _connectedPlayerInfo[player.slot].isAlive = false;
-
-        Invoke("CheckIfGameOver", 2);
-
-        NetworkServer.Destroy(player.gameObject);
-    }
-
-    private void CheckIfGameOver()
-    {
-        if (_connectedPlayerInfo.Where(x => x.isAlive).Count() == 1)
-        {
-            _connectedPlayerInfo.Where(x => x.isAlive).First().score++;
-            _connectedPlayerInfo.Where(x => x.isAlive).First().isAlive = false;
-        }
-
-        if (_connectedPlayerInfo.Where(x => x.isAlive).Count() == 0)
-        {
-            StartCoroutine(GameOver());
-        }
-    }
-
-    private IEnumerator GameOver()
-    {
-		if (_gameOver)
-			yield break;
-		
-		_gameOver = true;
-        float remainingTime = scoreScreenTime;
-
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player == null)
-                continue;
-            var info = _connectedPlayerInfo.Where(x => x != null && x.slot == player.slot).FirstOrDefault();
-
-			if(info != null)
-				player.RpcAddPlayerToScoreList(player.GetUsername(), info.score);
-        }
-
-        while (remainingTime >= -1)
-        {
-            yield return null;
-            remainingTime -= Time.deltaTime;
-        }
-
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player == null)
-                continue;
-
-            player.RpcClearScoreList();
-        }
-
-		_gameOver = false;
+	public void GameIsOver(){
 		_sceneLoaded = false;
-        LobbyManager.instance.SendReturnToLobby();
-    }
-
-    private void SpawnBoard()
-    {
-        _boardCreator = new BoardCreator();
-        _boardCreator.InitializeDestructible();
-
-        //Initialize spawn for all connected players
-        lobbySlots.Where(p => p != null).ToList()
-            .ForEach(p => _boardCreator.InitializeSpawn(_playerSpawnVectors[(int)p.slot]));
-
-        //Initialize all upgrades
-        _boardCreator.InitializeUpgrades();
-        //Get the generated tiles in the board
-        var board = _boardCreator.GetBoard();
-
-        //Spawn all objects in the board
-        foreach (var tile in board.tiles)
-        {
-            if (tile.isIndestructible)
-            {
-                NetworkServer.Spawn(Instantiate(indestructible, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-                continue;
-            }
-
-            NetworkServer.Spawn(Instantiate(floor, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-
-            if (tile.isDestructible)
-                NetworkServer.Spawn(Instantiate(destructible, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-
-            if (tile.isUpgrade)
-                switch (tile.upgradeType)
-                {
-                    case (UpgradeType.Bomb):
-                        NetworkServer.Spawn(Instantiate(bombUpgrade, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-                        break;
-                    case (UpgradeType.Kick):
-                        NetworkServer.Spawn(Instantiate(kickUpgrade, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-                        break;
-                    case (UpgradeType.Laser):
-                        NetworkServer.Spawn(Instantiate(laserUpgrade, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-                        break;
-                    case (UpgradeType.Line):
-                        NetworkServer.Spawn(Instantiate(lineUpgrade, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-                        break;
-                    case (UpgradeType.Radioactive):
-                        NetworkServer.Spawn(Instantiate(radioactiveUpgrade, new Vector3(tile.x, tile.y, 0.0f), Quaternion.identity) as GameObject);
-                        break;
-                    default: 
-						// Do nothing
-                        break;
-                }
-        }
-    }
-
-    private void SpawnUpgradeInRandomLocation(UpgradeType upgradeType, int num = 0)
-    {
-        for (int i = 0; i < num; i++)
-        {
-            Vector2 location = new Vector2();
-
-            do
-            {
-				// Spawnable locations on the board
-                location.x = UnityEngine.Random.Range(1, 13);   
-                location.y = UnityEngine.Random.Range(1, 11);
-            } while (Physics2D.RaycastAll(location, new Vector2(1.0f, 1.0f), 0.2f).Length != 0);
-
-            switch (upgradeType)
-            {
-                case (UpgradeType.Bomb):
-                    NetworkServer.Spawn(Instantiate(bombUpgrade, location, Quaternion.identity) as GameObject);
-                    break;
-                case (UpgradeType.Kick):
-                    NetworkServer.Spawn(Instantiate(kickUpgrade, location, Quaternion.identity) as GameObject);
-                    break;
-                case (UpgradeType.Laser):
-                    NetworkServer.Spawn(Instantiate(laserUpgrade, location, Quaternion.identity) as GameObject);
-                    break;
-                case (UpgradeType.Line):
-                    NetworkServer.Spawn(Instantiate(lineUpgrade, location, Quaternion.identity) as GameObject);
-                    break;
-                default: // Do nothing
-                    break;
-            }
-        }
-    }
-
-    public void HideInGameMenu()
-    {
-        inGameMenu.gameObject.SetActive(false);
-    }
-
-    public void ShowInGameMenu()
-    {
-        inGameMenu.gameObject.SetActive(true);
-    }
-
+		ServerReturnToLobby ();
+	}
 
     // **************SERVER**************
-    public override void OnLobbyStartServer()
-    {
-        _connectedPlayerInfo.Clear();
-    }
-
     public override void OnLobbyStopHost()
     {
         base.OnLobbyStopHost();
@@ -244,7 +55,7 @@ public class LobbyManager : NetworkLobbyManager
         var i = lobbySlots.Where(x => x != null && x.connectionToClient.connectionId == networkConnection.connectionId && x.playerControllerId == playerControllerId).First().slot;
         
 		GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
-        newPlayer.transform.position = _playerSpawnVectors[i];
+		newPlayer.transform.position = GameManager.instance.playerSpawnVectors[i];
         newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
 
 		NetworkServer.Spawn(newPlayer);
@@ -254,14 +65,13 @@ public class LobbyManager : NetworkLobbyManager
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
     {
         if (!_sceneLoaded)
-            SpawnBoard();
+			GameManager.instance.SpawnBoard();
         _sceneLoaded = true;
         return true;
     }
 
     public override void OnLobbyServerPlayersReady()
     {
-		Debug.Log ("OnLobbyServerPlayersReady");
         if (ArePlayersReady())
         {
             StartCoroutine(CountDownCoroutine());
@@ -272,7 +82,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         float remainingTime = countdownTime + 1;
         int floorTime = Mathf.FloorToInt(remainingTime);
-        int playerCount = _connectedPlayerInfo.Count;
+		int playerCount = lobbySlots.Where(x => x != null).Count();
 
         while (remainingTime >= 0)
         {
@@ -281,7 +91,7 @@ public class LobbyManager : NetworkLobbyManager
             remainingTime -= Time.deltaTime;
             int newFloorTime = Mathf.FloorToInt(remainingTime);
 
-            if (!ArePlayersReady() || playerCount != _connectedPlayerInfo.Count)
+			if (!ArePlayersReady() || playerCount != lobbySlots.Where(x => x != null).Count())
             {
                 foreach (LobbyPlayer player in lobbySlots)
                 {
@@ -332,82 +142,75 @@ public class LobbyManager : NetworkLobbyManager
 
     // **************CLIENT**************
 	public override void OnLobbyClientExit(){
-        base.OnLobbyClientExit();
-		ChangePanel(menuGui);
-        infoGui.gameObject.SetActive(false);
+		ChangePanel (menuGui);
+		HideInfoPanel ();
 	}
 
     public override void OnLobbyClientEnter()
     {
-        base.OnLobbyClientEnter();
-        HideInfoPanel();
-        ChangePanel(lobbyGui);
+		ChangePanel (lobbyGui);
+		HideInfoPanel ();
     }
 		
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
-        base.OnClientError(conn, errorCode);
         Debug.LogError("CLIENT ERROR" + errorCode);
     }
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
-        base.OnLobbyClientSceneChanged(conn);
 		if (SceneManager.GetActiveScene ().name == "Game")
-			_currentPanel.gameObject.SetActive (false);
+			DisableAllPanels ();
+		//TODO need to enable lobby gui here too?
     }
+
+	// **************GUI**************
+	public void DisplayInfoPanel(string message, UnityAction onCancel){
+		infoText.text = message;
+		infoButton.onClick.RemoveAllListeners();
+		infoButton.onClick.AddListener(onCancel);
+
+		infoButton.gameObject.SetActive(true);
+		infoGui.gameObject.SetActive(true);
+	}
+
+	public void ChangePanel(RectTransform newPanel){
+		if (_currentPanel != null)
+			newPanel.gameObject.SetActive (false);
+		
+		if (newPanel != null)
+			newPanel.gameObject.SetActive (true);
+
+		_currentPanel = newPanel;
+	}
+
+	public void HideInfoPanel(){
+		infoGui.gameObject.SetActive (false);
+	}
+
+	public void DisableAllPanels(){
+		scoreScreenGui.gameObject.SetActive (false);
+		lobbyGui.gameObject.SetActive (false);
+		menuGui.gameObject.SetActive (false);
+		infoGui.gameObject.SetActive (false);
+		inGameMenu.gameObject.SetActive (false);
+	}
+
+	public void HideInGameMenu()
+	{
+		inGameMenu.gameObject.SetActive(false);
+	}
+
+	public void ShowInGameMenu()
+	{
+		inGameMenu.gameObject.SetActive(true);
+	}
 
     public void StopClientCallback()
     {
         StopClient();
         StopMatchMaker();
-        ChangePanel(menuGui);
-    }
-
-    // **************GUI**************
-    public void ChangePanel(RectTransform newPanel)
-    {
-        if (_currentPanel != null)
-        {
-            _currentPanel.gameObject.SetActive(false);
-        }
-
-        if (newPanel != null)
-        {
-            newPanel.gameObject.SetActive(true);
-        }
-
-        _currentPanel = newPanel;
-    }
-
-    public void DisplayInfoPanel(string infoString, UnityAction onCancel)
-    {
-        infoText.text = infoString;
-        infoButton.onClick.RemoveAllListeners();
-        infoButton.onClick.AddListener(onCancel);
-
-        LobbyManager.instance.infoButton.gameObject.SetActive(true);
-        LobbyManager.instance.infoGui.gameObject.SetActive(true);
-    }
-
-    public void HideInfoPanel()
-    {
-        infoGui.gameObject.SetActive(false);
-    }
-
-    // **************PLAYER LIST**************
-    public void AddPlayer(LobbyPlayer player)
-    {
-        // This is called whenever a player enters the lobby, including coming back from the previous game
-        // 		Do not add players when they have already connected previously
-		if (_connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).Count () == 0) {
-			Debug.Log ("Adding player, resetting score");
-			_connectedPlayerInfo.Add (new PlayerInfo () { slot = player.slot, isAlive = true, score = 0 });
-		}
-    }
-
-    public void RemovePlayer(LobbyPlayer player)
-    {
-        _connectedPlayerInfo.Remove(_connectedPlayerInfo.Where(x => x.slot == player.slot).FirstOrDefault());
+		ChangePanel (menuGui);
+		HideInfoPanel ();
     }
 }

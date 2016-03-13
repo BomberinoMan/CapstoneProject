@@ -15,6 +15,10 @@ public class LobbyPlayer : NetworkLobbyPlayer
     private string readyText;
     [SyncVar]
     private string username;
+	[SyncVar]
+	public int score;
+	[SyncVar]
+	public bool isAlive;
 
     public LobbyPlayer()
     {
@@ -24,7 +28,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public override void OnClientEnterLobby()
     {
-        LobbyManager.instance.AddPlayer(this);
         LobbyPlayerList.instance.AddPlayer(this);
         SetupRemotePlayer();
     }
@@ -109,12 +112,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         Debug.Log("MATCH DESTROYED: " + response.ToString());
     }
-
-    public void OnDestroy()
-    {
-        LobbyManager.instance.RemovePlayer(this);
-    }
-
+		
     [Command]
     public void CmdNameChanged(string name)
     {
@@ -133,44 +131,44 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         removePlayerButton.interactable = true;
         readyButton.interactable = true;
-        LobbyManager.instance.infoGui.gameObject.SetActive(false);
+		LobbyManager.instance.HideInfoPanel ();
     }
 
     [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
-        LobbyManager.instance.infoGui.gameObject.SetActive(true);
-        LobbyManager.instance.infoButton.gameObject.SetActive(false);
+		LobbyManager.instance.infoGui.gameObject.SetActive(true);
+		LobbyManager.instance.infoButton.gameObject.SetActive(false);
         removePlayerButton.interactable = false;
         readyButton.interactable = false;
 
-        LobbyManager.instance.infoText.text = "Match Starting in " + (count);
+		LobbyManager.instance.infoText.text = "Match Starting in " + (count);
 
         if (count <= -1)
         {
-            LobbyManager.instance.infoGui.gameObject.SetActive(false);
+			LobbyManager.instance.HideInfoPanel ();
         }
     }
 
-    [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
+    [ClientRpc]
     public void RpcAddPlayerToScoreList(string playerName, int playerScore)
     {
-        LobbyManager.instance.scoreScreenGui.gameObject.SetActive(true);
+		LobbyManager.instance.ChangePanel (LobbyManager.instance.scoreScreenGui);
 
         var playerRow = Instantiate(scoreScreenPlayer);
         playerRow.GetComponentInChildren<ScoreScreenPlayerName>().SetPlayerName(playerName);
         playerRow.GetComponentInChildren<ScoreScreenPlayerScore>().SetPlayerScore(playerScore);
 
-        playerRow.transform.SetParent(LobbyManager.instance.scoreScreenGui.transform);
+		playerRow.transform.SetParent(LobbyManager.instance.scoreScreenGui.transform);
     }
 
     [ClientRpc]             // Need to send them in two lists because of the limitations of RPC calls
     public void RpcClearScoreList()
     {
-        for (int i = 0; i < LobbyManager.instance.scoreScreenGui.childCount; i++)
-            Destroy(LobbyManager.instance.scoreScreenGui.GetChild(i).gameObject);
+		for (int i = 0; i < LobbyManager.instance.scoreScreenGui.childCount; i++)
+			Destroy(LobbyManager.instance.scoreScreenGui.GetChild(i).gameObject);
 
-        LobbyManager.instance.scoreScreenGui.gameObject.SetActive(false);
+		LobbyManager.instance.scoreScreenGui.gameObject.SetActive (false);
     }
 
     public void OnReadyChanged(string text)

@@ -30,7 +30,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
     public void OnClickCreate()
     {
         var maxPlayers = (uint)LobbyManager.instance.maxPlayers;
-        LobbyManager.instance.DisplayInfoPanel("Creating...", LobbyManager.instance.StopClientCallback);       //TODO stop client callback or stop host callback ?
+		LobbyManager.instance.DisplayInfoPanel("Creating...", LobbyManager.instance.StopClientCallback);       //TODO stop client callback or stop host callback ?
 
         LobbyManager.instance.StartMatchMaker();
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
@@ -39,7 +39,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     public void OnClickFind()
     {
-        LobbyManager.instance.DisplayInfoPanel("Finding matches...", LobbyManager.instance.StopClientCallback);
+		LobbyManager.instance.DisplayInfoPanel("Finding matches...", LobbyManager.instance.StopClientCallback);
         LobbyManager.instance.StartMatchMaker();
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.ListMatches(0, 99, "", OnMatchList);
@@ -48,7 +48,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
     private void OnMatchList(ListMatchResponse response)
     {
         Debug.Log("MATCH COUNT: " + response.matches.Count);
-        LobbyManager.instance.HideInfoPanel();
+		LobbyManager.instance.HideInfoPanel ();
         ClearMatchList();
 
         if (response.matches.Count == 0)

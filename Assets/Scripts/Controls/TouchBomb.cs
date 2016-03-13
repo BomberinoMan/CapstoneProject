@@ -8,11 +8,18 @@ public class TouchBomb : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _player.TouchLayBomb();
+		Debug.Log ("Touch");
+		if (_player != null)
+	        _player.TouchLayBomb();
     }
 
     public void SetPlayerController(PlayerControllerComponent playerController)
     {
         _player = playerController;
     }
+
+	public void Update(){
+		if (Input.GetKeyDown (KeyCode.Space) && _player != null)
+			_player.TouchLayBomb ();
+	}
 }

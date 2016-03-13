@@ -14,8 +14,8 @@ public class PlayerControllerComponent : NetworkBehaviour
     private bool _bombBlock = false;
     private bool _animatorSetup = false;
 
+	public DPadController dPad;
     public GameObject bombObject;
-    public DPadController dPad;
     private Rigidbody2D _rb;
     private Transform _transform;
 
@@ -29,7 +29,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
         base.OnStartClient();
 
-        GameObject animator = Instantiate(LobbyManager.instance.playerAnimations[slot]) as GameObject;
+		GameObject animator = Instantiate(GameManager.instance.playerAnimations[slot]) as GameObject;
         animator.transform.SetParent(gameObject.transform);
         // Changing the parent also changes the localPosition, need to reset it
         animator.transform.localPosition = Vector3.zero;
@@ -37,9 +37,14 @@ public class PlayerControllerComponent : NetworkBehaviour
         // To sync animations, we need to assign the NetworkAnimator to the new child animator
         //          The animator on this (parent) object will be disabled
         GetComponent<NetworkAnimator>().animator = GetComponentsInChildren<Animator>().Where(x => x.enabled).First();
-
         _animatorSetup = true;
     }
+
+	public override void OnStartLocalPlayer(){
+		// Get the touch input from the UI
+		dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
+		GameObject.Find ("BombArea").GetComponent<TouchBomb> ().SetPlayerController (this);
+	}
 
     public void Start()
     {
@@ -48,18 +53,11 @@ public class PlayerControllerComponent : NetworkBehaviour
         _playerController = new DefaultPlayerControllerModifier();
         _rb = GetComponent<Rigidbody2D>();
         _transform = GetComponent<Transform>();
-
-		if (isLocalPlayer) 
-		{
-			// Get the touch input from the UI
-			dPad = GameObject.Find("DPadArea").GetComponent<DPadController>();
-			GameObject.Find("BombArea").GetComponent<TouchBomb>().SetPlayerController(this);
-		}
     }
 
-    public void TouchLayBomb()
+	public void TouchLayBomb()
     {
-        if (!isLocalPlayer)
+		if (!isLocalPlayer)
             return;
 
         if (_playerController.canLayBombs && _playerController.currNumBombs > 0)
@@ -83,37 +81,10 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
 		FlipFlopColor();
 
+
+
         if (!isLocalPlayer)
             return;
-
-        /*
-        var touch = Input.touches.Where(x => x.position.x <= 300 && x.position.y <= 300).FirstOrDefault();
-
-        Vector2 direction;
-
-        if (touch.position.x == 0.0 && touch.position.y == 0.0)
-            direction = new Vector2(0.0f, 0.0f);
-        else if (Math.Abs(touch.deltaPosition.x) >= 2.0 || Math.Abs(touch.deltaPosition.y) >= 2.0)
-            if (Math.Abs(touch.deltaPosition.x) > Math.Abs(touch.deltaPosition.y))
-            {
-                direction.x = Math.Abs(touch.deltaPosition.x) / touch.deltaPosition.x;
-                direction.y = 0.0f;
-            }
-            else
-            {
-                direction.x = 0.0f;
-                direction.y = Math.Abs(touch.deltaPosition.y) / touch.deltaPosition.y;
-            }
-        else
-            direction = prevDirection;
-
-        prevDirection = direction;
-        */
-
-        //float hor = Input.GetAxisRaw("Horizontal");
-        //float ver = Input.GetAxisRaw("Vertical");
-        //float hor = direction.x;
-        //float ver = direction.y;
 
         float hor = dPad.currDirection.x;
         float ver = dPad.currDirection.y;
@@ -181,8 +152,8 @@ public class PlayerControllerComponent : NetworkBehaviour
                 0.0f),
             Quaternion.identity)
             as GameObject;
-
-        bomb.GetComponent<BombController>().SetupBomb(gameObject);
+		
+		bomb.GetComponent<BombController>().SetupBomb(gameObject);
 		NetworkServer.Spawn (bomb);
         RpcSetupBomb(bomb, true);
     }
@@ -220,27 +191,23 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [Command]
-    private void CmdPickedUpUpgrade(GameObject upgrade)
+    private void CmdDestroyGameObject(GameObject upgrade)
     {
         NetworkServer.Destroy(upgrade);
     }
 
-	[Command]
-	private void CmdPlayerDead(){
-		LobbyManager.instance.PlayerDead (this);
-	}
-
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Upgrade")
-        {
-            UpgradeFactory.GetUpgrade(other.gameObject.GetComponent<UpgradeTypeComponent>().type).ApplyEffect(gameObject);
-            CmdPickedUpUpgrade(other.gameObject);
-        }
-        else if (other.gameObject.tag == "Laser")
-        {
-			CmdPlayerDead ();
-        }
+		if (other.gameObject.tag == "Upgrade") {
+			//TODO sync effects of radioactive upgrades. Need to go to server to get the type, then apply the effect with RPC call
+			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
+			if (isServer)
+				CmdDestroyGameObject (other.gameObject);
+		} else if (other.gameObject.tag == "Laser") {
+			GameManager.instance.PlayerDead (this);
+		} else if (other.gameObject.tag == "BombBlock") {
+			_bombBlock = true;
+		}	
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -265,7 +232,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         _playerController = newModifier;
     }
 
-    private void FlipFlopColor()
+    private void FlipFlopColor() // TODO sync color swap
     {
         if (!_animatorSetup)
             return;

@@ -9,17 +9,24 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public GameObject scoreScreenPlayer;
     public Text nameText;
     public Button readyButton;
-    public Button removePlayerButton;
+    public Button leaveButton;
+
+    public long nodeId;
 
     [SyncVar(hook = "OnReadyChanged")]
     private string readyText;
     [SyncVar(hook = "OnNameChanged")]
     private string username;
 
+    public void OnEnable()
+    {
+        leaveButton = LobbyRoom.instance.leaveButton;
+    }
+
     public override void OnClientEnterLobby()
     {
         LobbyManager.instance.AddPlayer(this);
-        LobbyPlayerList.instance.AddPlayer(this);
+        LobbyRoom.instance.AddPlayer(this);
         SetupRemotePlayer();
     }
 
@@ -32,14 +39,17 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         CmdNameChanged(LoginInformation.username);
         CmdReadyChanged("NOT READY");
+
+        nodeId = (long)LobbyManager.instance.matchInfo.nodeId;
+
         readyButton.interactable = true;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
 
-        removePlayerButton.interactable = true;
-        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
-        removePlayerButton.onClick.RemoveAllListeners();
-        removePlayerButton.onClick.AddListener(OnRemovePlayerClick);
+        leaveButton.interactable = true;
+        leaveButton.transform.GetChild(0).GetComponent<Text>().text = "Leave Room";
+        leaveButton.onClick.RemoveAllListeners();
+        leaveButton.onClick.AddListener(OnClickLeave);
     }
 
     public void SetupRemotePlayer()
@@ -52,19 +62,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
         nameText.text = username;
         readyButton.interactable = false;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
-        removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
-
-        if (isServer)
-        {
-            removePlayerButton.interactable = true;
-            removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "KICK";
-            removePlayerButton.onClick.RemoveAllListeners();
-            removePlayerButton.onClick.AddListener(OnRemovePlayerClick);
-        }
-        else
-        {
-            removePlayerButton.interactable = false;
-        }
     }
 
     public void OnReadyClick()
@@ -81,10 +78,10 @@ public class LobbyPlayer : NetworkLobbyPlayer
         }
     }
 
-    public void OnRemovePlayerClick()
+    public void OnClickLeave()
     {
         LobbyManager.instance.DisplayInfoNotification("Quitting...");
-        if (isServer && isLocalPlayer)
+        if (isServer)
         {
             var id = LobbyManager.instance.matchInfo.networkId;
             LobbyManager.instance.matchMaker.DestroyMatch(id, OnMatchDestroyed);
@@ -124,7 +121,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     public void RpcCancelCountdown()
     {
-        removePlayerButton.interactable = true;
+        leaveButton.interactable = true;
         readyButton.interactable = true;
         LobbyManager.instance.infoGui.gameObject.SetActive(false);
     }
@@ -134,7 +131,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         LobbyManager.instance.infoGui.gameObject.SetActive(true);
         LobbyManager.instance.infoButton.gameObject.SetActive(false);
-        removePlayerButton.interactable = false;
+        leaveButton.interactable = false;
         readyButton.interactable = false;
 
         LobbyManager.instance.infoText.text = "Match Starting in " + (count);

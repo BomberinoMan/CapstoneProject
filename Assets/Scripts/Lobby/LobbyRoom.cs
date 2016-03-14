@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
-public class LobbyPlayerList : MonoBehaviour
+public class LobbyRoom : MonoBehaviour
 {
-    public static LobbyPlayerList instance = null;
+    public static LobbyRoom instance = null;
     public RectTransform playerListContentTransform;
+    public Button leaveButton;
 
     public void OnEnable()
     {

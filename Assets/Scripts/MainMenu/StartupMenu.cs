@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class StartupMenu : MonoBehaviour
 {
     public Button rankedButton;
-    public Button unrankedButton;
     public Button settingsButton;
     public Button backButton;
 
@@ -13,9 +12,6 @@ public class StartupMenu : MonoBehaviour
     {
         rankedButton.onClick.RemoveAllListeners();
         rankedButton.onClick.AddListener(Ranked_OnClick);
-
-        unrankedButton.onClick.RemoveAllListeners();
-        unrankedButton.onClick.AddListener(Unranked_OnClick);
 
         settingsButton.onClick.RemoveAllListeners();
         settingsButton.onClick.AddListener(Settings_OnClick);
@@ -27,11 +23,6 @@ public class StartupMenu : MonoBehaviour
     public void Ranked_OnClick()
     {
         SceneManager.LoadScene("MatchMakingLobby");
-    }
-
-    public void Unranked_OnClick()
-    {
-        SceneManager.LoadScene("LanLobby");
     }
 
     public void Settings_OnClick()

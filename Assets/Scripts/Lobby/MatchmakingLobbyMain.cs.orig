@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking.Match;
+using UnityEngine.Networking;
 
 public class MatchmakingLobbyMain : MonoBehaviour
 {
@@ -31,24 +32,22 @@ public class MatchmakingLobbyMain : MonoBehaviour
     public void OnClickCreate()
     {
         var maxPlayers = (uint)LobbyManager.instance.maxPlayers;
-<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
         LobbyManager.instance.DisplayInfoNotification("Creating...");       //TODO stop client callback or stop host callback ?
-=======
-		LobbyManager.instance.DisplayInfoPanel("Creating...", LobbyManager.instance.StopClientCallback);       //TODO stop client callback or stop host callback ?
->>>>>>> Pushing changes to work at home
 
         LobbyManager.instance.StartMatchMaker();
+        NetworkManager.singleton.maxDelay = 0.2f;
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.CreateMatch(roomName.text, maxPlayers, true, "", LobbyManager.instance.OnMatchCreate);
     }
 
     public void OnClickFind()
     {
-<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
+<<<<<<< HEAD
         LobbyManager.instance.DisplayInfoNotification("Finding matches...");
 =======
 		LobbyManager.instance.DisplayInfoPanel("Finding matches...", LobbyManager.instance.StopClientCallback);
->>>>>>> Pushing changes to work at home
+        NetworkManager.singleton.maxDelay = 0.2f;
+>>>>>>> Finishing up change to lobby manager, fixed bug with returning to lobby
         LobbyManager.instance.StartMatchMaker();
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.ListMatches(0, 99, "", OnMatchList);
@@ -56,12 +55,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     private void OnMatchList(ListMatchResponse response)
     {
-<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
         LobbyManager.instance.HideInfoPanel();
-=======
-        Debug.Log("MATCH COUNT: " + response.matches.Count);
-		LobbyManager.instance.HideInfoPanel ();
->>>>>>> Pushing changes to work at home
         ClearMatchList();
 
         if (response.matches.Count == 0)

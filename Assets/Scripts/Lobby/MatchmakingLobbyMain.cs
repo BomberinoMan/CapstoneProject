@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking.Match;
+using UnityEngine.Networking;
 
 public class MatchmakingLobbyMain : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
         LobbyManager.instance.DisplayInfoNotification("Creating...");       //TODO stop client callback or stop host callback ?
 
         LobbyManager.instance.StartMatchMaker();
+        NetworkManager.singleton.maxDelay = 0.2f;
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.CreateMatch(roomName.text, maxPlayers, true, "", LobbyManager.instance.OnMatchCreate);
     }

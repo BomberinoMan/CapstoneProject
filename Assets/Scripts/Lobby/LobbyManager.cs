@@ -178,7 +178,7 @@ public class LobbyManager : NetworkLobbyManager
 
 	public void ChangePanel(RectTransform newPanel){
 		if (_currentPanel != null)
-			newPanel.gameObject.SetActive (false);
+            _currentPanel.gameObject.SetActive (false);
 		
 		if (newPanel != null)
 			newPanel.gameObject.SetActive (true);

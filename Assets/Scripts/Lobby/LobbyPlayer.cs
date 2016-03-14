@@ -13,14 +13,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     [SyncVar(hook = "OnReadyChanged")]
     private string readyText;
-    [SyncVar]
+    [SyncVar(hook = "OnNameChanged")]
     private string username;
-
-    public LobbyPlayer()
-    {
-        readyText = "NOT READY";
-        username = LoginInformation.username;
-    }
 
     public override void OnClientEnterLobby()
     {
@@ -36,9 +30,9 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupLocalPlayer()
     {
-        nameText.text = username;
+        CmdNameChanged(LoginInformation.username);
+        CmdReadyChanged("NOT READY");
         readyButton.interactable = true;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
         
@@ -176,6 +170,11 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void OnReadyChanged(string text)
     {
         readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
+    }
+
+    public void OnNameChanged(string text)
+    {
+        nameText.text = text;
     }
 
     public string GetUsername()

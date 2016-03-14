@@ -263,7 +263,6 @@ public class LobbyManager : NetworkLobbyManager
 
     public override void OnLobbyServerPlayersReady()
     {
-		Debug.Log ("OnLobbyServerPlayersReady");
         if (ArePlayersReady())
         {
             StartCoroutine(CountDownCoroutine());
@@ -336,7 +335,7 @@ public class LobbyManager : NetworkLobbyManager
 	public override void OnLobbyClientExit(){
         base.OnLobbyClientExit();
 		ChangePanel(menuGui);
-        infoGui.gameObject.SetActive(false);
+        HideInfoPanel();
 	}
 
     public override void OnLobbyClientEnter()
@@ -346,12 +345,6 @@ public class LobbyManager : NetworkLobbyManager
         ChangePanel(lobbyGui);
     }
 		
-    public override void OnClientError(NetworkConnection conn, int errorCode)
-    {
-        base.OnClientError(conn, errorCode);
-        Debug.LogError("CLIENT ERROR" + errorCode);
-    }
-
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
         base.OnLobbyClientSceneChanged(conn);
@@ -382,13 +375,21 @@ public class LobbyManager : NetworkLobbyManager
         _currentPanel = newPanel;
     }
 
-    public void DisplayInfoPanel(string infoString, UnityAction onCancel)
+    public void DisplayInfoAlert(string infoString, UnityAction onCancel)
     {
         infoText.text = infoString;
         infoButton.onClick.RemoveAllListeners();
         infoButton.onClick.AddListener(onCancel);
 
         LobbyManager.instance.infoButton.gameObject.SetActive(true);
+        LobbyManager.instance.infoGui.gameObject.SetActive(true);
+    }
+
+    public void DisplayInfoNotification(string infoString)
+    {
+        infoText.text = infoString;
+
+        LobbyManager.instance.infoButton.gameObject.SetActive(false);
         LobbyManager.instance.infoGui.gameObject.SetActive(true);
     }
 
@@ -403,7 +404,6 @@ public class LobbyManager : NetworkLobbyManager
         // This is called whenever a player enters the lobby, including coming back from the previous game
         // 		Do not add players when they have already connected previously
 		if (_connectedPlayerInfo.Where (x => x != null && x.slot == player.slot).Count () == 0) {
-			Debug.Log ("Adding player, resetting score");
 			_connectedPlayerInfo.Add (new PlayerInfo () { slot = player.slot, isAlive = true, score = 0 });
 		}
     }

@@ -83,6 +83,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void OnRemovePlayerClick()
     {
+        LobbyManager.instance.DisplayInfoNotification("Quitting...");
         if (isServer && isLocalPlayer)
         {
             var id = LobbyManager.instance.matchInfo.networkId;

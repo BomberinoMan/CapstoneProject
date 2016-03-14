@@ -7,6 +7,8 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Events;
+using UnityEngine.Networking.Match;
+using UnityEngine.Networking.Types;
 
 public class LobbyManager : NetworkLobbyManager
 {

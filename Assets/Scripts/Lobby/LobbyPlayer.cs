@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using UnityEngine.Networking.Types;
 using UnityEngine.UI;
 
 public class LobbyPlayer : NetworkLobbyPlayer
 {
     public GameObject scoreScreenPlayer;
-
     public Text nameText;
     public Button readyButton;
     public Button removePlayerButton;
@@ -35,7 +35,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
         readyButton.interactable = true;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
-        
+
         removePlayerButton.interactable = true;
         removePlayerButton.transform.GetChild(0).GetComponent<Text>().text = "QUIT";
         removePlayerButton.onClick.RemoveAllListeners();
@@ -83,28 +83,26 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void OnRemovePlayerClick()
     {
-        if (isServer)
+        if (isServer && isLocalPlayer)
         {
-            connectionToClient.Disconnect();
-            if (isLocalPlayer)
-            {
-                var id = LobbyManager.instance.matchInfo.networkId;
-                LobbyManager.instance.matchMaker.DestroyMatch(id, OnMatchDestroyed);
-                LobbyManager.instance.StopHost();
-            }
+            var id = LobbyManager.instance.matchInfo.networkId;
+            LobbyManager.instance.matchMaker.DestroyMatch(id, OnMatchDestroyed);
         }
         else
         {
-            LobbyManager.instance.StopClient();
+            var request = new DropConnectionRequest();
+            request.networkId = LobbyManager.instance.matchInfo.networkId;
+            request.nodeId = LobbyManager.instance.matchInfo.nodeId;
+            LobbyManager.instance.matchMaker.DropConnection(request, OnConnectionDropped);
         }
     }
 
     private void OnMatchDestroyed(BasicResponse response)
     {
-        Debug.Log("MATCH DESTROYED: " + response.ToString());
+        LobbyManager.instance.StopHost();
     }
 
-    public void OnDestroy()
+    private void OnConnectionDropped(BasicResponse response)
     {
         LobbyManager.instance.RemovePlayer(this);
     }

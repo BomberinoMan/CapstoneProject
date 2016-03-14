@@ -16,10 +16,10 @@ public class LobbyServerInfo : MonoBehaviour
         slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString();
 
         joinButton.onClick.RemoveAllListeners();
-        joinButton.onClick.AddListener(() => { OnClickJoin(match.networkId); });
+        joinButton.onClick.AddListener(() => { OnClickJoin(match.networkId, match.hostNodeId); });
     }
 
-    public void OnClickJoin(NetworkID networkId)
+    public void OnClickJoin(NetworkID networkId, NodeID nodeId)
     {
         LobbyManager.instance.DisplayInfoPanel("Joining...", LobbyManager.instance.StopClientCallback);
         LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);

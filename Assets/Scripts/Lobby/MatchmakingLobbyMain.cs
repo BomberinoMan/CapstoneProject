@@ -47,7 +47,6 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     private void OnMatchList(ListMatchResponse response)
     {
-        Debug.Log("MATCH COUNT: " + response.matches.Count);
         LobbyManager.instance.HideInfoPanel();
         ClearMatchList();
 

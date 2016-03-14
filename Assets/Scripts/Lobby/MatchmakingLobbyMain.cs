@@ -15,7 +15,8 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     public void OnEnable()
     {
-        ClearMatchList();
+        listPanel.gameObject.SetActive(false);
+        matchListWarning.gameObject.SetActive(false);
 
         createButton.onClick.RemoveAllListeners();
         createButton.onClick.AddListener(OnClickCreate);

@@ -12,34 +12,35 @@ using UnityEngine.Networking.Types;
 
 public class LobbyManager : NetworkLobbyManager
 {
-	public GameObject gameManager;
+    public GameObject gameManager;
 
-	public RectTransform scoreScreenGui;
-	public RectTransform lobbyGui;
-	public RectTransform menuGui;
-	public RectTransform infoGui;
-	public RectTransform inGameMenu;
-	public Text infoText;
-	public Button infoButton;
-	public float countdownTime = 5.0f;
+    public RectTransform scoreScreenGui;
+    public RectTransform lobbyGui;
+    public RectTransform menuGui;
+    public RectTransform infoGui;
+    public RectTransform inGameMenu;
+    public Text infoText;
+    public Button infoButton;
+    public float countdownTime = 5.0f;
     public static LobbyManager instance;
 
-	private RectTransform _currentPanel;
+    private RectTransform _currentPanel;
     private bool _sceneLoaded = false;
 
     void Start()
-	{
+    {
         instance = this;
 
-		// Activate needed objects to play the game
-		gameManager.SetActive (true);
-		ChangePanel (menuGui);
+        // Activate needed objects to play the game
+        gameManager.SetActive(true);
+        ChangePanel(menuGui);
     }
 
-	public void GameIsOver(){
-		_sceneLoaded = false;
-		ServerReturnToLobby ();
-	}
+    public void GameIsOver()
+    {
+        _sceneLoaded = false;
+        ServerReturnToLobby();
+    }
 
     // **************SERVER**************
     public override void OnLobbyStopHost()
@@ -55,19 +56,19 @@ public class LobbyManager : NetworkLobbyManager
     {
         // Figure out what slot the player is in based on the network connection and playerControllerId
         var i = lobbySlots.Where(x => x != null && x.connectionToClient.connectionId == networkConnection.connectionId && x.playerControllerId == playerControllerId).First().slot;
-        
-		GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
-		newPlayer.transform.position = GameManager.instance.playerSpawnVectors[i];
+
+        GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
+        newPlayer.transform.position = GameManager.instance.playerSpawnVectors[i];
         newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
 
-		NetworkServer.Spawn(newPlayer);
+        NetworkServer.Spawn(newPlayer);
         return newPlayer;
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject gameObject1, GameObject gameObject2)
     {
         if (!_sceneLoaded)
-			GameManager.instance.SpawnBoard();
+            GameManager.instance.SpawnBoard();
         _sceneLoaded = true;
         return true;
     }
@@ -84,7 +85,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         float remainingTime = countdownTime + 1;
         int floorTime = Mathf.FloorToInt(remainingTime);
-		int playerCount = lobbySlots.Where(x => x != null).Count();
+        int playerCount = lobbySlots.Where(x => x != null).Count();
 
         while (remainingTime >= 0)
         {
@@ -93,7 +94,7 @@ public class LobbyManager : NetworkLobbyManager
             remainingTime -= Time.deltaTime;
             int newFloorTime = Mathf.FloorToInt(remainingTime);
 
-			if (!ArePlayersReady() || playerCount != lobbySlots.Where(x => x != null).Count())
+            if (!ArePlayersReady() || playerCount != lobbySlots.Where(x => x != null).Count())
             {
                 foreach (LobbyPlayer player in lobbySlots)
                 {
@@ -143,17 +144,18 @@ public class LobbyManager : NetworkLobbyManager
     }
 
     // **************CLIENT**************
-	public override void OnLobbyClientExit(){
-		ChangePanel (menuGui);
-		HideInfoPanel ();
-	}
+    public override void OnLobbyClientExit()
+    {
+        ChangePanel(menuGui);
+        HideInfoPanel();
+    }
 
     public override void OnLobbyClientEnter()
     {
-		ChangePanel (lobbyGui);
-		HideInfoPanel ();
+        ChangePanel(lobbyGui);
+        HideInfoPanel();
     }
-		
+
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         Debug.LogError("CLIENT ERROR" + errorCode);
@@ -161,58 +163,70 @@ public class LobbyManager : NetworkLobbyManager
 
     public override void OnLobbyClientSceneChanged(NetworkConnection conn)
     {
-		if (SceneManager.GetActiveScene ().name == "Game")
-			DisableAllPanels ();
-		//TODO need to enable lobby gui here too?
+        if (SceneManager.GetActiveScene().name == "Game")
+            DisableAllPanels();
+        //TODO need to enable lobby gui here too?
     }
 
-	// **************GUI**************
-	public void DisplayInfoPanel(string message, UnityAction onCancel){
-		infoText.text = message;
-		infoButton.onClick.RemoveAllListeners();
-		infoButton.onClick.AddListener(onCancel);
+    // **************GUI**************
+    public void DisplayInfoNotification(string message)
+    {
+        infoText.text = message;
+        infoButton.gameObject.SetActive(false);
+        infoGui.gameObject.SetActive(true);
+    }
 
-		infoButton.gameObject.SetActive(true);
-		infoGui.gameObject.SetActive(true);
-	}
+    public void DisplayInfoAlert(string message, UnityAction onCancel)
+    {
+        infoText.text = message;
+        infoButton.onClick.RemoveAllListeners();
+        infoButton.onClick.AddListener(onCancel);
 
-	public void ChangePanel(RectTransform newPanel){
-		if (_currentPanel != null)
-            _currentPanel.gameObject.SetActive (false);
-		
-		if (newPanel != null)
-			newPanel.gameObject.SetActive (true);
+        infoButton.gameObject.SetActive(true);
+        infoGui.gameObject.SetActive(true);
+    }
 
-		_currentPanel = newPanel;
-	}
 
-	public void HideInfoPanel(){
-		infoGui.gameObject.SetActive (false);
-	}
+    public void ChangePanel(RectTransform newPanel)
+    {
+        if (_currentPanel != null)
+            _currentPanel.gameObject.SetActive(false);
 
-	public void DisableAllPanels(){
-		scoreScreenGui.gameObject.SetActive (false);
-		lobbyGui.gameObject.SetActive (false);
-		menuGui.gameObject.SetActive (false);
-		infoGui.gameObject.SetActive (false);
-		inGameMenu.gameObject.SetActive (false);
-	}
+        if (newPanel != null)
+            newPanel.gameObject.SetActive(true);
 
-	public void HideInGameMenu()
-	{
-		inGameMenu.gameObject.SetActive(false);
-	}
+        _currentPanel = newPanel;
+    }
 
-	public void ShowInGameMenu()
-	{
-		inGameMenu.gameObject.SetActive(true);
-	}
+    public void HideInfoPanel()
+    {
+        infoGui.gameObject.SetActive(false);
+    }
+
+    public void DisableAllPanels()
+    {
+        scoreScreenGui.gameObject.SetActive(false);
+        lobbyGui.gameObject.SetActive(false);
+        menuGui.gameObject.SetActive(false);
+        infoGui.gameObject.SetActive(false);
+        inGameMenu.gameObject.SetActive(false);
+    }
+
+    public void HideInGameMenu()
+    {
+        inGameMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowInGameMenu()
+    {
+        inGameMenu.gameObject.SetActive(true);
+    }
 
     public void StopClientCallback()
     {
         StopClient();
         StopMatchMaker();
-		ChangePanel (menuGui);
-		HideInfoPanel ();
+        ChangePanel(menuGui);
+        HideInfoPanel();
     }
 }

@@ -105,7 +105,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     private void OnConnectionDropped(BasicResponse response)
     {
-        LobbyManager.instance.RemovePlayer(this);
+
     }
 
     [Command]

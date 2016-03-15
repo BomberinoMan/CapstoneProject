@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
@@ -29,12 +29,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public override void OnClientEnterLobby()
     {
-<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
-        LobbyManager.instance.AddPlayer(this);
         LobbyRoom.instance.AddPlayer(this);
-=======
-        LobbyPlayerList.instance.AddPlayer(this);
->>>>>>> Pushing changes to work at home
         SetupRemotePlayer();
     }
 
@@ -107,16 +102,12 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
         LobbyManager.instance.StopHost();
     }
-<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
 
     private void OnConnectionDropped(BasicResponse response)
     {
         LobbyManager.instance.RemovePlayer(this);
     }
 
-=======
-		
->>>>>>> Pushing changes to work at home
     [Command]
     public void CmdNameChanged(string name)
     {
@@ -141,15 +132,9 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
-<<<<<<< bf062224d0965590212b56f53ea28487fd0679cc
         LobbyManager.instance.infoGui.gameObject.SetActive(true);
         LobbyManager.instance.infoButton.gameObject.SetActive(false);
         leaveButton.interactable = false;
-=======
-		LobbyManager.instance.infoGui.gameObject.SetActive(true);
-		LobbyManager.instance.infoButton.gameObject.SetActive(false);
-        removePlayerButton.interactable = false;
->>>>>>> Pushing changes to work at home
         readyButton.interactable = false;
 
 		LobbyManager.instance.infoText.text = "Match Starting in " + (count);

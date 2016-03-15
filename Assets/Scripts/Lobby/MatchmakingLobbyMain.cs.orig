@@ -32,7 +32,11 @@ public class MatchmakingLobbyMain : MonoBehaviour
     public void OnClickCreate()
     {
         var maxPlayers = (uint)LobbyManager.instance.maxPlayers;
+<<<<<<< HEAD
         LobbyManager.instance.DisplayInfoNotification("Creating...");       //TODO stop client callback or stop host callback ?
+=======
+		LobbyManager.instance.DisplayInfoPanel("Creating...", LobbyManager.instance.StopClientCallback);       //TODO stop client callback or stop host callback ?
+>>>>>>> 29443d703c42f33552918b670ac6d50f395519a4
 
         LobbyManager.instance.StartMatchMaker();
         NetworkManager.singleton.maxDelay = 0.2f;
@@ -47,7 +51,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
 =======
 		LobbyManager.instance.DisplayInfoPanel("Finding matches...", LobbyManager.instance.StopClientCallback);
         NetworkManager.singleton.maxDelay = 0.2f;
->>>>>>> Finishing up change to lobby manager, fixed bug with returning to lobby
+>>>>>>> 29443d703c42f33552918b670ac6d50f395519a4
         LobbyManager.instance.StartMatchMaker();
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);
         LobbyManager.instance.matchMaker.ListMatches(0, 99, "", OnMatchList);
@@ -55,7 +59,12 @@ public class MatchmakingLobbyMain : MonoBehaviour
 
     private void OnMatchList(ListMatchResponse response)
     {
+<<<<<<< HEAD
         LobbyManager.instance.HideInfoPanel();
+=======
+        Debug.Log("MATCH COUNT: " + response.matches.Count);
+		LobbyManager.instance.HideInfoPanel ();
+>>>>>>> 29443d703c42f33552918b670ac6d50f395519a4
         ClearMatchList();
 
         if (response.matches.Count == 0)

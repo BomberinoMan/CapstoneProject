@@ -62,7 +62,7 @@ public class BombController : NetworkBehaviour
 
     public void SetupBomb(GameObject player, bool setupColliders = true)
     {
-        _startTime = Time.time;
+		_startTime = Time.time;
         paramaters = new BombParams();
         BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
 
@@ -91,13 +91,17 @@ public class BombController : NetworkBehaviour
                 _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
                 gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
-				Destroy(gameObject);
+				Deactivate();
             }
         }
         catch (MissingReferenceException)
         {
         }
     }
+
+	private void Deactivate(){
+		gameObject.SetActive (false);
+	}
 
     void OnTriggerEnter2D(Collider2D collisionInfo)
     {

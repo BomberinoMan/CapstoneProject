@@ -133,7 +133,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     [ClientRpc]
     private void RpcSetupBomb(GameObject bomb, bool setupColliders)
     {
-        bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
+		bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
     }
 
     [Command]
@@ -154,8 +154,8 @@ public class PlayerControllerComponent : NetworkBehaviour
             as GameObject;
 		
 		bomb.GetComponent<BombController>().SetupBomb(gameObject);
-		NetworkServer.Spawn (bomb);
-        RpcSetupBomb(bomb, true);
+		NetworkServer.SpawnWithClientAuthority (bomb, gameObject);
+		RpcSetupBomb(bomb, true);
     }
 
     [Command]
@@ -184,9 +184,9 @@ public class PlayerControllerComponent : NetworkBehaviour
                 Quaternion.identity)
                 as GameObject;
 
-            bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
-            NetworkServer.Spawn(bomb);
-            RpcSetupBomb(bomb, false);
+			bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
+			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+			RpcSetupBomb(bomb, false);
         }
     }
 

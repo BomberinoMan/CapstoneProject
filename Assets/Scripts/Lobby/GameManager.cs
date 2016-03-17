@@ -2,10 +2,12 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GameManager : NetworkBehaviour {
 	public static GameManager instance;
 	public float scoreScreenTime = 5.0f;
+	private float hitExpireTime = 2.0f;
 	private bool _isGameOver = false;
 	private BoardCreator _boardCreator;
 
@@ -19,6 +21,15 @@ public class GameManager : NetworkBehaviour {
 		new Vector3(1.0f, 1.0f, 0.0f)
 	};
 	public Vector3[] playerSpawnVectors { get { return _playerSpawnVectors; } }
+
+	private class PlayerHitStat
+	{
+		public bool hitOnServer;
+		public bool hitOnClient;
+		public float serverHitTime;
+	}
+
+	private IDictionary<NetworkInstanceId, IList<IDictionary<int, PlayerHitStat>>> hitsDetected = new Dictionary<NetworkInstanceId, IList<IDictionary<int, PlayerHitStat>>>();
 
 	// **** Tiles ****
 	public GameObject bombUpgrade;
@@ -41,11 +52,25 @@ public class GameManager : NetworkBehaviour {
 		}
 	}
 
-	public void PlayerDead(PlayerControllerComponent player)
+	[Command]
+	public void CmdPlayerHit (PlayerControllerComponent player, NetworkInstanceId netId){
+
+	}
+
+	public void PlayerHit(PlayerControllerComponent player, NetworkInstanceId netId)
 	{
-		if (!isServer)
+		if (!isServer) {
+			CmdPlayerHit (player, netId);
 			return;
+		}
 		
+		if(!hitsDetected.ContainsKey(netId)){
+
+
+		}
+	}
+
+	private void PlayerDead(PlayerControllerComponent player){
 		SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
 		SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
 		SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);

@@ -201,10 +201,10 @@ public class PlayerControllerComponent : NetworkBehaviour
 		if (other.gameObject.tag == "Upgrade") {
 			//TODO sync effects of radioactive upgrades. Need to go to server to get the type, then apply the effect with RPC call
 			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
-			if (isServer)
+			if (localPlayerAuthority)
 				CmdDestroyGameObject (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {
-			GameManager.instance.PlayerDead (this);
+			GameManager.instance.PlayerHit (this, other.gameObject.GetComponent<NetworkBehaviour>().netId);
 		} else if (other.gameObject.tag == "BombBlock") {
 			_bombBlock = true;
 		}	

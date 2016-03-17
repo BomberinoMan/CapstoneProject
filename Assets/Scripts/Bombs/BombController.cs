@@ -23,7 +23,6 @@ public class BombController : NetworkBehaviour
             collisionController.parentPlayer = parentPlayer;
 
         parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
 	void OnDestroy(){
@@ -40,10 +39,8 @@ public class BombController : NetworkBehaviour
 
         if (_isMoving)
         {
-            _rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
             if ((int)_direction.x != 0)
             {
-                _rb.constraints = _rb.constraints | RigidbodyConstraints2D.FreezePositionY;
                 _rb.position = new Vector3(
                     _rb.position.x + _direction.x * speed * speedScalar,
                     AxisRounder.Round(_rb.position.y),
@@ -51,7 +48,6 @@ public class BombController : NetworkBehaviour
             }
             else if ((int)_direction.y != 0)
             {
-                _rb.constraints = _rb.constraints | RigidbodyConstraints2D.FreezePositionX;
                 _rb.position = new Vector3(
                     AxisRounder.Round(_rb.position.x),
                     _rb.position.y + _direction.y * speed * speedScalar,
@@ -63,6 +59,8 @@ public class BombController : NetworkBehaviour
     public void SetupBomb(GameObject player, bool setupColliders = true)
     {
 		_startTime = Time.time;
+		if (!isServer)
+			_startTime -= 0.5f;
         paramaters = new BombParams();
         BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
 

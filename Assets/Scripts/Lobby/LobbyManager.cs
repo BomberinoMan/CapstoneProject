@@ -26,6 +26,7 @@ public class LobbyManager : NetworkLobbyManager
 
     private RectTransform _currentPanel;
     private bool _sceneLoaded = false;
+    private GameObject[] playerGameObjects = new GameObject[4];
 
     void Start()
     {
@@ -60,6 +61,8 @@ public class LobbyManager : NetworkLobbyManager
         GameObject newPlayer = (GameObject)Instantiate(playerPrefab, Vector2.zero, Quaternion.identity);
         newPlayer.transform.position = GameManager.instance.playerSpawnVectors[i];
         newPlayer.GetComponent<PlayerControllerComponent>().slot = (int)i;
+
+        playerGameObjects[i] = newPlayer;
 
         NetworkServer.Spawn(newPlayer);
         return newPlayer;
@@ -136,6 +139,14 @@ public class LobbyManager : NetworkLobbyManager
             }
         }
         return true;
+    }
+
+    public GameObject GetPlayerGameObject(int index)
+    {
+        if (index < 0 || index >= 4)
+            return null;
+
+        return playerGameObjects[index];
     }
 
     public void KickPlayer(NetworkConnection conn)

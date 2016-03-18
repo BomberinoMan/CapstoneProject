@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 
 public class LaserController : NetworkBehaviour
 {
+    public uint bombNetId;
     public BombParams paramaters;
     public float creationTime;
 

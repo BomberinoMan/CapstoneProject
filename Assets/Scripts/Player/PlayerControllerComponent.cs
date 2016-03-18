@@ -196,18 +196,28 @@ public class PlayerControllerComponent : NetworkBehaviour
         NetworkServer.Destroy(upgrade);
     }
 
+    [Command]
+    public void CmdPlayerHit(uint bombNetId)
+    {
+        GameManager.instance.PlayerHit(this, bombNetId, true);
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
 		if (other.gameObject.tag == "Upgrade") {
 			//TODO sync effects of radioactive upgrades. Need to go to server to get the type, then apply the effect with RPC call
+            //TODO, possibly make another class that doesn't actually apply radioactive effects but just makes the player turn colors
 			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
 			if (localPlayerAuthority)
 				CmdDestroyGameObject (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {
-			GameManager.instance.PlayerHit (this, other.gameObject.GetComponent<NetworkBehaviour>().netId);
+            if (isServer)
+                GameManager.instance.PlayerHit(this, other.gameObject.GetComponent<LaserController>().bombNetId);
+            else
+                CmdPlayerHit(other.gameObject.GetComponent<LaserController>().bombNetId);
 		} else if (other.gameObject.tag == "BombBlock") {
 			_bombBlock = true;
-		}	
+		}
     }
 
     void OnTriggerStay2D(Collider2D other)

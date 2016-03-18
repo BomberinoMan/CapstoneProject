@@ -4,6 +4,7 @@ using System.Linq;
 
 public class LaserInstantiator : NetworkBehaviour
 {
+    public uint bombNetId;
     public GameObject laserCross;
     public GameObject laserUp;
     public GameObject laserDown;
@@ -17,8 +18,9 @@ public class LaserInstantiator : NetworkBehaviour
     private Vector2 _left = new Vector2(-1.0f, 0.0f);
     private Vector2 _right = new Vector2(1.0f, 0.0f);
 
-    public void InstantiateLaser()
+    public void InstantiateLaser(uint netId)
     {
+        bombNetId = netId;
         var temp = gameObject.GetComponent<BombController>().paramaters;
         var paramaters = new BombParams
         {
@@ -34,6 +36,7 @@ public class LaserInstantiator : NetworkBehaviour
         //TODO refactor this too
         laser.GetComponent<LaserController>().creationTime = Time.time;
         laser.GetComponent<LaserController>().paramaters = paramaters;
+        laser.GetComponent<LaserController>().bombNetId = bombNetId;
 
         InstantiateInDirection(location, _up, paramaters);
         InstantiateInDirection(location, _down, paramaters);
@@ -69,6 +72,7 @@ public class LaserInstantiator : NetworkBehaviour
             //TODO refactor all of this to make it cleaner/faster
             laser.GetComponent<LaserController>().creationTime = Time.time;
             laser.GetComponent<LaserController>().paramaters = paramaters;
+            laser.GetComponent<LaserController>().bombNetId = bombNetId;
         }
     }
 

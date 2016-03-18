@@ -60,7 +60,7 @@ public class BombController : NetworkBehaviour
     {
 		_startTime = Time.time;
 		if (!isServer)
-			_startTime -= 0.5f;
+			_startTime -= 0.3f;
         paramaters = new BombParams();
         BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
 
@@ -88,7 +88,7 @@ public class BombController : NetworkBehaviour
             {
                 _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
-                gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
+                gameObject.GetComponent<LaserInstantiator>().InstantiateLaser(GetComponent<NetworkIdentity>().netId.Value);
 				Deactivate();
             }
         }

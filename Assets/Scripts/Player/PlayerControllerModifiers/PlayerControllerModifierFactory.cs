@@ -5,6 +5,7 @@ public static class PlayerControllerModifierFactory
     public static IPlayerControllerModifier getControllerModifier(IPlayerControllerModifier playerController)
     {
         int rand = UnityEngine.Random.Range(0, 7);
+        rand = 2;
         switch (rand)
         {
             case 0:

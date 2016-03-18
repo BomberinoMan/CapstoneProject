@@ -24,6 +24,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     public int bombKick { get { return _playerController.bombKick; } set { _playerController.bombKick = value; } }
     public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
     public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
+    public bool reverseMovement { get { return _playerController.reverseMovement; } }
 
     public override void OnStartClient()
     {
@@ -55,7 +56,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         _transform = GetComponent<Transform>();
     }
 
-	public void TouchLayBomb()
+	public void TouchLayBomb(bool fromTouch = true)
     {
 		if (!isLocalPlayer)
             return;
@@ -66,14 +67,10 @@ public class PlayerControllerComponent : NetworkBehaviour
             {
                 CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
             }
-            else if (_playerController.bombLine > 0)
+            else if (_playerController.bombLine > 0 && fromTouch)
             {
                 CmdLayLineBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime, gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
-        }
-        if (_playerController.alwaysLayBombs && _playerController.currNumBombs > 0 && !_bombBlock)
-        {
-            CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
         }
     }
 
@@ -81,7 +78,8 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
 		FlipFlopColor();
 
-
+        if (_playerController.alwaysLayBombs)
+            TouchLayBomb(false);
 
         if (!isLocalPlayer)
             return;
@@ -94,39 +92,25 @@ public class PlayerControllerComponent : NetworkBehaviour
 			ver = Input.GetAxisRaw ("Vertical");
 		}
 
-        if (!_playerController.reverseMovement)
+        if (_playerController.reverseMovement)
         {
-            if (ver == 0.0f && hor != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    _rb.position.x + hor * _speed * _playerController.speedScalar,
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
-                    0.0f);
-            }
-            else if (hor == 0.0f && ver != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
-                    _rb.position.y + ver * _speed * _playerController.speedScalar,
-                    0.0f);
-            }
+            hor *= -1.0f;
+            ver *= -1.0f;
         }
-        else
+
+        if (ver == 0.0f && hor != 0.0f)
         {
-            if (ver == 0.0f && hor != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    _rb.position.x - hor * _speed * _playerController.speedScalar,
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
-                    0.0f);
-            }
-            else if (hor == 0.0f && ver != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
-                    _rb.position.y - ver * _speed * _playerController.speedScalar,
-                    0.0f);
-            }
+            _rb.position = new Vector3(
+                _rb.position.x + hor * _speed * _playerController.speedScalar,
+                AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
+                0.0f);
+        }
+        else if (hor == 0.0f && ver != 0.0f)
+        {
+            _rb.position = new Vector3(
+                AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
+                _rb.position.y + ver * _speed * _playerController.speedScalar,
+                0.0f);
         }
     }
 
@@ -260,7 +244,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         if (gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color == Color.white)
         {
-            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.678f, 0.698f, 0.741f);
+            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.2f, 0.2f, 0.2f);
         }
         else
         {

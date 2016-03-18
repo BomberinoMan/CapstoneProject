@@ -177,14 +177,14 @@ public class GameManager : NetworkBehaviour {
 		if (!isServer)
 			return;
 		_boardCreator = new BoardCreator();
-		_boardCreator.InitializeDestructible();
+		//_boardCreator.InitializeDestructible();
 
 		//Initialize spawn for all connected players
 		LobbyManager.instance.lobbySlots.Where(p => p != null).ToList()
 			.ForEach(p => _boardCreator.InitializeSpawn(_playerSpawnVectors[p.slot]));
 
 		//Initialize all upgrades
-		_boardCreator.InitializeUpgrades();
+		//_boardCreator.InitializeUpgrades();
 
 		//Get the generated tiles in the board
 		var board = _boardCreator.GetBoard();

@@ -33,7 +33,7 @@ public class BombController : NetworkBehaviour
 
     void FixedUpdate()
     {
-		if (_startTime + paramaters.delayTime <= Time.time) {
+		if (_startTime + paramaters.delayTime + paramaters.warningTime <= Time.time) {
 			Explode ();
 		}
 

@@ -13,6 +13,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     private IPlayerControllerModifier _playerController;
     private bool _bombBlock = false;
     private bool _animatorSetup = false;
+	private Vector2 _lastBombPos = new Vector2 ();
 
 	public DPadController dPad;
     public GameObject bombObject;
@@ -63,9 +64,13 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         if (_playerController.canLayBombs && _playerController.currNumBombs > 0)
         {
-            if (!_bombBlock)
+			if (!_bombBlock && !(_lastBombPos.x == AxisRounder.Round(_rb.transform.position.x) && _lastBombPos.y == AxisRounder.Round(_rb.transform.position.y)))
             {
                 CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
+
+				_lastBombPos = _rb.transform.position;
+				_lastBombPos.x = AxisRounder.Round (_lastBombPos.x);
+				_lastBombPos.y = AxisRounder.Round (_lastBombPos.y);
             }
             else if (_playerController.bombLine > 0 && fromTouch)
             {
@@ -81,8 +86,9 @@ public class PlayerControllerComponent : NetworkBehaviour
 		if (!isLocalPlayer)
             return;
 
-		if (_playerController.alwaysLayBombs)
+		if (_playerController.alwaysLayBombs) {
 			TouchLayBomb(false);
+		}
 
         float hor = dPad.currDirection.x;
         float ver = dPad.currDirection.y;
@@ -174,7 +180,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     {
 		if (other.gameObject.tag == "Upgrade") {
 			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
-			if (isServer)
+			if (localPlayerAuthority)
 				NetworkServer.Destroy (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {
             if (isServer)
@@ -208,7 +214,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         _playerController = newModifier;
     }
 
-    private void FlipFlopColor() // TODO sync color swap
+    private void FlipFlopColor()
     {
         if (!_animatorSetup)
             return;

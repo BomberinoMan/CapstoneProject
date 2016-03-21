@@ -154,6 +154,8 @@ MonoBehaviour:
   readyButton: {fileID: 11436954}
   leaveButton: {fileID: 0}
   nodeId: 0
+  score: 0
+  isAlive: 0
 --- !u!114 &11436954
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -16,12 +16,13 @@ public class DefaultPlayerControllerModifier : IPlayerControllerModifier
         _playerController = new PlayerController();
 
         _playerController.speedScalar = 1.0f;
-        _playerController.bombKick = 1;
-        _playerController.bombLine = 1;
-        _playerController.currNumBombs = 3; // Set to zero because changing max number will increase it
+        _playerController.bombKick = 0;
+        _playerController.bombLine = 0;
+        // Set to zero because changing max number will increase it
+        _playerController.currNumBombs = 0; 
         _playerController.maxNumBombs = _playerController.currNumBombs;
         _playerController.bombParams = new BombParams();
-        _playerController.bombParams.radius = 8;
+        _playerController.bombParams.radius = 2;
         _playerController.canLayBombs = true;
         _playerController.alwaysLayBombs = false;
         _playerController.reverseMovement = false;

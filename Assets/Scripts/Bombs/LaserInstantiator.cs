@@ -13,11 +13,6 @@ public class LaserInstantiator : NetworkBehaviour
     public GameObject laserHor;
     public GameObject laserVert;
 
-    private Vector2 _up = new Vector2(0.0f, 1.0f);
-    private Vector2 _down = new Vector2(0.0f, -1.0f);
-    private Vector2 _left = new Vector2(-1.0f, 0.0f);
-    private Vector2 _right = new Vector2(1.0f, 0.0f);
-
     public void InstantiateLaser(uint netId)
     {
         bombNetId = netId;
@@ -38,10 +33,10 @@ public class LaserInstantiator : NetworkBehaviour
         laser.GetComponent<LaserController>().paramaters = paramaters;
         laser.GetComponent<LaserController>().bombNetId = bombNetId;
 
-        InstantiateInDirection(location, _up, paramaters);
-        InstantiateInDirection(location, _down, paramaters);
-        InstantiateInDirection(location, _left, paramaters);
-        InstantiateInDirection(location, _right, paramaters);
+		InstantiateInDirection(location, Vector2.up, paramaters);
+        InstantiateInDirection(location, Vector2.down, paramaters);
+		InstantiateInDirection(location, Vector2.left, paramaters);
+		InstantiateInDirection(location, Vector2.right, paramaters);
     }
 
 	[Command]
@@ -78,7 +73,7 @@ public class LaserInstantiator : NetworkBehaviour
 
     private GameObject GetMiddleLaser(Vector2 direction)
     {
-        if (direction == _up || direction == _down)
+		if (direction == Vector2.up || direction == Vector2.down)
             return laserVert;
         else
             return laserHor;
@@ -86,11 +81,11 @@ public class LaserInstantiator : NetworkBehaviour
 
     private GameObject GetLaser(Vector2 direction)
     {
-        if (direction == _up)
+		if (direction == Vector2.up)
             return laserUp;
-        else if (direction == _down)
+		else if (direction == Vector2.down)
             return laserDown;
-        else if (direction == _left)
+		else if (direction == Vector2.left)
             return laserLeft;
         else
             return laserRight;

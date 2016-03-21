@@ -8,13 +8,13 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 448206}
-  - 61: {fileID: 6107906}
   - 50: {fileID: 5077168}
   - 114: {fileID: 11481418}
   - 114: {fileID: 11432814}
   - 114: {fileID: 11443372}
   - 95: {fileID: 9569044}
   - 114: {fileID: 11423524}
+  - 58: {fileID: 5840474}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -29,7 +29,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 142472}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5.5064716, y: 0.16533506, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -51,8 +51,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &6107906
-BoxCollider2D:
+--- !u!58 &5840474
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -62,9 +62,9 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: -0}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.95, y: 0.95}
+  m_Radius: 0.47
 --- !u!95 &9569044
 Animator:
   serializedVersion: 3
@@ -164,10 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4e64cccd51c4983ba5099b74ed7c76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIndex: 0
-  _lobbyManager: {fileID: 11442320, guid: 4ca6b5186935059409146ccb71bf116f, type: 2}
-  bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
+  slot: 0
   dPad: {fileID: 11468542, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
+  bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -74,15 +74,15 @@ public class PlayerControllerComponent : NetworkBehaviour
         }
     }
 
-    void FixedUpdate() //TODO Add reverse movement support to animation driver
+    void FixedUpdate()
     {
 		FlipFlopColor();
 
-        if (_playerController.alwaysLayBombs)
-            TouchLayBomb(false);
-
-        if (!isLocalPlayer)
+		if (!isLocalPlayer)
             return;
+
+		if (_playerController.alwaysLayBombs)
+			TouchLayBomb(false);
 
         float hor = dPad.currDirection.x;
         float ver = dPad.currDirection.y;
@@ -98,26 +98,16 @@ public class PlayerControllerComponent : NetworkBehaviour
             ver *= -1.0f;
         }
 
-        if (ver == 0.0f && hor != 0.0f)
-        {
-            _rb.position = new Vector3(
-                _rb.position.x + hor * _speed * _playerController.speedScalar,
-                AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
-                0.0f);
-        }
-        else if (hor == 0.0f && ver != 0.0f)
-        {
-            _rb.position = new Vector3(
-                AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
-                _rb.position.y + ver * _speed * _playerController.speedScalar,
-                0.0f);
-        }
+		hor *= (_speed / Time.fixedDeltaTime) * _playerController.speedScalar;
+		ver *= (_speed / Time.fixedDeltaTime) * _playerController.speedScalar;
+
+		_rb.velocity = new Vector2 (hor, ver);
     }
 
     [ClientRpc]
-    private void RpcSetupBomb(GameObject bomb, bool setupColliders)
+    private void RpcSetupBomb(GameObject bomb)
     {
-		bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
+		bomb.GetComponent<BombController>().SetupBomb(gameObject);
     }
 
     [Command]
@@ -139,7 +129,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 		
 		bomb.GetComponent<BombController>().SetupBomb(gameObject);
 		NetworkServer.SpawnWithClientAuthority (bomb, gameObject);
-		RpcSetupBomb(bomb, true);
+		RpcSetupBomb(bomb);
     }
 
     [Command]
@@ -168,18 +158,12 @@ public class PlayerControllerComponent : NetworkBehaviour
                 Quaternion.identity)
                 as GameObject;
 
-			bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
+			bomb.GetComponent<BombController>().SetupBomb(gameObject);
 			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-			RpcSetupBomb(bomb, false);
+			RpcSetupBomb(bomb);
         }
     }
-
-    [Command]
-    private void CmdDestroyGameObject(GameObject upgrade)
-    {
-        NetworkServer.Destroy(upgrade);
-    }
-
+		
     [Command]
     public void CmdPlayerHit(uint bombNetId)
     {
@@ -189,11 +173,9 @@ public class PlayerControllerComponent : NetworkBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
 		if (other.gameObject.tag == "Upgrade") {
-			//TODO sync effects of radioactive upgrades. Need to go to server to get the type, then apply the effect with RPC call
-            //TODO, possibly make another class that doesn't actually apply radioactive effects but just makes the player turn colors
 			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
-			if (localPlayerAuthority)
-				CmdDestroyGameObject (other.gameObject);
+			if (isServer)
+				NetworkServer.Destroy (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {
             if (isServer)
                 GameManager.instance.PlayerHit(this, other.gameObject.GetComponent<LaserController>().bombNetId);

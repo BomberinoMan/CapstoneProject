@@ -76,8 +76,16 @@ public class BombController : NetworkBehaviour
         }
     }
 
+    private void DestroyMe()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
 	private void Deactivate(){
 		gameObject.SetActive (false);
+        if (isServer)
+            // server will destroy deactivated bombs after 2 seconds, this will give plenty of time for the bombs to explode on all of the clients
+            Invoke("DestroyMe", 2);
 	}
 
     void OnTriggerEnter2D(Collider2D collisionInfo)

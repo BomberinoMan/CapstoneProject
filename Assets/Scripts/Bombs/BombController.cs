@@ -13,9 +13,13 @@ public class BombController : NetworkBehaviour
     private Vector2 _direction = new Vector2();
     private Rigidbody2D _rb;
 
-    void Start()
+    void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Start()
+    {
         parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
     }
 

@@ -123,6 +123,10 @@ public class LobbyManager : NetworkLobbyManager
             }
         }
 
+        for (int i = 0; i < lobbySlots.Count(); i++)
+            if(lobbySlots[i] != null)
+                (lobbySlots[i] as LobbyPlayer).isAlive = true;
+
         ServerChangeScene(playScene);
     }
 

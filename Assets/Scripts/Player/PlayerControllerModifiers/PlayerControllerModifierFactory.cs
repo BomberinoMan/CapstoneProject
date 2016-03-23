@@ -2,7 +2,7 @@
 
 public static class PlayerControllerModifierFactory
 {
-    public static IPlayerControllerModifier getControllerModifier(IPlayerControllerModifier playerController)
+    public static IPlayerControllerModifier GetControllerModifier(IPlayerControllerModifier playerController)
     {
         int rand = Random.Range(0, 7);
         switch (rand)

@@ -68,9 +68,17 @@ public class PlayerControllerComponent : NetworkBehaviour
             {
                 CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
 
-				_lastBombPos = _rb.transform.position;
-				_lastBombPos.x = AxisRounder.Round (_lastBombPos.x);
-				_lastBombPos.y = AxisRounder.Round (_lastBombPos.y);
+                if (_playerController.alwaysLayBombs)
+                {
+                    _lastBombPos = _rb.transform.position;
+                    _lastBombPos.x = AxisRounder.Round(_lastBombPos.x);
+                    _lastBombPos.y = AxisRounder.Round(_lastBombPos.y);
+                }
+                else
+                {
+                    _lastBombPos.x = -10.0f;
+                    _lastBombPos.y = -10.0f;
+                }
             }
             else if (_playerController.bombLine > 0 && fromTouch)
             {

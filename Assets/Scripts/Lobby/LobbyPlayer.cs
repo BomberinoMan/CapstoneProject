@@ -43,7 +43,10 @@ public class LobbyPlayer : NetworkLobbyPlayer
         CmdNameChanged(LoginInformation.username);
         CmdReadyChanged("NOT READY");
 
-        nodeId = (long)LobbyManager.instance.matchInfo.nodeId;
+        if (LobbyManager.instance.isMatchMaking) 
+        {
+            nodeId = (long)LobbyManager.instance.matchInfo.nodeId;
+        }
 
         readyButton.interactable = true;
         readyButton.onClick.RemoveAllListeners();
@@ -84,6 +87,34 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void OnClickLeave()
     {
         LobbyManager.instance.DisplayInfoNotification("Quitting...");
+        if (LobbyManager.instance.isMatchMaking)
+        {
+            Debug.Log("LEAVE MM");
+            LeaveMatchMaking();
+        }
+        else
+        {
+            Debug.Log("LEAVE LAN");
+            LeaveLan();
+        }
+    }
+
+    public void LeaveLan()
+    {
+        if (isServer)
+        {
+            LobbyManager.instance.StopHost();
+        }
+        else
+        {
+            RemovePlayer();
+            LobbyManager.instance.StopClient();
+        }
+
+    }
+
+    public void LeaveMatchMaking()
+    {
         if (isServer)
         {
             var id = LobbyManager.instance.matchInfo.networkId;
@@ -97,6 +128,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
             LobbyManager.instance.matchMaker.DropConnection(request, OnConnectionDropped);
         }
     }
+
 
     private void OnMatchDestroyed(BasicResponse response)
     {

@@ -4,33 +4,42 @@ using UnityEngine.UI;
 
 public class StartupMenu : MonoBehaviour
 {
-    public Button rankedButton;
+    public Button matchMakingButton;
+    public Button lanButton;
     public Button settingsButton;
     public Button backButton;
 
     public void OnEnable()
     {
-        rankedButton.onClick.RemoveAllListeners();
-        rankedButton.onClick.AddListener(Ranked_OnClick);
+        matchMakingButton.onClick.RemoveAllListeners();
+        matchMakingButton.onClick.AddListener(OnClickMatchMaking);
+
+        lanButton.onClick.RemoveAllListeners();
+        lanButton.onClick.AddListener(OnClickLan);
 
         settingsButton.onClick.RemoveAllListeners();
-        settingsButton.onClick.AddListener(Settings_OnClick);
+        settingsButton.onClick.AddListener(OnClickSettings);
 
         backButton.onClick.RemoveAllListeners();
-        backButton.onClick.AddListener(Back_OnClick);
+        backButton.onClick.AddListener(OnClickBack);
     }
 
-    public void Ranked_OnClick()
+    public void OnClickMatchMaking()
     {
         SceneManager.LoadScene("MatchMakingLobby");
     }
 
-    public void Settings_OnClick()
+    public void OnClickLan()
+    {
+        SceneManager.LoadScene("LanLobby");
+    }
+
+    public void OnClickSettings()
     {
         MenuManager.instance.ChangePanel(MenuManager.instance.settingsGui);
     }
 
-    public void Back_OnClick()
+    public void OnClickBack()
     {
         LoginInformation.username = "";
         LoginInformation.guid = System.Guid.Empty;

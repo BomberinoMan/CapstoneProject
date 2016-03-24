@@ -24,6 +24,8 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
     public static LobbyManager instance;
 
+    public bool isMatchMaking = false;
+
     private RectTransform _currentPanel;
     private bool _sceneLoaded = false;
     private GameObject[] playerGameObjects = new GameObject[4];

@@ -9,21 +9,18 @@ public class BombController : NetworkBehaviour
     public GameObject parentPlayer;
 
     private bool _hasExploded = false;
-    private bool _isMoving = false;
     private float _startTime;
-    private Vector3 _direction = new Vector3();
+    private Vector2 _direction = new Vector2();
     private Rigidbody2D _rb;
+
+    void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
 
     void Start()
     {
-        //TODO need to handle the case where two players are on top of the bomb on instantiation
-        _rb = GetComponent<Rigidbody2D>();
-        // Set parentPlayer in all child sub colliders
-        foreach (BombCollisionController collisionController in gameObject.GetComponentsInChildren<BombCollisionController>())
-            collisionController.parentPlayer = parentPlayer;
-
         parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
 	void OnDestroy(){
@@ -34,35 +31,20 @@ public class BombController : NetworkBehaviour
 
     void FixedUpdate()
     {
-		if (_startTime + paramaters.delayTime <= Time.time) {
+		if (_startTime + paramaters.delayTime + paramaters.warningTime <= Time.time) {
 			Explode ();
 		}
 
-        if (_isMoving)
-        {
-            _rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-            if ((int)_direction.x != 0)
-            {
-                _rb.constraints = _rb.constraints | RigidbodyConstraints2D.FreezePositionY;
-                _rb.position = new Vector3(
-                    _rb.position.x + _direction.x * speed * speedScalar,
-                    AxisRounder.Round(_rb.position.y),
-                    0.0f);
-            }
-            else if ((int)_direction.y != 0)
-            {
-                _rb.constraints = _rb.constraints | RigidbodyConstraints2D.FreezePositionX;
-                _rb.position = new Vector3(
-                    AxisRounder.Round(_rb.position.x),
-                    _rb.position.y + _direction.y * speed * speedScalar,
-                    0.0f);
-            }
-        }
+		_rb.velocity = _direction;
     }
 
-    public void SetupBomb(GameObject player, bool setupColliders = true)
+    public void SetupBomb(GameObject player)
     {
-        _startTime = Time.time;
+		_startTime = Time.time;
+
+		if (!isServer)
+			_startTime -= 0.3f;
+		
         paramaters = new BombParams();
         BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
 
@@ -73,11 +55,6 @@ public class BombController : NetworkBehaviour
 
         parentPlayer = player;
         transform.SetParent(player.transform.parent);
-
-        if (setupColliders)
-            foreach (Collider2D collider in GetComponentsInChildren<Collider2D>())   // Ignore collisions on all child colliders aswell, do not ignore colliders that are triggers
-                if (!collider.isTrigger)
-                    Physics2D.IgnoreCollision(collider, player.GetComponent<Collider2D>());
     }
 
     public void Explode()
@@ -90,8 +67,8 @@ public class BombController : NetworkBehaviour
             {
                 _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
-                gameObject.GetComponent<LaserInstantiator>().InstantiateLaser();
-				Destroy(gameObject);
+                gameObject.GetComponent<LaserInstantiator>().InstantiateLaser(GetComponent<NetworkIdentity>().netId.Value);
+				Deactivate();
             }
         }
         catch (MissingReferenceException)
@@ -99,19 +76,33 @@ public class BombController : NetworkBehaviour
         }
     }
 
+    private void DestroyMe()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
+	private void Deactivate(){
+		gameObject.SetActive (false);
+        if (isServer)
+            // server will destroy deactivated bombs after 2 seconds, this will give plenty of time for the bombs to explode on all of the clients
+            Invoke("DestroyMe", 2);
+	}
+
     void OnTriggerEnter2D(Collider2D collisionInfo)
     {
-		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().bombKick > 0)
+		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().bombKick > 0 && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().isLocalPlayer)
         {
             foreach (Collider2D bombCollider in gameObject.GetComponentsInChildren<Collider2D>())
                 if (Physics2D.GetIgnoreCollision(bombCollider, collisionInfo.gameObject.GetComponent<Collider2D>()))
                     // Ignore collisions on colliders that are on the parent player before they leave the bomb
                     return;
 
-            _isMoving = true;
             _direction = -(collisionInfo.transform.position - transform.position).normalized;
             _direction.x = AxisRounder.Round(_direction.x);
             _direction.y = AxisRounder.Round(_direction.y);
+			_rb.isKinematic = false;
+			_direction.x *= (speed / Time.fixedDeltaTime) * speedScalar;
+			_direction.y *= (speed / Time.fixedDeltaTime) * speedScalar;
         }
         else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb")
         {
@@ -137,7 +128,8 @@ public class BombController : NetworkBehaviour
 
     private void StopMovement()
     {
-        _isMoving = false;
-        _rb.position = new Vector3(AxisRounder.Round(_rb.position.x), AxisRounder.Round(_rb.position.y), 0.0f);
+        _rb.position = new Vector2(AxisRounder.Round(_rb.position.x), AxisRounder.Round(_rb.position.y));
+		_direction = Vector2.zero;
+		_rb.isKinematic = true;
     }
 }

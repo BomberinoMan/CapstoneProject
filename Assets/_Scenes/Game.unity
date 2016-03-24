@@ -85,7 +85,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &562053264
+--- !u!1001 &723477822
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -168,22 +168,6 @@ Prefab:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2010935115}
-    - target: {fileID: 11498458, guid: 09daccf57a0bd2e4a8eed57d21b03d09, type: 2}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11498458, guid: 09daccf57a0bd2e4a8eed57d21b03d09, type: 2}
-      propertyPath: m_Color.r
-      value: 0.9944105
-      objectReference: {fileID: 0}
-    - target: {fileID: 11498458, guid: 09daccf57a0bd2e4a8eed57d21b03d09, type: 2}
-      propertyPath: m_Color.g
-      value: 0.9901245
-      objectReference: {fileID: 0}
-    - target: {fileID: 11498458, guid: 09daccf57a0bd2e4a8eed57d21b03d09, type: 2}
-      propertyPath: m_Color.b
-      value: 0.98990214
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 09daccf57a0bd2e4a8eed57d21b03d09, type: 2}
   m_IsPrefabParent: 0

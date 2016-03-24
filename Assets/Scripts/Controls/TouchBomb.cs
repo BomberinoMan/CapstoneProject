@@ -8,7 +8,6 @@ public class TouchBomb : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-		Debug.Log ("Touch");
 		if (_player != null)
 	        _player.TouchLayBomb();
     }

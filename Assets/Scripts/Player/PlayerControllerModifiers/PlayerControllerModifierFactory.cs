@@ -2,9 +2,9 @@
 
 public static class PlayerControllerModifierFactory
 {
-    public static IPlayerControllerModifier getControllerModifier(IPlayerControllerModifier playerController)
+    public static IPlayerControllerModifier GetControllerModifier(IPlayerControllerModifier playerController)
     {
-        int rand = UnityEngine.Random.Range(0, 7);
+        int rand = Random.Range(0, 7);
         switch (rand)
         {
             case 0:
@@ -24,7 +24,7 @@ public static class PlayerControllerModifierFactory
             case 7:
                 return new NeverLayBombsPlayerControllerModifier(playerController.RemoveMod());
             default:
-                Debug.Log("Applying default playerControllerModifier. Check the range of the random number genterator");
+                Debug.LogError("Applying default playerControllerModifier. Check the range of the random number genterator");
                 return new DefaultPlayerControllerModifier(playerController.RemoveMod());
         }
     }

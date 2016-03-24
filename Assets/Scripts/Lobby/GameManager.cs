@@ -2,10 +2,13 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GameManager : NetworkBehaviour {
 	public static GameManager instance;
 	public float scoreScreenTime = 5.0f;
+    //TODO do we want to remove elements from the list after a certain amount of time?
+	private float _hitExpireTime = 2.0f;
 	private bool _isGameOver = false;
 	private BoardCreator _boardCreator;
 
@@ -19,6 +22,16 @@ public class GameManager : NetworkBehaviour {
 		new Vector3(1.0f, 1.0f, 0.0f)
 	};
 	public Vector3[] playerSpawnVectors { get { return _playerSpawnVectors; } }
+
+	private class PlayerHitStat
+	{
+        public int slot;
+		public bool hitOnServer;
+		public bool hitOnClient;
+		public float addedTime;
+	}
+
+	private IDictionary<uint, IList<PlayerHitStat>> detectedHits = new Dictionary<uint, IList<PlayerHitStat>>();
 
 	// **** Tiles ****
 	public GameObject bombUpgrade;
@@ -41,11 +54,63 @@ public class GameManager : NetworkBehaviour {
 		}
 	}
 
-	public void PlayerDead(PlayerControllerComponent player)
+    void FixedUpdate()
+    {
+        var playersToKill = new List<int>();
+        var hitsToRemove = new List<uint>();
+
+        foreach(var entry in detectedHits)
+            foreach (var playerHit in entry.Value)
+            {
+                if (playerHit.addedTime + _hitExpireTime <= Time.time)
+                {
+                    hitsToRemove.Add(entry.Key);
+                    continue;
+                }
+
+                if (playerHit.hitOnServer && playerHit.hitOnClient)
+                    playersToKill.Add(playerHit.slot);
+            }
+
+        foreach (var hit in hitsToRemove)
+            detectedHits.Remove(hit);
+
+        foreach (var playerToKill in playersToKill)
+        {
+            var playerGameObject = LobbyManager.instance.GetPlayerGameObject(playerToKill);
+            if(playerGameObject != null)
+                PlayerDead(playerGameObject.GetComponent<PlayerControllerComponent>());
+        }
+    }
+
+	public void PlayerHit(PlayerControllerComponent player, uint netId, bool sentFromClient = false)
 	{
-		if (!isServer)
+		if (!isServer) {
 			return;
-		
+		}
+        
+        // Add new hit for new bomb netId
+        if (!detectedHits.ContainsKey(netId))
+        {
+            var stat = new List<PlayerHitStat>();
+            stat.Add(new PlayerHitStat { slot = player.slot, hitOnServer = !sentFromClient, hitOnClient = (player.isLocalPlayer || sentFromClient), addedTime = Time.time });
+            detectedHits.Add(netId, stat);
+		}
+        else
+        {
+            // Add hit on existing hit
+            if (detectedHits[netId].Where(x => x.slot == player.slot).Count() > 0)
+                detectedHits[netId].Where(x => x.slot == player.slot).ToList().ForEach(x => 
+                {
+                    if(!x.hitOnServer)
+                        x.hitOnServer = !sentFromClient;
+                    if(!x.hitOnClient)
+                        x.hitOnClient = (player.isLocalPlayer || sentFromClient);
+                });
+        }
+	}
+
+	private void PlayerDead(PlayerControllerComponent player){
 		SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
 		SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
 		SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
@@ -103,6 +168,7 @@ public class GameManager : NetworkBehaviour {
 		}
 
 		_isGameOver = false;
+        detectedHits.Clear();
 		LobbyManager.instance.GameIsOver ();
 	}
 

@@ -15,7 +15,8 @@ public class FastBombsPlayerControllerModifier : DefaultPlayerControllerModifier
         _temp.radius = _playerController.bombParams.radius;
         _temp.warningTime = _playerController.bombParams.warningTime;
 
-        _temp.delayTime = _temp.delayTime / 4.0f;
+        _temp.delayTime /= 2.0f;
+        _temp.warningTime /= 2.0f;
     }
 
     public override BombParams bombParams

@@ -228,7 +228,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -376,7 +376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ffe594a2e17493b981eb058400a9e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentPlayer: {fileID: 0}
 --- !u!114 &11408656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -413,6 +412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c4c5d11772944dcb6058059cc3ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bombNetId: 0
   laserCross: {fileID: 191038, guid: 5e2171ebfd885914fa696bcb8960f7f4, type: 2}
   laserUp: {fileID: 164174, guid: 80b60945654382f4fb1f496975d6523b, type: 2}
   laserDown: {fileID: 189166, guid: ac417a3cedcdadb46abb0e2de9d114fe, type: 2}
@@ -431,7 +431,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ffe594a2e17493b981eb058400a9e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentPlayer: {fileID: 0}
 --- !u!114 &11452880
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -443,7 +442,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ffe594a2e17493b981eb058400a9e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentPlayer: {fileID: 0}
 --- !u!114 &11453778
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -456,7 +454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 2
-  m_SendInterval: 0.1
+  m_SendInterval: 0.055555556
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0

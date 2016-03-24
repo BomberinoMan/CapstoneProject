@@ -12,51 +12,64 @@ public static class Direction
 public class PlayerAnimationDriver : NetworkBehaviour
 {
     [SyncVar]
-    private Animator animator;
-    private new bool isLocalPlayer;
-    private DPadController dPad;
+    private Animator _animator;
+    private new bool _isLocalPlayer;
+    private DPadController _dPad;
+    private PlayerControllerComponent _player;
 
     void Start()
     {
-        animator = gameObject.GetComponent<Animator>();
-        isLocalPlayer = gameObject.GetComponentInParent<PlayerControllerComponent>().isLocalPlayer;
-        dPad = gameObject.GetComponentInParent<PlayerControllerComponent>().dPad;
+        _animator = gameObject.GetComponent<Animator>();
+        _player = gameObject.GetComponentInParent<PlayerControllerComponent>();
+        _isLocalPlayer = _player.isLocalPlayer;
+        _dPad = gameObject.GetComponentInParent<PlayerControllerComponent>().dPad;
     }
 
     void FixedUpdate()
     {
-        if (!isLocalPlayer)
+        if (!_isLocalPlayer)
             return;
-        //TODO need to implement reverse movement here aswell
-        //TODO refactor
-        float hor = dPad.currDirection.x;
-        float vert = dPad.currDirection.y;
+
+        float hor = _dPad.currDirection.x;
+        float vert = _dPad.currDirection.y;
+
+        if (hor == 0 && vert == 0)
+        {
+            hor = Input.GetAxisRaw("Horizontal");
+            vert = Input.GetAxisRaw("Vertical");
+        }
+
+        if (_player.reverseMovement)
+        {
+            hor *= -1.0f;
+            vert *= -1.0f;
+        }
 
         if (vert != 0.0)
         {
-            animator.SetFloat("Speed", Mathf.Abs(vert));
+            _animator.SetFloat("Speed", Mathf.Abs(vert));
 
             if (vert > 0.0)
-                animator.SetInteger("Direction", Direction.Up);
+                _animator.SetInteger("Direction", Direction.Up);
             else if (vert < 0.0)
-                animator.SetInteger("Direction", Direction.Down);
+                _animator.SetInteger("Direction", Direction.Down);
         }
         else if (hor != 0.0)
         {
-            animator.SetFloat("Speed", Mathf.Abs(hor));
+            _animator.SetFloat("Speed", Mathf.Abs(hor));
 
             if (hor > 0.0)
-                animator.SetInteger("Direction", Direction.Right);
+                _animator.SetInteger("Direction", Direction.Right);
             else if (hor < 0.0)
-                animator.SetInteger("Direction", Direction.Left);
+                _animator.SetInteger("Direction", Direction.Left);
         }
         else
-            animator.SetFloat("Speed", 0.0f);
+            _animator.SetFloat("Speed", 0.0f);
     }
 
     public Vector2 GetDirection()
     {
-        switch (animator.GetInteger("Direction"))
+        switch (_animator.GetInteger("Direction"))
         {
             case 1:
                 return new Vector2(0.0f, 1.0f); // Up

@@ -13,6 +13,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     private IPlayerControllerModifier _playerController;
     private bool _bombBlock = false;
     private bool _animatorSetup = false;
+	private Vector2 _lastBombPos = new Vector2 ();
 
 	public DPadController dPad;
     public GameObject bombObject;
@@ -24,6 +25,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     public int bombKick { get { return _playerController.bombKick; } set { _playerController.bombKick = value; } }
     public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
     public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
+    public bool reverseMovement { get { return _playerController.reverseMovement; } }
 
     public override void OnStartClient()
     {
@@ -55,36 +57,46 @@ public class PlayerControllerComponent : NetworkBehaviour
         _transform = GetComponent<Transform>();
     }
 
-	public void TouchLayBomb()
+	public void TouchLayBomb(bool fromTouch = true)
     {
 		if (!isLocalPlayer)
             return;
 
         if (_playerController.canLayBombs && _playerController.currNumBombs > 0)
         {
-            if (!_bombBlock)
+			if (!_bombBlock && !(_lastBombPos.x == AxisRounder.Round(_rb.transform.position.x) && _lastBombPos.y == AxisRounder.Round(_rb.transform.position.y)))
             {
                 CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
+
+                if (_playerController.alwaysLayBombs)
+                {
+                    _lastBombPos = _rb.transform.position;
+                    _lastBombPos.x = AxisRounder.Round(_lastBombPos.x);
+                    _lastBombPos.y = AxisRounder.Round(_lastBombPos.y);
+                }
+                else
+                {
+                    _lastBombPos.x = -10.0f;
+                    _lastBombPos.y = -10.0f;
+                }
             }
-            else if (_playerController.bombLine > 0)
+            else if (_playerController.bombLine > 0 && fromTouch)
             {
                 CmdLayLineBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime, gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
         }
-        if (_playerController.alwaysLayBombs && _playerController.currNumBombs > 0 && !_bombBlock)
-        {
-            CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
-        }
     }
 
-    void FixedUpdate() //TODO Add reverse movement support to animation driver
+    void FixedUpdate()
     {
 		FlipFlopColor();
 
-
-
-        if (!isLocalPlayer)
+		if (!isLocalPlayer)
             return;
+
+		if (_playerController.alwaysLayBombs) {
+			TouchLayBomb(false);
+		}
 
         float hor = dPad.currDirection.x;
         float ver = dPad.currDirection.y;
@@ -94,46 +106,22 @@ public class PlayerControllerComponent : NetworkBehaviour
 			ver = Input.GetAxisRaw ("Vertical");
 		}
 
-        if (!_playerController.reverseMovement)
+        if (_playerController.reverseMovement)
         {
-            if (ver == 0.0f && hor != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    _rb.position.x + hor * _speed * _playerController.speedScalar,
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
-                    0.0f);
-            }
-            else if (hor == 0.0f && ver != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
-                    _rb.position.y + ver * _speed * _playerController.speedScalar,
-                    0.0f);
-            }
+            hor *= -1.0f;
+            ver *= -1.0f;
         }
-        else
-        {
-            if (ver == 0.0f && hor != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    _rb.position.x - hor * _speed * _playerController.speedScalar,
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.y),
-                    0.0f);
-            }
-            else if (hor == 0.0f && ver != 0.0f)
-            {
-                _rb.position = new Vector3(
-                    AxisRounder.SmoothRound(0.3f, 0.7f, _rb.position.x),
-                    _rb.position.y - ver * _speed * _playerController.speedScalar,
-                    0.0f);
-            }
-        }
+
+		hor *= (_speed / Time.fixedDeltaTime) * _playerController.speedScalar;
+		ver *= (_speed / Time.fixedDeltaTime) * _playerController.speedScalar;
+
+		_rb.velocity = new Vector2 (hor, ver);
     }
 
     [ClientRpc]
-    private void RpcSetupBomb(GameObject bomb, bool setupColliders)
+    private void RpcSetupBomb(GameObject bomb)
     {
-        bomb.GetComponent<BombController>().SetupBomb(gameObject, setupColliders);
+		bomb.GetComponent<BombController>().SetupBomb(gameObject);
     }
 
     [Command]
@@ -154,8 +142,8 @@ public class PlayerControllerComponent : NetworkBehaviour
             as GameObject;
 		
 		bomb.GetComponent<BombController>().SetupBomb(gameObject);
-		NetworkServer.Spawn (bomb);
-        RpcSetupBomb(bomb, true);
+		NetworkServer.SpawnWithClientAuthority (bomb, gameObject);
+		RpcSetupBomb(bomb);
     }
 
     [Command]
@@ -184,30 +172,32 @@ public class PlayerControllerComponent : NetworkBehaviour
                 Quaternion.identity)
                 as GameObject;
 
-            bomb.GetComponent<BombController>().SetupBomb(gameObject, false);
-            NetworkServer.Spawn(bomb);
-            RpcSetupBomb(bomb, false);
+			bomb.GetComponent<BombController>().SetupBomb(gameObject);
+			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+			RpcSetupBomb(bomb);
         }
     }
-
+		
     [Command]
-    private void CmdDestroyGameObject(GameObject upgrade)
+    public void CmdPlayerHit(uint bombNetId)
     {
-        NetworkServer.Destroy(upgrade);
+        GameManager.instance.PlayerHit(this, bombNetId, true);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
 		if (other.gameObject.tag == "Upgrade") {
-			//TODO sync effects of radioactive upgrades. Need to go to server to get the type, then apply the effect with RPC call
 			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
-			if (isServer)
-				CmdDestroyGameObject (other.gameObject);
+			if (localPlayerAuthority)
+				NetworkServer.Destroy (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {
-			GameManager.instance.PlayerDead (this);
+            if (isServer)
+                GameManager.instance.PlayerHit(this, other.gameObject.GetComponent<LaserController>().bombNetId);
+            else
+                CmdPlayerHit(other.gameObject.GetComponent<LaserController>().bombNetId);
 		} else if (other.gameObject.tag == "BombBlock") {
 			_bombBlock = true;
-		}	
+		}
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -232,7 +222,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         _playerController = newModifier;
     }
 
-    private void FlipFlopColor() // TODO sync color swap
+    private void FlipFlopColor()
     {
         if (!_animatorSetup)
             return;
@@ -250,7 +240,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         if (gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color == Color.white)
         {
-            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.678f, 0.698f, 0.741f);
+            gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = new Color(0.2f, 0.2f, 0.2f);
         }
         else
         {

@@ -27,8 +27,7 @@ public class InGameMenu : MonoBehaviour
 
     public void OnClickScore()
     {
-        // TODO
-        //show score screen
+
     }
 
     public void OnClickQuit()

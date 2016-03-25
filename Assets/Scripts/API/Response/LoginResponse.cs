@@ -1,9 +1,6 @@
 ﻿using System;
 
 [Serializable]
-public class LoginResponse
+public class LoginResponse : GeneralResponse
 {
-    public string userId;
-    public bool isSuccessful;
-    public string errorMessage;
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 
 [Serializable]
-public class ChangePasswordResponse : LoginResponse
+public class ChangePasswordResponse : GeneralResponse
 {
 }
 

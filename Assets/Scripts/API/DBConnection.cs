@@ -52,6 +52,32 @@ public class DBConnection
         });
     }
 
+    public CreateRoomResponse CreateRooom(CreateRoomMessage message)
+    {
+        return Connect<CreateRoomResponse>("Matchmaking", "CreateRoom", new NameValueCollection()
+        {
+            { "UserId", message.userId.ToString() },
+            { "Name", message.name },
+            { "IP", message.ip }
+        });
+    }
+
+    public DeleteRoomResponse DeleteRoom(DeleteRoomMessage message)
+    {
+        return Connect<DeleteRoomResponse>("Matchmaking", "DeleteRoom", new NameValueCollection()
+        {
+            { "UserId", message.userId.ToString() }
+        });
+    }
+
+    public ListRoomsResponse ListRooms(ListRoomsMessage message)
+    {
+        return Connect<ListRoomsResponse>("Matchmaking", "ListRooms", new NameValueCollection()
+        {
+            { "UserId", message.userId.ToString() }
+        });
+    }
+
     private T Connect<T>(string endpoint, string action, NameValueCollection values)
     {
         values.Add(new NameValueCollection() { { "SuperSecretCode", _superSecretCode } });

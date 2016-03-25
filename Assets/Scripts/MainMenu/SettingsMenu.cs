@@ -38,9 +38,7 @@ public class SettingsMenu : MonoBehaviour
             return;
         }
 
-        var db = DBConnection.GetInstance();
-
-        var response = db.ChangePassword(new ChangePasswordMessage { userName = LoginInformation.username, oldPassword = oldPasswordInputField.text, newPassword = newPasswordInputField.text });
+        var response = DBConnection.instance.ChangePassword(new ChangePasswordMessage { userName = LoginInformation.username, oldPassword = oldPasswordInputField.text, newPassword = newPasswordInputField.text });
 
         if (!response.isSuccessful)
             errorText.text = response.errorMessage;

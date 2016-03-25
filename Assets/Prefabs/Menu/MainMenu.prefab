@@ -175,7 +175,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &112848
 GameObject:
   m_ObjectHideFlags: 1
@@ -939,7 +939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &185608
 GameObject:
   m_ObjectHideFlags: 1
@@ -2003,7 +2003,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ranked
+  m_Text: Match Making
 --- !u!114 &11430002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3096,7 +3096,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d6f8f8c3d60a64b94923d5041d54cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rankedButton: {fileID: 11482918}
+  matchMakingButton: {fileID: 11482918}
+  lanButton: {fileID: 11437734}
   settingsButton: {fileID: 11469578}
   backButton: {fileID: 11491978}
 --- !u!114 &11466204
@@ -3457,7 +3458,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ranked
+  m_Text: Local Area Network
 --- !u!114 &11471652
 MonoBehaviour:
   m_ObjectHideFlags: 1

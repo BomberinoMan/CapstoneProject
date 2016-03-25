@@ -14,6 +14,13 @@ public class LanLobbyMain : MonoBehaviour
 
     public void OnEnable()
     {
+        /*
+        var response = DBConnection.instance.CreateRooom(new CreateRoomMessage { userId = new Guid(), name = "Second test room" });
+
+        var response2 = DBConnection.instance.ListRooms(new ListRoomsMessage { userId = new Guid() });
+
+        var response3 = DBConnection.instance.DeleteRoom(new DeleteRoomMessage { userId = new Guid() });
+        */
         hostButton.onClick.RemoveAllListeners();
         hostButton.onClick.AddListener(OnClickHost);
 

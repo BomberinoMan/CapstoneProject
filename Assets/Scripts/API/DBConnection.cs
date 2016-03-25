@@ -1,6 +1,8 @@
 ﻿using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
@@ -13,7 +15,7 @@ public class DBConnection
     private string _superSecretCode = "21548b73-0f5e-42e9-9038-ffb14458119b";
 
     private DBConnection() { }
-    public static DBConnection GetInstance()
+    public static DBConnection instance { get
     {
         if (_hasInit)
             return _instance;
@@ -22,7 +24,7 @@ public class DBConnection
 
         _instance = new DBConnection();
         return _instance;
-    }
+    }}
 
     public LoginResponse Login(LoginMessage message)
     {
@@ -58,7 +60,7 @@ public class DBConnection
         {
             { "UserId", message.userId.ToString() },
             { "Name", message.name },
-            { "IP", message.ip }
+            { "IP",  LocalIPAddress() }
         });
     }
 
@@ -104,6 +106,20 @@ public class DBConnection
     private static bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
     {
         return true;
+    }
+
+    private string LocalIPAddress()
+    {
+        if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+        {
+            return null;
+        }
+
+        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+        return host
+            .AddressList
+            .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork).ToString();
     }
 
     private static string Hash(string input)

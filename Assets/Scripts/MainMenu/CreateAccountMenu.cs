@@ -40,9 +40,7 @@ public class CreateAccountMenu : MonoBehaviour
             return;
         }
 
-        var db = DBConnection.GetInstance();
-
-        var response = db.CreateUser(new CreateUserMessage { userName = usernameInputField.text, password = passwordInputField.text });
+        var response = DBConnection.instance.CreateUser(new CreateUserMessage { userName = usernameInputField.text, password = passwordInputField.text });
 
         if (!response.isSuccessful)
             errorText.text = response.errorMessage;

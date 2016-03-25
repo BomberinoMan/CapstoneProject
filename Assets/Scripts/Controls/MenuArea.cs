@@ -6,6 +6,6 @@ public class MenuArea : MonoBehaviour, IPointerDownHandler
 {
     public void OnPointerDown(PointerEventData eventData)
     {
-        LobbyManager.instance.ShowInGameMenu();
+        LobbyManager.instance.ToggleInGameMenu();
     }
 }

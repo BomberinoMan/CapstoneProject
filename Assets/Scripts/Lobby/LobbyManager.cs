@@ -13,6 +13,8 @@ using UnityEngine.Networking.Types;
 public class LobbyManager : NetworkLobbyManager
 {
     public GameObject gameManager;
+    public static LobbyManager instance;
+    public ScoreScreen scoreScreen;
 
     public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
@@ -22,9 +24,9 @@ public class LobbyManager : NetworkLobbyManager
     public Text infoText;
     public Button infoButton;
     public float countdownTime = 5.0f;
-    public static LobbyManager instance;
 
     public bool isMatchMaking = false;
+    public LobbyPlayer localPlayer;
 
     private RectTransform _currentPanel;
     private bool _sceneLoaded = false;
@@ -126,7 +128,7 @@ public class LobbyManager : NetworkLobbyManager
         }
 
         for (int i = 0; i < lobbySlots.Count(); i++)
-            if(lobbySlots[i] != null)
+            if (lobbySlots[i] != null)
                 (lobbySlots[i] as LobbyPlayer).isAlive = true;
 
         ServerChangeScene(playScene);
@@ -203,6 +205,21 @@ public class LobbyManager : NetworkLobbyManager
         infoGui.gameObject.SetActive(true);
     }
 
+    public void HideInfoPanel()
+    {
+        infoGui.gameObject.SetActive(false);
+    }
+
+    public void ShowScorePanel()
+    {
+        scoreScreenGui.gameObject.SetActive(true);
+        scoreScreen.UpdateScoreList();
+    }
+
+    public void HideScorePanel()
+    {
+        scoreScreenGui.gameObject.SetActive(false);
+    }
 
     public void ChangePanel(RectTransform newPanel)
     {
@@ -215,9 +232,14 @@ public class LobbyManager : NetworkLobbyManager
         _currentPanel = newPanel;
     }
 
-    public void HideInfoPanel()
+    public void ShowInGameMenu()
     {
-        infoGui.gameObject.SetActive(false);
+        inGameMenu.gameObject.SetActive(true);
+    }
+
+    public void HideInGameMenu()
+    {
+        inGameMenu.gameObject.SetActive(false);
     }
 
     public void DisableAllPanels()
@@ -229,14 +251,16 @@ public class LobbyManager : NetworkLobbyManager
         inGameMenu.gameObject.SetActive(false);
     }
 
-    public void HideInGameMenu()
+    public void ToggleInGameMenu()
     {
-        inGameMenu.gameObject.SetActive(false);
-    }
-
-    public void ShowInGameMenu()
-    {
-        inGameMenu.gameObject.SetActive(true);
+        if (inGameMenu.gameObject.activeSelf)
+        {
+            HideInGameMenu();
+        }
+        else
+        {
+            ShowInGameMenu();
+        }
     }
 
     public void StopClientCallback()

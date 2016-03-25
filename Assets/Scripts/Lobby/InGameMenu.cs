@@ -27,13 +27,13 @@ public class InGameMenu : MonoBehaviour
 
     public void OnClickScore()
     {
-        // TODO
-        //show score screen
+        LobbyManager.instance.ShowScorePanel();
+        LobbyManager.instance.scoreScreen.UpdateScoreList();
     }
 
     public void OnClickQuit()
     {
-        // TODO
-        //through player object disconnect
+        LobbyManager.instance.localPlayer.Leave();
+        LobbyManager.instance.HideInGameMenu();
     }
 }

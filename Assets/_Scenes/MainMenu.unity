@@ -171,6 +171,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &1120631180 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11437734, guid: d9752638532057b4582f2e408e1544f2,
+    type: 2}
+  m_PrefabInternal: {fileID: 1698820270}
+  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1001 &1698820270
 Prefab:
   m_ObjectHideFlags: 0
@@ -250,6 +256,22 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11469742, guid: d9752638532057b4582f2e408e1544f2, type: 2}
+      propertyPath: m_Text
+      value: Local Area Network
+      objectReference: {fileID: 0}
+    - target: {fileID: 11429086, guid: d9752638532057b4582f2e408e1544f2, type: 2}
+      propertyPath: m_Text
+      value: Match Making
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465814, guid: d9752638532057b4582f2e408e1544f2, type: 2}
+      propertyPath: matchMakingButton
+      value: 
+      objectReference: {fileID: 2119072595}
+    - target: {fileID: 11465814, guid: d9752638532057b4582f2e408e1544f2, type: 2}
+      propertyPath: lanButton
+      value: 
+      objectReference: {fileID: 1120631180}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9752638532057b4582f2e408e1544f2, type: 2}
   m_IsPrefabParent: 0
@@ -327,3 +349,9 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &2119072595 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11482918, guid: d9752638532057b4582f2e408e1544f2,
+    type: 2}
+  m_PrefabInternal: {fileID: 1698820270}
+  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}

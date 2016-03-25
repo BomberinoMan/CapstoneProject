@@ -32,8 +32,9 @@ public class MatchmakingLobbyMain : MonoBehaviour
     public void OnClickCreate()
     {
         var maxPlayers = (uint)LobbyManager.instance.maxPlayers;
-        LobbyManager.instance.DisplayInfoNotification("Creating...");       //TODO stop client callback or stop host callback ?
+        LobbyManager.instance.DisplayInfoNotification("Creating...");
 
+        LobbyManager.instance.isMatchMaking = true;
         LobbyManager.instance.StartMatchMaker();
         NetworkManager.singleton.maxDelay = 0.2f;
 		LobbyManager.instance.matchMaker.SetProgramAppID((UnityEngine.Networking.Types.AppID)808401);

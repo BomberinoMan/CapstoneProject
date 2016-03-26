@@ -8,7 +8,6 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager instance;
     public float scoreScreenTime = 5.0f;
-    //TODO do we want to remove elements from the list after a certain amount of time?
     private float _hitExpireTime = 2.0f;
     private bool _isGameOver = false;
     private BoardCreator _boardCreator;
@@ -110,6 +109,8 @@ public class GameManager : NetworkBehaviour
                     if (!x.hitOnClient)
                         x.hitOnClient = (player.isLocalPlayer || sentFromClient);
                 });
+            else
+                detectedHits[netId].Add(new PlayerHitStat { slot = player.slot, hitOnServer = !sentFromClient, hitOnClient = (player.isLocalPlayer || sentFromClient), addedTime = Time.time });
         }
     }
 
@@ -122,9 +123,11 @@ public class GameManager : NetworkBehaviour
 
         (LobbyManager.instance.lobbySlots.Where(x => x.slot == player.slot).First() as LobbyPlayer).isAlive = false;
 
-        Invoke("CheckIfGameOver", 2);
-
-        NetworkServer.Destroy(player.gameObject);
+        if (!_isGameOver)
+        {
+            Invoke("CheckIfGameOver", 2);
+            NetworkServer.Destroy(player.gameObject);
+        }
     }
 
     private void CheckIfGameOver()

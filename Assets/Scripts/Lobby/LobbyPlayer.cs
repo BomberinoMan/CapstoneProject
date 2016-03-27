@@ -33,6 +33,14 @@ public class LobbyPlayer : NetworkLobbyPlayer
         SetupRemotePlayer();
     }
 
+    public override void OnClientExitLobby()
+    {
+        base.OnClientExitLobby();
+        LobbyManager.instance.HideScorePanel();
+        LobbyManager.instance.HideInGameMenu();
+        LobbyManager.instance.HideInfoPanel();
+    }
+
     public override void OnStartLocalPlayer()
     {
         SetupLocalPlayer();
@@ -157,6 +165,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void CmdReadyChanged(string newReadyText)
     {
         readyText = newReadyText;
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
     }
 
     [ClientRpc]
@@ -193,6 +202,13 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void RpcHideScoreList()
     {
         LobbyManager.instance.HideScorePanel();
+    }
+
+    [ClientRpc]
+    public void RpcResetReadyState()
+    {
+        CmdReadyChanged("NOT READY");
+        readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
     }
 
     public void OnReadyChanged(string text)

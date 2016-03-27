@@ -132,6 +132,14 @@ public class LobbyManager : NetworkLobbyManager
                 (lobbySlots[i] as LobbyPlayer).isAlive = true;
 
         ServerChangeScene(playScene);
+
+        foreach (LobbyPlayer player in lobbySlots)
+        {
+            if (player != null)
+            {
+                player.RpcResetReadyState();
+            }
+        }
     }
 
     public bool ArePlayersReady()

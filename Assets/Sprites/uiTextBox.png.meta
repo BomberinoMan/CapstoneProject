@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 9af7b33e98d8dd141be5889734c66858
-timeCreated: 1459034977
+guid: d752062f49ae6684cbcdf89cfdd8e535
+timeCreated: 1459041891
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -43,15 +43,15 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 150, y: 150, z: 150, w: 150}
-  spritePixelsToUnits: 100
+  spriteBorder: {x: 50, y: 50, z: 50, w: 50}
+  spritePixelsToUnits: 2048
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: Tiles
+  spritePackingTag: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

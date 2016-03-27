@@ -21,10 +21,6 @@ public class CreateAccountMenu : MonoBehaviour
         backButton.onClick.AddListener(Back_OnClick);
 
         errorText.text = "";
-
-        usernameInputField.ActivateInputField();
-        passwordInputField.ActivateInputField();
-        rePasswordInputField.ActivateInputField();
     }
 
     public void CreateAccount_OnClick()

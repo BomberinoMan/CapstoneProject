@@ -28,9 +28,6 @@ public class LoginMenu : MonoBehaviour
 		guestButton.onClick.RemoveAllListeners ();
 		guestButton.onClick.AddListener (GuestButton_OnClick);
 
-        usernameInputField.ActivateInputField();
-        passwordInputField.ActivateInputField();
-
         errorText.text = "";
 		passwordInputField.text = "";
 

@@ -14,6 +14,11 @@ public class ScoreScreen : MonoBehaviour
         closeButton.onClick.AddListener(OnClickClose);
     }
 
+    void FixedUpdate()
+    {
+        UpdateScoreList();
+    }
+
     public void OnClickClose()
     {
         LobbyManager.instance.HideScorePanel();

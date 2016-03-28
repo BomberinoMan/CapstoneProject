@@ -13,24 +13,18 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public long nodeId;
 
-    [SyncVar(hook = "OnReadyChanged")]
+    [SyncVar]
     private string readyText;
-    [SyncVar(hook = "OnNameChanged")]
+    [SyncVar]
     private string username;
     [SyncVar]
     public int score;
     [SyncVar]
     public bool isAlive;
 
-    public void OnEnable()
-    {
-        leaveButton = LobbyRoom.instance.leaveButton;
-    }
-
     public override void OnClientEnterLobby()
     {
-        LobbyRoom.instance.AddPlayer(this);
-        SetupRemotePlayer();
+        base.OnClientEnterLobby();
     }
 
     public override void OnClientExitLobby()
@@ -43,59 +37,40 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public override void OnStartLocalPlayer()
     {
-        SetupLocalPlayer();
-    }
+        UpdateUsernameLocal(LoginInformation.username);
+        CmdUpdateUsernameServer(LoginInformation.username);
 
-    public void SetupLocalPlayer()
-    {
-        CmdNameChanged(LoginInformation.username);
-        CmdReadyChanged("NOT READY");
         LobbyManager.instance.localPlayer = this;
-
         if (LobbyManager.instance.isMatchMaking)
         {
             nodeId = (long)LobbyManager.instance.matchInfo.nodeId;
         }
 
-        readyButton.interactable = true;
-        readyButton.onClick.RemoveAllListeners();
-        readyButton.onClick.AddListener(OnReadyClick);
-
-        leaveButton.interactable = true;
-        leaveButton.transform.GetChild(0).GetComponent<Text>().text = "Leave Room";
-        leaveButton.onClick.RemoveAllListeners();
-        leaveButton.onClick.AddListener(OnClickLeave);
+        CmdUpdateAllPlayerLists();
     }
 
-    public void SetupRemotePlayer()
-    {
-        if (isLocalPlayer)
-        {
-            return;
-        }
-
-        nameText.text = username;
-        readyButton.interactable = false;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
-    }
-
-    public void OnReadyClick()
+    public void ToggleReady()
     {
         if (!readyToBegin)
         {
-            SendReadyToBeginMessage();
-            CmdReadyChanged("READY");
+            Ready();
         }
         else
         {
-            SendNotReadyToBeginMessage();
-            CmdReadyChanged("NOT READY");
+            NotReady();
         }
     }
 
-    public void OnClickLeave()
+    private void Ready()
     {
-        Leave();
+        SendReadyToBeginMessage();
+        CmdUpdateReadyText();
+    }
+
+    private void NotReady()
+    {
+        SendNotReadyToBeginMessage();
+        CmdUpdateReadyText();
     }
 
     public void Leave()
@@ -103,17 +78,15 @@ public class LobbyPlayer : NetworkLobbyPlayer
         LobbyManager.instance.DisplayInfoNotification("Quitting...");
         if (LobbyManager.instance.isMatchMaking)
         {
-            Debug.Log("LEAVE MM");
             LeaveMatchMaking();
         }
         else
         {
-            Debug.Log("LEAVE LAN");
             LeaveLan();
         }
     }
 
-    public void LeaveLan()
+    private void LeaveLan()
     {
 		if (isServer)
 		{
@@ -128,7 +101,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     }
 
-    public void LeaveMatchMaking()
+    private void LeaveMatchMaking()
     {
         if (isServer)
         {
@@ -144,7 +117,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
         }
     }
 
-
     private void OnMatchDestroyed(BasicResponse response)
     {
         LobbyManager.instance.StopHost();
@@ -152,21 +124,42 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     private void OnConnectionDropped(BasicResponse response)
     {
-
+        //Unity Matchmaking magic
     }
 
-    [Command]
-    public void CmdNameChanged(string name)
+    [Command] 
+    public void CmdUpdateUsernameServer(string name)
     {
-        nameText.text = name;
         username = name;
     }
 
+    //[Command]
+    //public void CmdUpdateUsername()
+    //{
+    //    foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
+    //    {
+    //        if (player != null)
+    //        {
+    //        }
+    //    }
+    //}
+
     [Command]
-    public void CmdReadyChanged(string newReadyText)
+    public void CmdUpdateReadyText()
     {
-        readyText = newReadyText;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
+        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
+        {
+            if (player != null)
+            {
+                player.RpcUpdateReadyTextRemote();
+            }
+        }
+    }
+    
+    [Command]
+    public void CmdUpdateAllPlayerLists()
+    {
+        LobbyManager.instance.UpdateAllPlayerLists();
     }
 
     [ClientRpc]
@@ -206,24 +199,84 @@ public class LobbyPlayer : NetworkLobbyPlayer
     }
 
     [ClientRpc]
-    public void RpcResetReadyState()
+    public void RpcUpdatePlayerList()
     {
-        CmdReadyChanged("NOT READY");
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
+        LobbyManager.instance.lobbyRoom.UpdatePlayerList();
     }
 
-    public void OnReadyChanged(string text)
+    [ClientRpc]
+    public void RpcUpdateReadyTextRemote()
     {
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
+        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
+        {
+            if (player != null)
+            {
+                //update each players text ***NOTE THIS IS THE CLIENTS VERSION OF ALL THE PLAYERS, NOT EACH INDIVIUAL PLAYER
+                player.UpdateReadyTextLocal();
+            }
+        }
     }
 
-    public void OnNameChanged(string text)
+    [ClientRpc]
+    public void RpcClearReadyStatusLocal()
     {
-        nameText.text = text;
+        Debug.Log("CLIENT RESET");
+        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
+        {
+            if (player != null)
+            {
+                player.readyToBegin = false;
+                player.readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
+            }
+        }
+    }
+
+    public void UpdateReadyTextLocal()
+    {
+        if (readyToBegin)
+        {
+            readyButton.transform.GetChild(0).GetComponent<Text>().text = "READY";
+        }
+        else
+        {
+            readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
+        }
+    }
+
+    //public void OnReadyChanged(string text)
+    //{
+    //    readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
+    //}
+
+    //public void OnNameChanged(string text)
+    //{
+    //    nameText.text = text;
+    //}
+
+    public void UpdateUsernameLocal(string name)
+    {
+        username = name;
     }
 
     public string GetUsername()
     {
         return username;
+    }
+
+    public int GetPosition()
+    {
+        var position = 0;
+        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
+        {
+            if (player != null)
+            {
+                if (this == player)
+                {
+                    return position;
+                }
+            }
+            position += 1;
+        }
+        return -1;
     }
 }

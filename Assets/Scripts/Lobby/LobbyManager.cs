@@ -15,6 +15,7 @@ public class LobbyManager : NetworkLobbyManager
     public GameObject gameManager;
     public static LobbyManager instance;
     public ScoreScreen scoreScreen;
+    public LobbyRoom lobbyRoom;
 
     public RectTransform scoreScreenGui;
     public RectTransform lobbyGui;
@@ -55,6 +56,23 @@ public class LobbyManager : NetworkLobbyManager
         //TODO destroy match if possible
         // maybe create private var for matchId
         // or blacklist match with that id
+    }
+
+    public override void OnServerDisconnect(NetworkConnection conn)
+    {
+        base.OnServerDisconnect(conn);
+        UpdateAllPlayerLists();
+    }
+
+    public void UpdateAllPlayerLists()
+    {
+        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
+        {
+            if (player != null)
+            {
+                player.RpcUpdatePlayerList();
+            }
+        }
     }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
@@ -131,15 +149,16 @@ public class LobbyManager : NetworkLobbyManager
             if (lobbySlots[i] != null)
                 (lobbySlots[i] as LobbyPlayer).isAlive = true;
 
-        ServerChangeScene(playScene);
-
+        Debug.Log("STATUS RESET");
         foreach (LobbyPlayer player in lobbySlots)
         {
             if (player != null)
             {
-                player.RpcResetReadyState();
+                player.RpcClearReadyStatusLocal();
             }
         }
+
+        ServerChangeScene(playScene);
     }
 
     public bool ArePlayersReady()

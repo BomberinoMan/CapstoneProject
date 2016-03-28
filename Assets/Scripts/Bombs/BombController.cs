@@ -20,6 +20,7 @@ public class BombController : NetworkBehaviour
 
     void Start()
     {
+		paramaters = new BombParams();
         parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
     }
 
@@ -38,7 +39,7 @@ public class BombController : NetworkBehaviour
 		_rb.velocity = _direction;
     }
 
-    public void SetupBomb(GameObject player)
+	public void SetupBomb(GameObject player, float delayTime, float explodingDuration, int radius, float warningTime)
     {
 		_startTime = Time.time;
 
@@ -46,12 +47,10 @@ public class BombController : NetworkBehaviour
 			_startTime -= 0.3f;
 		
         paramaters = new BombParams();
-        BombParams playerBombParams = player.GetComponent<PlayerControllerComponent>().bombParams;
-
-        paramaters.delayTime = playerBombParams.delayTime;
-        paramaters.explodingDuration = playerBombParams.explodingDuration;
-        paramaters.radius = playerBombParams.radius;
-        paramaters.warningTime = playerBombParams.warningTime;
+        paramaters.delayTime = delayTime;
+        paramaters.explodingDuration = explodingDuration;
+        paramaters.radius = radius;
+        paramaters.warningTime = warningTime;
 
         parentPlayer = player;
         transform.SetParent(player.transform.parent);

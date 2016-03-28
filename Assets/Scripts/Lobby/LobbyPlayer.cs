@@ -62,7 +62,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
         readyButton.onClick.AddListener(OnReadyClick);
 
         leaveButton.interactable = true;
-        leaveButton.transform.GetChild(0).GetComponent<Text>().text = "Leave Room";
+        leaveButton.GetComponentInChildren<Text>().text = "Leave Room";
         leaveButton.onClick.RemoveAllListeners();
         leaveButton.onClick.AddListener(OnClickLeave);
     }

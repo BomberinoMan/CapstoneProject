@@ -21,7 +21,7 @@ public class LobbyServerInfo : MonoBehaviour
 
     public void OnClickJoin()
     {
-		LobbyManager.instance.DisplayInfoNotification("Joining" + _ip);
+		LobbyManager.instance.DisplayInfoNotification("Joining");
 		LobbyManager.instance.networkAddress = _ip;
 		LobbyManager.instance.StartClient ();
     }

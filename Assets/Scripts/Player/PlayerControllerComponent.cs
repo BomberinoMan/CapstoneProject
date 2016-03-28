@@ -119,9 +119,11 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcSetupBomb(GameObject bomb)
+	private void RpcSetupBomb(GameObject bomb, float delayTime, float explodingDuration, int radius, float warningTime)
     {
-		bomb.GetComponent<BombController>().SetupBomb(gameObject);
+		if (isLocalPlayer)
+			return;
+		bomb.GetComponent<BombController>().SetupBomb(gameObject, delayTime, explodingDuration, radius, warningTime);
     }
 
     [Command]
@@ -140,10 +142,10 @@ public class PlayerControllerComponent : NetworkBehaviour
                 0.0f),
             Quaternion.identity)
             as GameObject;
-		
-		bomb.GetComponent<BombController>().SetupBomb(gameObject);
+
+		bomb.GetComponent<BombController> ().SetupBomb (gameObject, delayTime, explodingDuration, radius, warningTime);
 		NetworkServer.SpawnWithClientAuthority (bomb, gameObject);
-		RpcSetupBomb(bomb);
+		RpcSetupBomb(bomb, delayTime, explodingDuration, radius, warningTime);
     }
 
     [Command]
@@ -172,9 +174,9 @@ public class PlayerControllerComponent : NetworkBehaviour
                 Quaternion.identity)
                 as GameObject;
 
-			bomb.GetComponent<BombController>().SetupBomb(gameObject);
+			bomb.GetComponent<BombController> ().SetupBomb (gameObject, delayTime, explodingDuration, radius, warningTime);
 			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
-			RpcSetupBomb(bomb);
+			RpcSetupBomb(bomb, delayTime, explodingDuration, radius, warningTime);
         }
     }
 		

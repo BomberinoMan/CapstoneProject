@@ -15,13 +15,6 @@ public class LanLobbyMain : MonoBehaviour
 
 	public void OnEnable()
 	{
-		/*
-        var response = DBConnection.instance.CreateRooom(new CreateRoomMessage { userId = new Guid(), name = "Second test room" });
-
-        var response2 = DBConnection.instance.ListRooms(new ListRoomsMessage { userId = new Guid() });
-
-        var response3 = DBConnection.instance.DeleteRoom(new DeleteRoomMessage { userId = new Guid() });
-        */
 		hostButton.onClick.RemoveAllListeners();
 		hostButton.onClick.AddListener(OnClickHost);
 
@@ -31,36 +24,13 @@ public class LanLobbyMain : MonoBehaviour
 		refreshButton.onClick.RemoveAllListeners ();
 		refreshButton.onClick.AddListener (OnClickRefresh);
 
-		var response = DBConnection.instance.ListRooms (new ListRoomsMessage { userId = LoginInformation.guid });
-
-		for(int i = joinList.childCount -1; i >= 0; i--){
-			Destroy(joinList.GetChild(i).gameObject);
-		}
-
-		if(response.isSuccessful)
-			foreach (var room in response.rooms) {
-				var newServerInfo = Instantiate (serverInfo);
-
-				newServerInfo.GetComponent<LobbyServerInfo>().PopulateMatchInfo(room.name, room.ip);
-				newServerInfo.transform.SetParent (joinList.transform, false);
-				newServerInfo.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
-			}
-
-		if (response.rooms.Length == 0) {
-			var newServerInfo = Instantiate (serverInfo);
-
-			newServerInfo.GetComponent<LobbyServerInfo>().PopulateMatchInfo("No games exist", "", false);
-			newServerInfo.transform.SetParent (joinList.transform, false);
-			newServerInfo.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
-		}
-
-		//TODO show popup on error
+		OnClickRefresh ();
 	}
 
 	public void OnClickHost()
 	{
 		var response = DBConnection.instance.CreateRooom (new CreateRoomMessage { userId = LoginInformation.guid, name = "Hello World" });
-
+		//TODO show popup and get a room name
 		if (response.isSuccessful) {
 			LobbyManager.instance.StartHost();
 		}
@@ -74,11 +44,11 @@ public class LanLobbyMain : MonoBehaviour
 	}
 
 	public void OnClickRefresh(){
-		var response = DBConnection.instance.ListRooms (new ListRoomsMessage { userId = LoginInformation.guid });
-
 		for(int i = joinList.childCount -1; i >= 0; i--){
 			Destroy(joinList.GetChild(i).gameObject);
 		}
+
+		var response = DBConnection.instance.ListRooms (new ListRoomsMessage { userId = LoginInformation.guid });
 
 		if(response.isSuccessful)
 			foreach (var room in response.rooms) {
@@ -88,7 +58,7 @@ public class LanLobbyMain : MonoBehaviour
 				newServerInfo.transform.SetParent (joinList.transform, false);
 				newServerInfo.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
 			}
-
+		
 		if (response.rooms.Length == 0) {
 			var newServerInfo = Instantiate (serverInfo);
 

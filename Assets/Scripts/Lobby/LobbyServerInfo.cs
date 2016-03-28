@@ -6,22 +6,23 @@ using System;
 
 public class LobbyServerInfo : MonoBehaviour
 {
-    public Text serverInfo;
-    public Text slotInfo;
+	private string _ip;
+    public Text serverName;
     public Button joinButton;
 
-    public void PopulateMatchInfo(MatchDesc match)
+	public void PopulateMatchInfo(string name, string ip, bool enableButton = true)
     {
-        serverInfo.text = match.name;
-        slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString();
-
+		_ip = ip;
+		serverName.text = name;
         joinButton.onClick.RemoveAllListeners();
-        joinButton.onClick.AddListener(() => { OnClickJoin(match.networkId, match.hostNodeId); });
+        joinButton.onClick.AddListener(() => { OnClickJoin(); });
+		joinButton.gameObject.SetActive (enableButton);
     }
 
-    public void OnClickJoin(NetworkID networkId, NodeID nodeId)
+    public void OnClickJoin()
     {
-        LobbyManager.instance.DisplayInfoNotification("Joining...");
-        LobbyManager.instance.matchMaker.JoinMatch(networkId, "", LobbyManager.instance.OnMatchJoined);
+		LobbyManager.instance.DisplayInfoNotification("Joining" + _ip);
+		LobbyManager.instance.networkAddress = _ip;
+		LobbyManager.instance.StartClient ();
     }
 }

@@ -68,7 +68,7 @@ public class MatchmakingLobbyMain : MonoBehaviour
         foreach (MatchDesc match in response.matches)
         {
             GameObject go = Instantiate(serverInfoPrefab) as GameObject;
-            go.GetComponent<LobbyServerInfo>().PopulateMatchInfo(match);
+//            go.GetComponent<LobbyServerInfo>().PopulateMatchInfo(match);
             go.transform.SetParent(listPanel, false);
         }
     }

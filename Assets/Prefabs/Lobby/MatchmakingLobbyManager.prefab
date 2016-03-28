@@ -862,13 +862,14 @@ MonoBehaviour:
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 0
-  m_LobbyPlayerPrefab: {fileID: 11422460, guid: 8614c5b25e4a14a69b8426eb1d1b6a09,
+  m_LobbyPlayerPrefab: {fileID: 11488796, guid: 8614c5b25e4a14a69b8426eb1d1b6a09,
     type: 2}
   m_GamePlayerPrefab: {fileID: 142472, guid: 58d5cb0cd7e374eb38d4398c5b63fade, type: 2}
   m_LobbyScene: MatchMakingLobby
   m_PlayScene: Game
   lobbySlots: []
   gameManager: {fileID: 175468}
+  scoreScreen: {fileID: 0}
   scoreScreenGui: {fileID: 22458962}
   lobbyGui: {fileID: 22484374}
   menuGui: {fileID: 22413948}
@@ -877,6 +878,8 @@ MonoBehaviour:
   infoText: {fileID: 11486962}
   infoButton: {fileID: 11404188}
   countdownTime: 5
+  isMatchMaking: 0
+  localPlayer: {fileID: 0}
 --- !u!114 &11404724
 MonoBehaviour:
   m_ObjectHideFlags: 1

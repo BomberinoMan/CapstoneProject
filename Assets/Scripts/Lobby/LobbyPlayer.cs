@@ -115,10 +115,11 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void LeaveLan()
     {
-        if (isServer)
-        {
-            LobbyManager.instance.StopHost();
-        }
+		if (isServer)
+		{
+			DBConnection.instance.DeleteRoom (new DeleteRoomMessage { userId = LoginInformation.guid });
+			LobbyManager.instance.StopHost();
+		}
         else
         {
             RemovePlayer();

@@ -153,6 +153,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         ChangePanel(lobbyGui);
         HideInfoPanel();
+		//DisplayInfoInputField ("Enter name for room", OTest);
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)
@@ -176,6 +177,7 @@ public class LobbyManager : NetworkLobbyManager
 
     public void DisplayInfoAlert(string message, UnityAction onCancel)
     {
+		
         infoText.text = message;
         infoButton.onClick.RemoveAllListeners();
         infoButton.onClick.AddListener(onCancel);
@@ -183,6 +185,29 @@ public class LobbyManager : NetworkLobbyManager
         infoButton.gameObject.SetActive(true);
         infoGui.gameObject.SetActive(true);
     }
+
+	public void DisplayInfoInputField(string placeholder, Action<string> onSubmit){
+		infoText.gameObject.SetActive (false);
+
+		infoInputField.gameObject.SetActive (true);
+		infoInputField.GetComponentInChildren<Text> ().text = placeholder;
+
+		infoButton.GetComponentInChildren<Text> ().text = "Submit";
+		infoButton.onClick.RemoveAllListeners ();
+		infoButton.onClick.AddListener (delegate {
+			ResetInfoPanel();
+			onSubmit(infoInputField.text);
+		});
+
+		infoGui.gameObject.SetActive (true);
+	}
+
+	public void ResetInfoPanel(){
+		infoInputField.gameObject.SetActive (false);
+		infoButton.GetComponentInChildren<Text> ().text = "Cancel";
+		infoText.gameObject.SetActive (true);
+		infoGui.gameObject.SetActive (false);
+	}
 
     public void HideInfoPanel()
     {

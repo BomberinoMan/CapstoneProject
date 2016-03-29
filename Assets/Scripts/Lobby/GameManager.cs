@@ -152,7 +152,14 @@ public class GameManager : NetworkBehaviour
         _isGameOver = true;
         float remainingTime = scoreScreenTime;
 
-		(LobbyManager.instance.lobbySlots [0] as LobbyPlayer).RpcShowScoreList();
+        // Workaround to reset all of the readyText on lobbyPlayers
+        // This needs to be done because there is no way to ensure that each client will get the latest version of the text 
+        //      when re-connecting to the lobby
+        for (int i = 0; i < LobbyManager.instance.lobbySlots.Length; i++)
+            if (LobbyManager.instance.lobbySlots[i] != null)
+                (LobbyManager.instance.lobbySlots[i] as LobbyPlayer).readyText = "NOT READY";
+
+        (LobbyManager.instance.lobbySlots [0] as LobbyPlayer).RpcShowScoreList();
 
         while (remainingTime >= -1)
         {

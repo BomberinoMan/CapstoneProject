@@ -10,11 +10,20 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public Text nameText;
     public Button readyButton;
     public Button leaveButton;
+    public Image playerColorImage;
+
+    private Color[] playerSlotColors = new Color[]
+    {
+        new Color(0.0f, 0.0f, 1.0f, 1.0f),  // Blue
+        new Color(1.0f, 1.0f, 0.0f, 1.0f),  // Yellow
+        new Color(1.0f, 0.0f, 0.0f, 1.0f),  // Red
+        new Color(0.0f, 1.0f, 0.0f, 1.0f)   // Green
+    };
 
     public long nodeId;
 
     [SyncVar(hook = "OnReadyChanged")]
-    private string readyText;
+    public string readyText;
     [SyncVar(hook = "OnNameChanged")]
     private string username;
     [SyncVar]
@@ -25,6 +34,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public override void OnClientEnterLobby()
     {
         LobbyRoom.instance.AddPlayer(this);
+        playerColorImage.color = playerSlotColors[slot];
         SetupRemotePlayer();
     }
 
@@ -43,16 +53,10 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupLocalPlayer()
     {
-        CmdSetUsername(LoginInformation.username);
-		Debug.Log ("before : " + isLocalPlayer + " : " + readyText);
-		CmdSetReadyStateText();
-		Debug.Log ("after : " + isLocalPlayer + " : " + readyText);
-
-		Debug.Log ("before2 : " + isLocalPlayer + " : " + readyText);
-		CmdSetReadyStateText();
-		Debug.Log ("after2 : " + isLocalPlayer + " : " + readyText);
-
         LobbyManager.instance.localPlayer = this;
+
+        CmdSetUsername(LoginInformation.username);
+        CmdUpdateReadyStateText();
 
         readyButton.interactable = true;
         readyButton.onClick.RemoveAllListeners();
@@ -69,7 +73,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
 		if (isLocalPlayer)
 			return;
-		
+
         nameText.text = username;
         readyButton.interactable = false;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
@@ -82,7 +86,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
         else
             SendNotReadyToBeginMessage();
 
-		CmdSetReadyStateText();
+		CmdUpdateReadyStateText();
     }
 
     public void OnClickLeave()
@@ -151,9 +155,8 @@ public class LobbyPlayer : NetworkLobbyPlayer
     }
 
     [Command]
-	public void CmdSetReadyStateText()
+	public void CmdUpdateReadyStateText()
     {
-		Debug.Log ("Ready state changed " + readyToBegin + " : " + isLocalPlayer);
 		readyText = readyToBegin ? "READY" : "NOT READY";
     }
 

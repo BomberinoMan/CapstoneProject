@@ -152,13 +152,7 @@ public class GameManager : NetworkBehaviour
         _isGameOver = true;
         float remainingTime = scoreScreenTime;
 
-        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
-        {
-            if (player != null)
-            {
-                player.RpcShowScoreList();
-            }
-        }
+		(LobbyManager.instance.lobbySlots [0] as LobbyPlayer).RpcShowScoreList();
 
         while (remainingTime >= -1)
         {
@@ -166,15 +160,9 @@ public class GameManager : NetworkBehaviour
             remainingTime -= Time.deltaTime;
         }
 
-        foreach (LobbyPlayer player in LobbyManager.instance.lobbySlots)
-        {
-            if (player != null)
-            {
-                player.RpcHideScoreList();
-            }
-        }
+		(LobbyManager.instance.lobbySlots [0] as LobbyPlayer).RpcHideScoreList();
 
-        _isGameOver = false;
+		_isGameOver = false;
         detectedHits.Clear();
         LobbyManager.instance.GameIsOver();
     }

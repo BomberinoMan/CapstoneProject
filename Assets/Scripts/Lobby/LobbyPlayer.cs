@@ -22,11 +22,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [SyncVar]
     public bool isAlive;
 
-    public void OnEnable()
-    {
-        leaveButton = LobbyRoom.instance.leaveButton;
-    }
-
     public override void OnClientEnterLobby()
     {
         LobbyRoom.instance.AddPlayer(this);
@@ -48,19 +43,22 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupLocalPlayer()
     {
-        CmdNameChanged(LoginInformation.username);
-        CmdReadyChanged("NOT READY");
-        LobbyManager.instance.localPlayer = this;
+        CmdSetUsername(LoginInformation.username);
+		Debug.Log ("before : " + isLocalPlayer + " : " + readyText);
+		CmdSetReadyStateText();
+		Debug.Log ("after : " + isLocalPlayer + " : " + readyText);
 
-        if (LobbyManager.instance.isMatchMaking)
-        {
-            nodeId = (long)LobbyManager.instance.matchInfo.nodeId;
-        }
+		Debug.Log ("before2 : " + isLocalPlayer + " : " + readyText);
+		CmdSetReadyStateText();
+		Debug.Log ("after2 : " + isLocalPlayer + " : " + readyText);
+
+        LobbyManager.instance.localPlayer = this;
 
         readyButton.interactable = true;
         readyButton.onClick.RemoveAllListeners();
         readyButton.onClick.AddListener(OnReadyClick);
 
+		leaveButton = LobbyRoom.instance.leaveButton;
         leaveButton.interactable = true;
         leaveButton.GetComponentInChildren<Text>().text = "Leave Room";
         leaveButton.onClick.RemoveAllListeners();
@@ -69,11 +67,9 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void SetupRemotePlayer()
     {
-        if (isLocalPlayer)
-        {
-            return;
-        }
-
+		if (isLocalPlayer)
+			return;
+		
         nameText.text = username;
         readyButton.interactable = false;
         readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
@@ -82,15 +78,11 @@ public class LobbyPlayer : NetworkLobbyPlayer
     public void OnReadyClick()
     {
         if (!readyToBegin)
-        {
             SendReadyToBeginMessage();
-            CmdReadyChanged("READY");
-        }
         else
-        {
             SendNotReadyToBeginMessage();
-            CmdReadyChanged("NOT READY");
-        }
+
+		CmdSetReadyStateText();
     }
 
     public void OnClickLeave()
@@ -100,15 +92,13 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
     public void Leave()
     {
-        LobbyManager.instance.DisplayInfoNotification("Quitting...");
+        LobbyManager.instance.DisplayInfoNotification("Leaving");
         if (LobbyManager.instance.isMatchMaking)
         {
-            Debug.Log("LEAVE MM");
             LeaveMatchMaking();
         }
         else
         {
-            Debug.Log("LEAVE LAN");
             LeaveLan();
         }
     }
@@ -117,7 +107,6 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
 		if (isServer)
 		{
-			DBConnection.instance.DeleteRoom (new DeleteRoomMessage { userId = LoginInformation.guid });
 			LobbyManager.instance.StopHost();
 		}
         else
@@ -156,22 +145,24 @@ public class LobbyPlayer : NetworkLobbyPlayer
     }
 
     [Command]
-    public void CmdNameChanged(string name)
+    public void CmdSetUsername(string name)
     {
-        nameText.text = name;
         username = name;
     }
 
     [Command]
-    public void CmdReadyChanged(string newReadyText)
+	public void CmdSetReadyStateText()
     {
-        readyText = newReadyText;
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
+		Debug.Log ("Ready state changed " + readyToBegin + " : " + isLocalPlayer);
+		readyText = readyToBegin ? "READY" : "NOT READY";
     }
 
     [ClientRpc]
     public void RpcCancelCountdown()
     {
+		if (!isLocalPlayer)
+			return;
+		
         leaveButton.interactable = true;
         readyButton.interactable = true;
         LobbyManager.instance.HideInfoPanel();
@@ -180,6 +171,9 @@ public class LobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     public void RpcUpdateCountdown(int count)
     {
+		if (!isLocalPlayer)
+			return;
+		
         LobbyManager.instance.infoGui.gameObject.SetActive(true);
         LobbyManager.instance.infoButton.gameObject.SetActive(false);
         leaveButton.interactable = false;
@@ -187,7 +181,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
 
         LobbyManager.instance.infoText.text = "Match Starting in " + (count);
 
-        if (count <= -1)
+        if (count <= 0)
         {
             LobbyManager.instance.HideInfoPanel();
         }
@@ -205,21 +199,16 @@ public class LobbyPlayer : NetworkLobbyPlayer
         LobbyManager.instance.HideScorePanel();
     }
 
-    [ClientRpc]
-    public void RpcResetReadyState()
-    {
-        CmdReadyChanged("NOT READY");
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = "NOT READY";
-    }
-
     public void OnReadyChanged(string text)
     {
-        readyButton.transform.GetChild(0).GetComponent<Text>().text = text;
+		readyText = text;
+		readyButton.transform.GetChild(0).GetComponent<Text>().text = readyText;
     }
 
     public void OnNameChanged(string text)
     {
         nameText.text = text;
+		username = text;
     }
 
     public string GetUsername()

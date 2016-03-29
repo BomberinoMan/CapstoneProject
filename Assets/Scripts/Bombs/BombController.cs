@@ -21,7 +21,6 @@ public class BombController : NetworkBehaviour
     void Start()
     {
 		paramaters = new BombParams();
-        parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
     }
 
 	void OnDestroy(){
@@ -53,6 +52,7 @@ public class BombController : NetworkBehaviour
         paramaters.warningTime = warningTime;
 
         parentPlayer = player;
+		parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs--;
         transform.SetParent(player.transform.parent);
     }
 

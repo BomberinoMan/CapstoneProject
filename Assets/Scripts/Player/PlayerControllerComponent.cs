@@ -121,7 +121,7 @@ public class PlayerControllerComponent : NetworkBehaviour
     [ClientRpc]
 	private void RpcSetupBomb(GameObject bomb, float delayTime, float explodingDuration, int radius, float warningTime)
     {
-		if (isLocalPlayer)
+		if (isServer)
 			return;
 		bomb.GetComponent<BombController>().SetupBomb(gameObject, delayTime, explodingDuration, radius, warningTime);
     }

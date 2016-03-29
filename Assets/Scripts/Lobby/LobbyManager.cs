@@ -21,7 +21,9 @@ public class LobbyManager : NetworkLobbyManager
     public RectTransform menuGui;
     public RectTransform infoGui;
     public RectTransform inGameMenu;
+
     public Text infoText;
+	public InputField infoInputField;
     public Button infoButton;
     public float countdownTime = 5.0f;
 
@@ -51,10 +53,7 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyStopHost()
     {
         base.OnLobbyStopHost();
-
-        //TODO destroy match if possible
-        // maybe create private var for matchId
-        // or blacklist match with that id
+		DBConnection.instance.DeleteRoom (new DeleteRoomMessage { userId = LoginInformation.guid });
     }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
@@ -103,27 +102,14 @@ public class LobbyManager : NetworkLobbyManager
 
             if (!ArePlayersReady() || playerCount != lobbySlots.Where(x => x != null).Count())
             {
-                foreach (LobbyPlayer player in lobbySlots)
-                {
-                    if (player != null)
-                    {
-                        player.RpcCancelCountdown();
-                    }
-                }
+				lobbySlots.Where (x => x != null).ToList ().ForEach (x => (x as LobbyPlayer).RpcCancelCountdown ());
                 yield break;
             }
 
             if (newFloorTime != floorTime)
             {
                 floorTime = newFloorTime;
-
-                foreach (LobbyPlayer player in lobbySlots)
-                {
-                    if (player != null)
-                    {
-                        player.RpcUpdateCountdown(floorTime);
-                    }
-                }
+				lobbySlots.Where (x => x != null).ToList ().ForEach (x => (x as LobbyPlayer).RpcUpdateCountdown(floorTime));
             }
         }
 
@@ -132,28 +118,14 @@ public class LobbyManager : NetworkLobbyManager
                 (lobbySlots[i] as LobbyPlayer).isAlive = true;
 
         ServerChangeScene(playScene);
-
-        foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                player.RpcResetReadyState();
-            }
-        }
     }
 
     public bool ArePlayersReady()
     {
         foreach (LobbyPlayer player in lobbySlots)
-        {
-            if (player != null)
-            {
-                if (!player.readyToBegin)
-                {
+			if (player != null)
+				if (!player.readyToBegin)
                     return false;
-                }
-            }
-        }
         return true;
     }
 
@@ -192,7 +164,6 @@ public class LobbyManager : NetworkLobbyManager
     {
         if (SceneManager.GetActiveScene().name == "Game")
             DisableAllPanels();
-        //TODO need to enable lobby gui here too?
     }
 
     // **************GUI**************

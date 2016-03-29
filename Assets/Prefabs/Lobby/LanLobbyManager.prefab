@@ -500,7 +500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &178466
 GameObject:
   m_ObjectHideFlags: 1
@@ -1543,6 +1543,7 @@ MonoBehaviour:
   infoGui: {fileID: 22478562}
   inGameMenu: {fileID: 22461040}
   infoText: {fileID: 11454128}
+  infoInputField: {fileID: 11430624}
   infoButton: {fileID: 11460016}
   countdownTime: 5
   isMatchMaking: 0

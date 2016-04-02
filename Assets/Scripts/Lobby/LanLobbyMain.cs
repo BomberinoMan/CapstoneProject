@@ -29,7 +29,11 @@ public class LanLobbyMain : MonoBehaviour
 
 	public void OnClickHost()
 	{
-		var response = DBConnection.instance.CreateRooom (new CreateRoomMessage { userId = LoginInformation.guid, name = "Hello World" });
+		LobbyManager.instance.DisplayInfoInputField ("Room Name", OnSubmitHostName);
+	}
+
+	public void OnSubmitHostName(string name){
+		var response = DBConnection.instance.CreateRooom (new CreateRoomMessage { userId = LoginInformation.guid, name = name });
 		//TODO show popup and get a room name
 		if (response.isSuccessful) {
 			LobbyManager.instance.StartHost();

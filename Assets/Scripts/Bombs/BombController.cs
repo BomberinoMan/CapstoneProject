@@ -21,8 +21,13 @@ public class BombController : NetworkBehaviour
 
     void Start()
     {
+<<<<<<< HEAD
         if(paramaters == null)
 		    paramaters = new BombParams();
+=======
+		if(paramaters == null)
+			paramaters = new BombParams();
+>>>>>>> origin/master
     }
 
 	void OnDestroy(){
@@ -46,7 +51,7 @@ public class BombController : NetworkBehaviour
 
 		if (!isServer)
 			_startTime -= 0.3f;
-		
+		Debug.Log ("SetupBomb");
         paramaters = new BombParams();
         paramaters.delayTime = delayTime;
         paramaters.explodingDuration = explodingDuration;

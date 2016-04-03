@@ -21,13 +21,8 @@ public class BombController : NetworkBehaviour
 
     void Start()
     {
-<<<<<<< HEAD
         if(paramaters == null)
 		    paramaters = new BombParams();
-=======
-		if(paramaters == null)
-			paramaters = new BombParams();
->>>>>>> origin/master
     }
 
 	void OnDestroy(){

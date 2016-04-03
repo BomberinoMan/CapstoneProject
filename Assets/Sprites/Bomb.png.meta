@@ -9,7 +9,7 @@ TextureImporter:
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -29,7 +29,7 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 128
+  maxTextureSize: 256
   textureSettings:
     filterMode: -1
     aniso: 16
@@ -63,10 +63,29 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -32, y: 32}
-        - {x: -32, y: -32}
-        - {x: 32, y: -32}
-        - {x: 32, y: 32}
+      - - {x: 125, y: -128}
+        - {x: 128, y: -128}
+        - {x: 128, y: 128}
+        - {x: 125, y: 128}
+        - {x: 117, y: 91}
+        - {x: 79, y: 106}
+        - {x: 98, y: 127}
+        - {x: 98, y: 128}
+        - {x: -98, y: 128}
+        - {x: -98, y: 126}
+        - {x: -97, y: 87}
+        - {x: -126, y: 98}
+        - {x: -128, y: 98}
+        - {x: -128, y: -98}
+        - {x: -125, y: -99}
+        - {x: -103, y: -82}
+        - {x: -79, y: -106}
+        - {x: -98, y: -126}
+        - {x: -98, y: -128}
+        - {x: 98, y: -128}
+        - {x: 98, y: -126}
+        - {x: 88, y: -99}
+        - {x: 125, y: -97}
     - name: BombLight
       rect:
         serializedVersion: 2
@@ -78,14 +97,18 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 6.079895, y: 12}
-        - {x: -6.920105, y: 12}
-        - {x: -11.920105, y: 6}
-        - {x: -11.920105, y: -10}
-        - {x: -5.920105, y: -12}
-        - {x: 8.079895, y: -12}
-        - {x: 12.079895, y: -7}
-        - {x: 12.079895, y: 6}
+      - - {x: -124.68042, y: -128}
+        - {x: -124.68042, y: 128}
+        - {x: -127.68042, y: 128}
+        - {x: -127.68042, y: -128}
+      - - {x: -33.68042, y: 43}
+        - {x: -41.68042, y: 22}
+        - {x: -41.68042, y: -27}
+        - {x: -27.68042, y: -43}
+        - {x: 23.31958, y: -43}
+        - {x: 43.31958, y: -33}
+        - {x: 43.31958, y: 26}
+        - {x: 25.31958, y: 43}
     outline: []
   spritePackingTag: 
   userData: 

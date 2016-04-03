@@ -205,6 +205,7 @@ public class LobbyManager : NetworkLobbyManager
 	public void ResetInfoPanel(){
 		infoInputField.gameObject.SetActive (false);
 		infoButton.GetComponentInChildren<Text> ().text = "Cancel";
+        infoButton.gameObject.SetActive(true);
 		infoText.gameObject.SetActive (true);
 		infoGui.gameObject.SetActive (false);
 	}

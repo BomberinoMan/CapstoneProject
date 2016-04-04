@@ -15,6 +15,7 @@ GameObject:
   - 95: {fileID: 9569044}
   - 114: {fileID: 11423524}
   - 58: {fileID: 5840474}
+  - 82: {fileID: 8249476}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -65,6 +66,80 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.47
+--- !u!82 &8249476
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 142472}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &9569044
 Animator:
   serializedVersion: 3
@@ -167,6 +242,11 @@ MonoBehaviour:
   slot: 0
   dPad: {fileID: 11468542, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
   bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
+  audioObject: {fileID: 135588, guid: ee599bdca9c85c24895d1b93d32e5c85, type: 2}
+  pickupUpgradeSound: {fileID: 8300000, guid: 6045a6b9441764cccb7e494f01f4cb8d, type: 3}
+  pickupRadioactiveUpgradeSound: {fileID: 8300000, guid: 96677dd078e7c488fb184b357873c120,
+    type: 3}
+  layBombSound: {fileID: 8300000, guid: bc06ed1783713428e93d98a968cbf4ff, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

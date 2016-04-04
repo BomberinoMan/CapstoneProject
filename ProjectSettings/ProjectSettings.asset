@@ -91,7 +91,70 @@ PlayerSettings:
     Others: 1
   bundleIdentifier: com.Capstone.BomberinoMan
   bundleVersion: 1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 2800000, guid: 27801757e47fa6149a664981d03af897, type: 3}
+  - {fileID: 2800000, guid: fa7e3bed658a85848922a0d18555cc6c, type: 3}
+  - {fileID: 2800000, guid: 1e68640012699c04a837c406afc047b4, type: 3}
+  - {fileID: 2800000, guid: b2660c104662eeb499be684452dda551, type: 3}
+  - {fileID: 2800000, guid: e3079d80b40311c4586f8881cc786fe7, type: 3}
+  - {fileID: 2800000, guid: c8cb75a0529f3634a83d64f0485f013b, type: 3}
+  - {fileID: 2800000, guid: 1c30b7d0023569245bc3cde09fb31901, type: 3}
+  - {fileID: 2800000, guid: 054d5de033f7db048adfa37c5bff5b2a, type: 3}
+  - {fileID: 2800000, guid: ec4e1cf016f7e5d429a4def6122fd1a3, type: 3}
+  - {fileID: 2800000, guid: a39e5b01ab7f99d48a415fafaa48cd1b, type: 3}
+  - {fileID: 2800000, guid: fa09e4516dacd6d45b66214c484f5d72, type: 3}
+  - {fileID: 2800000, guid: 9ada26c1764b18b4e969385a9173e303, type: 3}
+  - {fileID: 2800000, guid: 1fbf37e1206677a4ea67dbaf11aba1bb, type: 3}
+  - {fileID: 2800000, guid: 03540ef1f742b5d4bb0222558f21ba0e, type: 3}
+  - {fileID: 2800000, guid: cc1e7e52342a11642a57c70ba58d9ef8, type: 3}
+  - {fileID: 2800000, guid: d096cb72171c85d45bb0e74ba571de7c, type: 3}
+  - {fileID: 2800000, guid: 467f168258338d44fb43d5eb410dbf42, type: 3}
+  - {fileID: 2800000, guid: a6ab90b21d6c96d40889c21e8f793c88, type: 3}
+  - {fileID: 2800000, guid: 939b3743810d6e34c8bda2c3cc02dcab, type: 3}
+  - {fileID: 2800000, guid: 4e161df34cb6b8147894d1b015728318, type: 3}
+  - {fileID: 2800000, guid: ca4cda043a800774187bf2250dcfa02c, type: 3}
+  - {fileID: 2800000, guid: 8e243314deb0cea48b8fb2a2fe943fba, type: 3}
+  - {fileID: 2800000, guid: 113cbc4491c381c41b62b9771c78c4a7, type: 3}
+  - {fileID: 2800000, guid: 1fc14354c5a2e73458204e2506999e81, type: 3}
+  - {fileID: 2800000, guid: 46b43e35ab4a82745b9364becdee7816, type: 3}
+  - {fileID: 2800000, guid: 18de1da5ff7538f4fb9b5a111a658102, type: 3}
+  - {fileID: 2800000, guid: b4d574e5ba0631f4e8ee2bd872b494da, type: 3}
+  - {fileID: 2800000, guid: 97da8e06bbae38d428bd3a94a0a204ae, type: 3}
+  - {fileID: 2800000, guid: 092021165dbbf4943b5e10a093752705, type: 3}
+  - {fileID: 2800000, guid: 69af755624989614fbae6f3a0c3579b3, type: 3}
+  - {fileID: 2800000, guid: f583f4c62b85bd640b60a0961a855183, type: 3}
+  - {fileID: 2800000, guid: 100576d6a3851d2468deef8f143c1cda, type: 3}
+  - {fileID: 2800000, guid: 7313aa07a8bcfde4e82a3ff08e209f51, type: 3}
+  - {fileID: 2800000, guid: 23f23a17c33e82c4b96d688c75c87079, type: 3}
+  - {fileID: 2800000, guid: 7f790778cf560c74c84fb892856bdaa0, type: 3}
+  - {fileID: 2800000, guid: b8dfc878b71cce4428f83928e715f364, type: 3}
+  - {fileID: 2800000, guid: df668978402efe74a9112fec4ac83696, type: 3}
+  - {fileID: 2800000, guid: 81040788d79420849929411600db858e, type: 3}
+  - {fileID: 2800000, guid: 1ef51cb856861e345ad6c9b7c233a257, type: 3}
+  - {fileID: 2800000, guid: f19b1bd8a3ae1eb4ea7f72c964b767a9, type: 3}
+  - {fileID: 2800000, guid: 8ee0444952212e04caf294669d22b3a8, type: 3}
+  - {fileID: 2800000, guid: c6703a5962887a54b95add96dfe6ce0a, type: 3}
+  - {fileID: 2800000, guid: 8b8858795a47b0848ae540433789050b, type: 3}
+  - {fileID: 2800000, guid: d3c522992855e034aa6543a48ef6e56f, type: 3}
+  - {fileID: 2800000, guid: 64cd68d908b2584468cefa52cfc9ec48, type: 3}
+  - {fileID: 2800000, guid: 6651da5ae3fdaf8419cecaaa5ebc540d, type: 3}
+  - {fileID: 2800000, guid: d70952ea3f213ae4baede8748a4a9596, type: 3}
+  - {fileID: 2800000, guid: 9542736bb11e7444f80065f6ae27e519, type: 3}
+  - {fileID: 2800000, guid: ba9955ab5b4e0ea45bc12070a15d9860, type: 3}
+  - {fileID: 2800000, guid: 808b499ce4a284d4697d2a89ffb03f39, type: 3}
+  - {fileID: 2800000, guid: 06857cdcb8a31b243aae8d100f7c3e74, type: 3}
+  - {fileID: 2800000, guid: 1f6442ec84c8e7347a7ec773453ec198, type: 3}
+  - {fileID: 2800000, guid: 33bc355dc4a73e74cbf72688d4f18364, type: 3}
+  - {fileID: 2800000, guid: 70b2f07dab23557409ceea2a3e9e5879, type: 3}
+  - {fileID: 2800000, guid: 69812bddfdb7aed47890d15f646512fc, type: 3}
+  - {fileID: 2800000, guid: f5d6992e3c2874288b775ca769d1b4ca, type: 3}
+  - {fileID: 2800000, guid: 9af7b33e98d8dd141be5889734c66858, type: 3}
+  - {fileID: 2800000, guid: 1918748e3da3e2d4c8b7384cd35d8f84, type: 3}
+  - {fileID: 2800000, guid: 1f9fc3fee821dd742b9f603694a7c631, type: 3}
+  - {fileID: 2800000, guid: c10b75fe52ae7914288ab3ac0049abf1, type: 3}
+  - {fileID: 2800000, guid: d752062f49ae6684cbcdf89cfdd8e535, type: 3}
+  - {fileID: 2800000, guid: 86fbb95fbaeee064f98634c7c583cb8d, type: 3}
+  - {fileID: 2800000, guid: 072c3eaf7883a57408047786d03c51a4, type: 3}
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   xboxOneDisableKinectGpuReservation: 0

@@ -401,6 +401,7 @@ MonoBehaviour:
   speed: 0.12
   speedScalar: 1
   parentPlayer: {fileID: 0}
+  audioObject: {fileID: 178328, guid: 22f91a3b9625dd545abb3aded1bb07d2, type: 2}
 --- !u!114 &11421224
 MonoBehaviour:
   m_ObjectHideFlags: 1

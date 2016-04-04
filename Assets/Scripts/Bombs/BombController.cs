@@ -7,6 +7,7 @@ public class BombController : NetworkBehaviour
     public float speedScalar;
     public BombParams paramaters;
     public GameObject parentPlayer;
+    public GameObject audioObject;
 
     private bool _hasExploded = false;
     private float _startTime;
@@ -20,8 +21,8 @@ public class BombController : NetworkBehaviour
 
     void Start()
     {
-		if(paramaters == null)
-			paramaters = new BombParams();
+        if(paramaters == null)
+		    paramaters = new BombParams();
     }
 
 	void OnDestroy(){
@@ -65,6 +66,7 @@ public class BombController : NetworkBehaviour
         {
             if (!_hasExploded)
             {
+                Instantiate(audioObject);
                 _hasExploded = true;
                 parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
                 gameObject.GetComponent<LaserInstantiator>().InstantiateLaser(GetComponent<NetworkIdentity>().netId.Value);

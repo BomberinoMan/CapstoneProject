@@ -17,8 +17,14 @@ public class PlayerControllerComponent : NetworkBehaviour
 
 	public DPadController dPad;
     public GameObject bombObject;
+    public GameObject audioObject;
+    public AudioClip pickupUpgradeSound;
+    public AudioClip pickupRadioactiveUpgradeSound;
+    public AudioClip layBombSound;
+
     private Rigidbody2D _rb;
     private Transform _transform;
+    private AudioSource _audioSource;
 
     public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
     public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
@@ -48,8 +54,14 @@ public class PlayerControllerComponent : NetworkBehaviour
 		GameObject.Find ("BombArea").GetComponent<TouchBomb> ().SetPlayerController (this);
 	}
 
+    public void OnDestroy()
+    {
+        Instantiate(audioObject);
+    }
+
     public void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _speed = 0.06f;
         _flipFlopTime = Time.time;
         _playerController = new DefaultPlayerControllerModifier();
@@ -66,6 +78,7 @@ public class PlayerControllerComponent : NetworkBehaviour
         {
 			if (!_bombBlock && !(_lastBombPos.x == AxisRounder.Round(_rb.transform.position.x) && _lastBombPos.y == AxisRounder.Round(_rb.transform.position.y)))
             {
+                _audioSource.PlayOneShot(layBombSound);
                 CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
 
                 if (_playerController.alwaysLayBombs)
@@ -82,6 +95,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             }
             else if (_playerController.bombLine > 0 && fromTouch)
             {
+                _audioSource.PlayOneShot(layBombSound);
                 CmdLayLineBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime, gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
         }
@@ -189,7 +203,12 @@ public class PlayerControllerComponent : NetworkBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
 		if (other.gameObject.tag == "Upgrade") {
-			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
+            if (other.gameObject.GetComponent<UpgradeTypeComponent>().type == UpgradeType.Radioactive)
+                _audioSource.PlayOneShot(pickupRadioactiveUpgradeSound);
+            else
+                _audioSource.PlayOneShot(pickupUpgradeSound);
+
+            UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
 			if (localPlayerAuthority)
 				NetworkServer.Destroy (other.gameObject);
 		} else if (other.gameObject.tag == "Laser") {

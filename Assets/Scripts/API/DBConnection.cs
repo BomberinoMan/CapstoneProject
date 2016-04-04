@@ -15,16 +15,19 @@ public class DBConnection
     private string _superSecretCode = "21548b73-0f5e-42e9-9038-ffb14458119b";
 
     private DBConnection() { }
-    public static DBConnection instance { get
+    public static DBConnection instance
     {
-        if (_hasInit)
+        get
+        {
+            if (_hasInit)
+                return _instance;
+
+            ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+
+            _instance = new DBConnection();
             return _instance;
-
-        ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
-
-        _instance = new DBConnection();
-        return _instance;
-    }}
+        }
+    }
 
     public LoginResponse Login(LoginMessage message)
     {
@@ -54,7 +57,7 @@ public class DBConnection
         });
     }
 
-    public CreateRoomResponse CreateRooom(CreateRoomMessage message)
+    public CreateRoomResponse CreateRoom(CreateRoomMessage message)
     {
         return Connect<CreateRoomResponse>("Matchmaking", "CreateRoom", new NameValueCollection()
         {

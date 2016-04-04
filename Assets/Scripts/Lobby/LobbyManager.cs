@@ -9,6 +9,7 @@ using System;
 using UnityEngine.Events;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
+using System.Threading;
 
 public class LobbyManager : NetworkLobbyManager
 {
@@ -34,13 +35,32 @@ public class LobbyManager : NetworkLobbyManager
     private bool _sceneLoaded = false;
     private GameObject[] playerGameObjects = new GameObject[4];
 
+    private bool _isResponse;
+    private DeleteRoomResponse _response;
+    private Action<DeleteRoomResponse> _responseCallback;
+
     void Start()
     {
         instance = this;
 
+        _isResponse = false;
+        _responseCallback = null;
+
         // Activate needed objects to play the game
         gameManager.SetActive(true);
         ChangePanel(menuGui);
+    }
+
+    void Update()
+    {
+        if (_isResponse)
+        {
+            if (_responseCallback != null)
+            {
+                _responseCallback(_response);
+            }
+            _isResponse = false;
+        }
     }
 
     public void GameIsOver()
@@ -53,7 +73,21 @@ public class LobbyManager : NetworkLobbyManager
     public override void OnLobbyStopHost()
     {
         base.OnLobbyStopHost();
-		DBConnection.instance.DeleteRoom (new DeleteRoomMessage { userId = LoginInformation.guid });
+
+        _isResponse = false;
+        _responseCallback = new Action<DeleteRoomResponse>(DeleteRoomCallback);
+        new Thread(DeleteRoom).Start();
+    }
+
+    public void DeleteRoom()
+    {
+		_response = DBConnection.instance.DeleteRoom (new DeleteRoomMessage { userId = LoginInformation.guid });
+        _isResponse = true;
+    }
+
+    public void DeleteRoomCallback(DeleteRoomResponse response)
+    {
+        //Do Nothing
     }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection networkConnection, short playerControllerId)
@@ -190,6 +224,7 @@ public class LobbyManager : NetworkLobbyManager
 		infoText.gameObject.SetActive (false);
 
 		infoInputField.gameObject.SetActive (true);
+        infoButton.gameObject.SetActive(true);
 		infoInputField.GetComponentInChildren<Text> ().text = placeholder;
 
 		infoButton.GetComponentInChildren<Text> ().text = "Submit";

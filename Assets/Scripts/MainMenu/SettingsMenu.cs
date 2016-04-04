@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
@@ -12,8 +14,16 @@ public class SettingsMenu : MonoBehaviour
 
     public Text errorText;
 
+    private bool _isResponse;
+    private ChangePasswordResponse _response;
+    private Action<ChangePasswordResponse> _responseCallback;
+
+
     public void OnEnable()
     {
+        _isResponse = false;
+        _responseCallback = null;
+
         backButton.onClick.RemoveAllListeners();
         backButton.onClick.AddListener(BackButton_OnClick);
 
@@ -23,6 +33,18 @@ public class SettingsMenu : MonoBehaviour
         oldPasswordInputField.text = "";
         newPasswordInputField.text = "";
         newRePasswordInputField.text = "";
+    }
+
+    void Update()
+    {
+        if (_isResponse)
+        {
+            if (_responseCallback != null)
+            {
+                _responseCallback(_response);
+            }
+            _isResponse = false;
+        }
     }
 
     public void ChangePasswordButton_OnClick()
@@ -38,8 +60,20 @@ public class SettingsMenu : MonoBehaviour
             return;
         }
 
-        var response = DBConnection.instance.ChangePassword(new ChangePasswordMessage { userName = LoginInformation.username, oldPassword = oldPasswordInputField.text, newPassword = newPasswordInputField.text });
+        _isResponse = false;
+        _responseCallback = new Action<ChangePasswordResponse>(ChangePasswordCallback);
+        new Thread(ChangePassword).Start();
+    }
 
+    public void ChangePassword()
+    {
+        Debug.Log(LoginInformation.username + oldPasswordInputField.text + newPasswordInputField.text);
+        _response = DBConnection.instance.ChangePassword(new ChangePasswordMessage { userName = LoginInformation.username, oldPassword = oldPasswordInputField.text, newPassword = newPasswordInputField.text });
+        _isResponse = true;
+    }
+
+    public void ChangePasswordCallback(ChangePasswordResponse response)
+    {
         if (!response.isSuccessful)
             errorText.text = response.errorMessage;
         else

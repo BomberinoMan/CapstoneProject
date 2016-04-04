@@ -67,7 +67,6 @@ public class SettingsMenu : MonoBehaviour
 
     public void ChangePassword()
     {
-        Debug.Log(LoginInformation.username + oldPasswordInputField.text + newPasswordInputField.text);
         _response = DBConnection.instance.ChangePassword(new ChangePasswordMessage { userName = LoginInformation.username, oldPassword = oldPasswordInputField.text, newPassword = newPasswordInputField.text });
         _isResponse = true;
     }

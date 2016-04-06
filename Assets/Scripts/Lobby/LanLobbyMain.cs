@@ -57,6 +57,7 @@ public class LanLobbyMain : MonoBehaviour
     {
         _isResponse = false;
         _responseCallback = new Action<GeneralResponse>(CreateRoomCallback);
+		LobbyManager.instance.roomName = name;
         new Thread(() => CreateRoom(name)).Start();
     }
 

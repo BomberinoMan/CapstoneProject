@@ -500,7 +500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &178466
 GameObject:
   m_ObjectHideFlags: 1
@@ -799,10 +799,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 18d97db383777475281adf6f6e9aa0e4, type: 3}
-    m_FontSize: 14
+    m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 10
+    m_BestFit: 0
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -832,11 +832,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 18d97db383777475281adf6f6e9aa0e4, type: 3}
-    m_FontSize: 14
+    m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 124
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1042,7 +1042,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Join a Game
+  m_Text: Join or Host Game
 --- !u!114 &11420704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1064,10 +1064,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 18d97db383777475281adf6f6e9aa0e4, type: 3}
-    m_FontSize: 14
+    m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 10
+    m_BestFit: 0
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -1088,7 +1088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerListContentTransform: {fileID: 22486326}
-  roomTitle: {fileID: 0}
+  roomTitle: {fileID: 11480254}
   leaveButton: {fileID: 11464196}
 --- !u!114 &11422582
 MonoBehaviour:
@@ -1548,6 +1548,7 @@ MonoBehaviour:
   infoButton: {fileID: 11460016}
   countdownTime: 5
   isMatchMaking: 0
+  roomName: 
   localPlayer: {fileID: 0}
 --- !u!114 &11453794
 MonoBehaviour:
@@ -1611,10 +1612,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 18d97db383777475281adf6f6e9aa0e4, type: 3}
-    m_FontSize: 62
+    m_FontSize: 36
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 6
+    m_BestFit: 0
+    m_MinSize: 0
     m_MaxSize: 62
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -1926,10 +1927,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 18d97db383777475281adf6f6e9aa0e4, type: 3}
-    m_FontSize: 14
+    m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 10
+    m_BestFit: 0
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -2118,10 +2119,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 18d97db383777475281adf6f6e9aa0e4, type: 3}
-    m_FontSize: 32
+    m_FontSize: 36
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 3
+    m_BestFit: 0
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -2955,7 +2956,7 @@ RectTransform:
   - {fileID: 22445182}
   m_Father: {fileID: 22466722}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0.85067374}
+  m_AnchorMin: {x: 0, y: 0.85}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}

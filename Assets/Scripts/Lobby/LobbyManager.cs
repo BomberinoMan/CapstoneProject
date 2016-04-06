@@ -29,6 +29,7 @@ public class LobbyManager : NetworkLobbyManager
     public float countdownTime = 5.0f;
 
     public bool isMatchMaking = false;
+	public string roomName = "";
     public LobbyPlayer localPlayer;
 
     private RectTransform _currentPanel;
@@ -187,7 +188,7 @@ public class LobbyManager : NetworkLobbyManager
     {
         ChangePanel(lobbyGui);
         HideInfoPanel();
-		//DisplayInfoInputField ("Enter name for room", OTest);
+		LobbyRoom.instance.SetRoomName (roomName);
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)

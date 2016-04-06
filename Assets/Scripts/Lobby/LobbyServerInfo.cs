@@ -23,6 +23,7 @@ public class LobbyServerInfo : MonoBehaviour
     {
 		LobbyManager.instance.DisplayInfoNotification("Joining");
 		LobbyManager.instance.networkAddress = _ip;
+		LobbyManager.instance.roomName = serverName.text;
 		LobbyManager.instance.StartClient ();
     }
 }

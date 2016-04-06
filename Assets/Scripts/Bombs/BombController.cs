@@ -109,7 +109,7 @@ public class BombController : NetworkBehaviour
             newDirection.y = AxisRounder.Round(newDirection.y);
             CmdSetDirection(newDirection);
         }
-        else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb")
+		else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb" || collisionInfo.gameObject.tag == "Destructible")
         {
             StopMovement();
         }

@@ -11,7 +11,7 @@ public class DBConnection
 {
     private static DBConnection _instance;
     private static bool _hasInit = false;
-    private string _uri = "https://142.3.21.28/{0}.php?Action={1}";
+    private string _uri = "https://192.168.1.105/{0}.php?Action={1}";
     private string _superSecretCode = "21548b73-0f5e-42e9-9038-ffb14458119b";
 
     private DBConnection() { }

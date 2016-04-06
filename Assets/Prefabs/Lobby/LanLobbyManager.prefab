@@ -1088,7 +1088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerListContentTransform: {fileID: 22486326}
-  roomName: {fileID: 11480254}
+  roomTitle: {fileID: 0}
   leaveButton: {fileID: 11464196}
 --- !u!114 &11422582
 MonoBehaviour:
@@ -2485,6 +2485,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

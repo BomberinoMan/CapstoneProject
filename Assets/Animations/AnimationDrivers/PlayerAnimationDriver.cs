@@ -13,7 +13,7 @@ public class PlayerAnimationDriver : NetworkBehaviour
 {
     [SyncVar]
     private Animator _animator;
-    private new bool _isLocalPlayer;
+    private bool _isLocalPlayer;
     private DPadController _dPad;
     private PlayerControllerComponent _player;
 

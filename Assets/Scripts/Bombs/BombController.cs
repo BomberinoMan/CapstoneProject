@@ -11,13 +11,8 @@ public class BombController : NetworkBehaviour
 
     private bool _hasExploded = false;
     private float _startTime;
+    [SyncVar]
     private Vector2 _direction = new Vector2();
-    private Rigidbody2D _rb;
-
-    void Awake()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-    }
 
     void Start()
     {
@@ -37,7 +32,7 @@ public class BombController : NetworkBehaviour
 			Explode ();
 		}
 
-		_rb.velocity = _direction;
+        transform.position += new Vector3(_direction.x * speed, _direction.y * speed, 0.0f);
     }
 
 	public void SetupBomb(GameObject player, float delayTime, float explodingDuration, int radius, float warningTime)
@@ -46,7 +41,7 @@ public class BombController : NetworkBehaviour
 
 		if (!isServer)
 			_startTime -= 0.3f;
-		Debug.Log ("SetupBomb");
+
         paramaters = new BombParams();
         paramaters.delayTime = delayTime;
         paramaters.explodingDuration = explodingDuration;
@@ -61,7 +56,7 @@ public class BombController : NetworkBehaviour
     public void Explode()
     {
         StopMovement();
-
+        
         try
         {
             if (!_hasExploded)
@@ -90,21 +85,29 @@ public class BombController : NetworkBehaviour
             Invoke("DestroyMe", 2);
 	}
 
+    [Command]
+    private void CmdSetDirection(Vector2 newDirection)
+    {
+        _direction = newDirection;
+    }
+
     void OnTriggerEnter2D(Collider2D collisionInfo)
     {
-		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().bombKick > 0 && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().isLocalPlayer)
+		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().hasBombKick && hasAuthority)
         {
             foreach (Collider2D bombCollider in gameObject.GetComponentsInChildren<Collider2D>())
                 if (Physics2D.GetIgnoreCollision(bombCollider, collisionInfo.gameObject.GetComponent<Collider2D>()))
                     // Ignore collisions on colliders that are on the parent player before they leave the bomb
                     return;
 
-            _direction = -(collisionInfo.transform.position - transform.position).normalized;
-            _direction.x = AxisRounder.Round(_direction.x);
-            _direction.y = AxisRounder.Round(_direction.y);
-			_rb.isKinematic = false;
-			_direction.x *= (speed / Time.fixedDeltaTime) * speedScalar;
-			_direction.y *= (speed / Time.fixedDeltaTime) * speedScalar;
+            if (_direction != Vector2.zero)
+                StopMovement();
+
+            var newDirection = new Vector2();
+            newDirection = -(collisionInfo.transform.position - transform.position).normalized;
+            newDirection.x = AxisRounder.Round(newDirection.x);
+            newDirection.y = AxisRounder.Round(newDirection.y);
+            CmdSetDirection(newDirection);
         }
         else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb")
         {
@@ -120,18 +123,9 @@ public class BombController : NetworkBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D collisionInfo)
-    {
-        if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb" || collisionInfo.gameObject.tag == "Player")
-        {
-            StopMovement();
-        }
-    }
-
     private void StopMovement()
     {
-        _rb.position = new Vector2(AxisRounder.Round(_rb.position.x), AxisRounder.Round(_rb.position.y));
-		_direction = Vector2.zero;
-		_rb.isKinematic = true;
+        transform.position = new Vector3(AxisRounder.Round(transform.position.x), AxisRounder.Round(transform.position.y), 0.0f);
+        CmdSetDirection(Vector2.zero);
     }
 }

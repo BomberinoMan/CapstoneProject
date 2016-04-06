@@ -6,6 +6,8 @@ public class PlayerControllerComponent : NetworkBehaviour
 {
     [SyncVar]
     public int slot;
+    [SyncVar]
+    public bool hasBombKick = false;
 
     private float _speed;
     private float _flipFlopTime;
@@ -28,7 +30,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     public int currNumBombs { get { return _playerController.currNumBombs; } set { _playerController.currNumBombs = value; } }
     public int maxNumBombs { get { return _playerController.maxNumBombs; } set { _playerController.maxNumBombs = value; } }
-    public int bombKick { get { return _playerController.bombKick; } set { _playerController.bombKick = value; } }
+    public int bombKick { get { return _playerController.bombKick; } set { CmdSetBombKick(); _playerController.bombKick = value; } }
     public int bombLine { get { return _playerController.bombLine; } set { _playerController.bombLine = value; } }
     public BombParams bombParams { get { return _playerController.bombParams; } set { _playerController.bombParams = value; } }
     public bool reverseMovement { get { return _playerController.reverseMovement; } }
@@ -200,6 +202,12 @@ public class PlayerControllerComponent : NetworkBehaviour
         GameManager.instance.PlayerHit(this, bombNetId, true);
     }
 
+    [Command]
+    public void CmdSetBombKick()
+    {
+        hasBombKick = true;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
 		if (other.gameObject.tag == "Upgrade") {
@@ -214,7 +222,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 		} else if (other.gameObject.tag == "Laser") {
             if (isServer)
                 GameManager.instance.PlayerHit(this, other.gameObject.GetComponent<LaserController>().bombNetId);
-            else
+            else if(isLocalPlayer)
                 CmdPlayerHit(other.gameObject.GetComponent<LaserController>().bombNetId);
 		} else if (other.gameObject.tag == "BombBlock") {
 			_bombBlock = true;

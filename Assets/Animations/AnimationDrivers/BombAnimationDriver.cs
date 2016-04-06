@@ -16,6 +16,6 @@ public class BombAnimationDriver : MonoBehaviour
     void FixedUpdate()
     {
         animator.SetBool("IsExploding", (_creationTime + paramaters.delayTime) <= Time.time);
-        animator.SetBool("IsDisapearing", (_creationTime + paramaters.delayTime + paramaters.warningTime + paramaters.explodingDuration) <= Time.time);
+        //animator.SetBool("IsDisapearing", (_creationTime + paramaters.delayTime + paramaters.warningTime + paramaters.explodingDuration) <= Time.time);
     }
 }

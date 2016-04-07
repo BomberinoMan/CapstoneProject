@@ -116,6 +116,9 @@ public class GameManager : NetworkBehaviour
 
     private void PlayerDead(PlayerControllerComponent player)
     {
+		if (_isGameOver)
+			return;
+		
         SpawnUpgradeInRandomLocation(UpgradeType.Bomb, player.maxNumBombs - 1);
         SpawnUpgradeInRandomLocation(UpgradeType.Laser, player.bombParams.radius - 2);
         SpawnUpgradeInRandomLocation(UpgradeType.Kick, player.bombKick);
@@ -134,21 +137,19 @@ public class GameManager : NetworkBehaviour
     {
         if (LobbyManager.instance.lobbySlots.Where(x => x != null).Select(x => x as LobbyPlayer).Where(x => x.isAlive).Count() == 1)
         {
-            LobbyManager.instance.lobbySlots.Where(x => x != null).Select(x => x as LobbyPlayer).Where(x => x.isAlive).First().score++;
-            LobbyManager.instance.lobbySlots.Where(x => x != null).Select(x => x as LobbyPlayer).Where(x => x.isAlive).First().isAlive = false;
+            LobbyManager.instance.lobbySlots.Where(x => x != null).Select(x => x as LobbyPlayer).Where(x => x.isAlive).FirstOrDefault().score++;
+			LobbyManager.instance.lobbySlots.Where(x => x != null).Select(x => x as LobbyPlayer).Where(x => x.isAlive).FirstOrDefault().isAlive = false;
         }
 
         if (LobbyManager.instance.lobbySlots.Where(x => x != null).Select(x => x as LobbyPlayer).Where(x => x.isAlive).Where(x => x.isAlive).Count() == 0)
         {
-            StartCoroutine(GameOver());
+			if (!_isGameOver)
+            	StartCoroutine(GameOver());
         }
     }
 
     private IEnumerator GameOver()
     {
-        if (_isGameOver)
-            yield break;
-
         _isGameOver = true;
         float remainingTime = scoreScreenTime;
 

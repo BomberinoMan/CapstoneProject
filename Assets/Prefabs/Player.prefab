@@ -49,7 +49,7 @@ Rigidbody2D:
   m_GravityScale: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &5840474
@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slot: 0
+  hasBombKick: 0
   dPad: {fileID: 11468542, guid: c2e49f47531e7854ebe9cf3a79b05bcb, type: 2}
   bombObject: {fileID: 163012, guid: ff9397ff31393f34f8bec556343e325d, type: 2}
   audioObject: {fileID: 135588, guid: ee599bdca9c85c24895d1b93d32e5c85, type: 2}

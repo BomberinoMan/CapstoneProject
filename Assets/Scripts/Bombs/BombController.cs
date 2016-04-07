@@ -10,8 +10,8 @@ public class BombController : NetworkBehaviour
     public GameObject audioObject;
 
     private bool _hasExploded = false;
+	private bool _isMoving = false;
     private float _startTime;
-    [SyncVar]
     private Vector2 _direction = new Vector2();
 
     void Start()
@@ -32,7 +32,11 @@ public class BombController : NetworkBehaviour
 			Explode ();
 		}
 
-        transform.position += new Vector3(_direction.x * speed, _direction.y * speed, 0.0f);
+		if (!isServer)
+			return;
+
+		if(_isMoving)
+        	transform.position += new Vector3(_direction.x * speed, _direction.y * speed, 0.0f);
     }
 
 	public void SetupBomb(GameObject player, float delayTime, float explodingDuration, int radius, float warningTime)
@@ -85,29 +89,16 @@ public class BombController : NetworkBehaviour
             Invoke("DestroyMe", 2);
 	}
 
-    [Command]
-    private void CmdSetDirection(Vector2 newDirection)
-    {
-        _direction = newDirection;
-    }
-
     void OnTriggerEnter2D(Collider2D collisionInfo)
     {
-		if (collisionInfo.gameObject.tag == "Player" && collisionInfo.gameObject.GetComponent<PlayerControllerComponent>().hasBombKick && hasAuthority)
+		if (collisionInfo.gameObject.tag == "Player")
         {
-            foreach (Collider2D bombCollider in gameObject.GetComponentsInChildren<Collider2D>())
-                if (Physics2D.GetIgnoreCollision(bombCollider, collisionInfo.gameObject.GetComponent<Collider2D>()))
-                    // Ignore collisions on colliders that are on the parent player before they leave the bomb
-                    return;
-
-            if (_direction != Vector2.zero)
-                StopMovement();
-
-            var newDirection = new Vector2();
-            newDirection = -(collisionInfo.transform.position - transform.position).normalized;
-            newDirection.x = AxisRounder.Round(newDirection.x);
-            newDirection.y = AxisRounder.Round(newDirection.y);
-            CmdSetDirection(newDirection);
+			//Do all of the bomb kick things on the server
+			if (!isServer)
+				return;
+			
+			if (_isMoving)
+				StopMovement();
         }
 		else if (collisionInfo.gameObject.tag == "Blocking" || collisionInfo.gameObject.tag == "Bomb" || collisionInfo.gameObject.tag == "Destructible")
         {
@@ -123,9 +114,18 @@ public class BombController : NetworkBehaviour
         }
     }
 
+	public void Kick(Vector2 direction)
+	{
+		if (!isServer)
+			return;
+		_isMoving = true;
+		_direction = direction;
+	}
+
     private void StopMovement()
     {
+		_isMoving = false;
+		_direction = Vector2.zero;
         transform.position = new Vector3(AxisRounder.Round(transform.position.x), AxisRounder.Round(transform.position.y), 0.0f);
-        CmdSetDirection(Vector2.zero);
     }
 }

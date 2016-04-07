@@ -111,6 +111,7 @@ public class LobbyPlayer : NetworkLobbyPlayer
     {
 		if (isServer)
 		{
+			LobbyManager.instance.GameIsOver ();
 			LobbyManager.instance.StopHost();
 		}
         else

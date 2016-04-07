@@ -160,7 +160,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             as GameObject;
 
 		bomb.GetComponent<BombController> ().SetupBomb (gameObject, delayTime, explodingDuration, radius, warningTime);
-		NetworkServer.SpawnWithClientAuthority (bomb, gameObject);
+		NetworkServer.Spawn (bomb);
 		RpcSetupBomb(bomb, delayTime, explodingDuration, radius, warningTime);
     }
 
@@ -191,7 +191,7 @@ public class PlayerControllerComponent : NetworkBehaviour
                 as GameObject;
 
 			bomb.GetComponent<BombController> ().SetupBomb (gameObject, delayTime, explodingDuration, radius, warningTime);
-			NetworkServer.SpawnWithClientAuthority(bomb, gameObject);
+			NetworkServer.Spawn (bomb);
 			RpcSetupBomb(bomb, delayTime, explodingDuration, radius, warningTime);
         }
     }
@@ -208,18 +208,35 @@ public class PlayerControllerComponent : NetworkBehaviour
         hasBombKick = true;
     }
 
+	[Command]
+	public void CmdKick(GameObject bomb, Vector2 direction)
+	{
+		bomb.GetComponent<BombController> ().Kick (direction);
+	}
+
     void OnTriggerEnter2D(Collider2D other)
     {
 		if (other.gameObject.tag == "Upgrade") {
-            if (other.gameObject.GetComponent<UpgradeTypeComponent>().type == UpgradeType.Radioactive)
-                _audioSource.PlayOneShot(pickupRadioactiveUpgradeSound);
-            else
-                _audioSource.PlayOneShot(pickupUpgradeSound);
+			if (other.gameObject.GetComponent<UpgradeTypeComponent> ().type == UpgradeType.Radioactive)
+				_audioSource.PlayOneShot (pickupRadioactiveUpgradeSound);
+			else
+				_audioSource.PlayOneShot (pickupUpgradeSound);
 
-            UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
+			UpgradeFactory.GetUpgrade (other.gameObject.GetComponent<UpgradeTypeComponent> ().type).ApplyEffect (gameObject);
 			if (localPlayerAuthority)
 				NetworkServer.Destroy (other.gameObject);
-		} else if (other.gameObject.tag == "Laser") {
+		} else if (other.gameObject.tag == "Bomb" && isLocalPlayer && bombKick > 0) {
+			foreach (Collider2D bombCollider in other.gameObject.GetComponentsInChildren<Collider2D>())
+				if (Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), bombCollider))
+					return;
+			var kickDirection = Vector2.zero;
+
+			kickDirection.x = AxisRounder.Round (other.transform.position.x - transform.position.x);
+			kickDirection.y = AxisRounder.Round (other.transform.position.y - transform.position.y);
+
+			if(kickDirection == GetComponentInChildren<PlayerAnimationDriver>().GetDirection())
+				CmdKick (other.gameObject.transform.parent.gameObject, kickDirection);
+		}else if (other.gameObject.tag == "Laser") {
             if (isServer)
                 GameManager.instance.PlayerHit(this, other.gameObject.GetComponent<LaserController>().bombNetId);
             else if(isLocalPlayer)
@@ -253,9 +270,9 @@ public class PlayerControllerComponent : NetworkBehaviour
 
     private void FlipFlopColor()
     {
-        if (!_animatorSetup)
+		if (!_animatorSetup || _playerController == null)
             return;
-
+		
         if (!_playerController.isRadioactive)
         {
             gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.enabled).First().color = Color.white;

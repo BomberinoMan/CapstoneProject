@@ -21,7 +21,7 @@ public class BombController : NetworkBehaviour
     }
 
 	void OnDestroy(){
-		if (!_hasExploded) {
+		if (!_hasExploded && parentPlayer != null) {
 			parentPlayer.GetComponent<PlayerControllerComponent> ().currNumBombs++;
 		}
 	}
@@ -67,7 +67,8 @@ public class BombController : NetworkBehaviour
             {
                 Instantiate(audioObject);
                 _hasExploded = true;
-                parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
+				if(parentPlayer != null)
+                	parentPlayer.GetComponent<PlayerControllerComponent>().currNumBombs++;
                 gameObject.GetComponent<LaserInstantiator>().InstantiateLaser(GetComponent<NetworkIdentity>().netId.Value);
 				Deactivate();
             }

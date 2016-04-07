@@ -81,7 +81,7 @@ public class PlayerControllerComponent : NetworkBehaviour
 			if (!_bombBlock && !(_lastBombPos.x == AxisRounder.Round(_rb.transform.position.x) && _lastBombPos.y == AxisRounder.Round(_rb.transform.position.y)))
             {
                 _audioSource.PlayOneShot(layBombSound);
-                CmdLayBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
+				CmdLayBomb(AxisRounder.Round(_transform.position.x), AxisRounder.Round(_transform.position.y), bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime);
 
                 if (_playerController.alwaysLayBombs)
                 {
@@ -98,7 +98,7 @@ public class PlayerControllerComponent : NetworkBehaviour
             else if (_playerController.bombLine > 0 && fromTouch)
             {
                 _audioSource.PlayOneShot(layBombSound);
-                CmdLayLineBomb(bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime, gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
+				CmdLayLineBomb(AxisRounder.Round(_transform.position.x), AxisRounder.Round(_transform.position.y), bombParams.delayTime, bombParams.explodingDuration, bombParams.radius, bombParams.warningTime, gameObject.GetComponentInChildren<PlayerAnimationDriver>().GetDirection());
             }
         }
     }
@@ -143,37 +143,29 @@ public class PlayerControllerComponent : NetworkBehaviour
     }
 
     [Command]
-    private void CmdLayBomb(float delayTime, float explodingDuration, int radius, float warningTime)
+    private void CmdLayBomb(float x, float y, float delayTime, float explodingDuration, int radius, float warningTime)
     {
         bombParams.delayTime = delayTime;
         bombParams.explodingDuration = explodingDuration;
         bombParams.radius = radius;
         bombParams.warningTime = warningTime;
 
-        GameObject bomb = Instantiate(
-            bombObject,
-            new Vector3(
-                AxisRounder.Round(_transform.position.x),
-                AxisRounder.Round(_transform.position.y),
-                0.0f),
-            Quaternion.identity)
-            as GameObject;
-
+        GameObject bomb = Instantiate(bombObject, new Vector3(x, y, 0.0f), Quaternion.identity) as GameObject;
 		bomb.GetComponent<BombController> ().SetupBomb (gameObject, delayTime, explodingDuration, radius, warningTime);
 		NetworkServer.Spawn (bomb);
 		RpcSetupBomb(bomb, delayTime, explodingDuration, radius, warningTime);
     }
 
     [Command]
-    private void CmdLayLineBomb(float delayTime, float explodingDuration, int radius, float warningTime, Vector2 direction)
+    private void CmdLayLineBomb(float x, float y, float delayTime, float explodingDuration, int radius, float warningTime, Vector2 direction)
     {
         bombParams.delayTime = delayTime;
         bombParams.explodingDuration = explodingDuration;
         bombParams.radius = radius;
         bombParams.warningTime = warningTime;
 
-        var emptySpace = Physics2D.RaycastAll(new Vector2(AxisRounder.Round(_transform.position.x), AxisRounder.Round(transform.position.y)), direction)
-            .Where(x => x.distance != 0)
+        var emptySpace = Physics2D.RaycastAll(new Vector2(AxisRounder.Round(x), AxisRounder.Round(y)), direction)
+            .Where(z => z.distance != 0)
             .First();
 
         //The number of bombs that will be spawned is either the amount of clear space, or the number of bombs
@@ -181,11 +173,9 @@ public class PlayerControllerComponent : NetworkBehaviour
 
         for (int i = 1; i <= numBombs; i++)
         {
-            GameObject bomb = Instantiate(
-                bombObject,
-                new Vector3(
-                    AxisRounder.Round(_transform.position.x + direction.x * i),
-                    AxisRounder.Round(_transform.position.y + direction.y * i),
+            GameObject bomb = Instantiate(bombObject, new Vector3(
+                    AxisRounder.Round(x + direction.x * i),
+                    AxisRounder.Round(y + direction.y * i),
                     0.0f),
                 Quaternion.identity)
                 as GameObject;
